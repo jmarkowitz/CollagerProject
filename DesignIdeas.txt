@@ -45,5 +45,3 @@ Nouns (classes, attributes):
   - transparency ([r,g,b,a] 0 <= a <= 255, 0 being fully transparent, 255 being opaque)
     - read spec for equations
   - image processing
-
-  111111
