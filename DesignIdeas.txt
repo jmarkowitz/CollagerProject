@@ -1,0 +1,47 @@
+Model:
+- the image file reading
+- the image file writing
+- the image data when imported from file
+  - Model Interface:
+    - PixelInterface
+    - AbstractPixel
+    - GreyscalePixel enum? idk
+    - RedPixel enum? idk
+      - value could just be a field that is a double
+    - GreenPixel enum? idk
+    - RedPixel enum? idk
+    - Coord type class for row and columns
+    - AbstractColorModel?
+      - Fields:
+        - private RedPixel red
+        - private GreenPixel green
+        - private BluePixel blue
+    - RGBColorModel
+    - RGBAColorModel
+  -
+
+View:
+Controller:
+  - Command design pattern using lambdas
+  - look at lab with mocks
+
+------------------------------------------------------------------------------------------------
+Pass 1:
+Nouns (classes, attributes):
+  - image
+  - layers
+  - filtered
+  - text-based
+  - flexible
+  - file
+  - sequence of pixels
+  - position
+  - greyscale (0 is black, 1 or 255 is white)
+  - color ( [0,0,0] for black or [255,255,255] for white)
+  - brightness
+    - value (max val of [r,g,b])
+    - intensity (avg. of [r,g,b])
+    - luma (weighted sum (0.2126r + 0.7152g + 0.0722b)
+  - transparency ([r,g,b,a] 0 <= a <= 255, 0 being fully transparent, 255 being opaque)
+    - read spec for equations
+  - image processing
