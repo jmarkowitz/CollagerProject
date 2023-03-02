@@ -11,11 +11,11 @@ Model:
     - GreenPixel enum? idk
     - RedPixel enum? idk
     - Coord type class for row and columns
-    - AbstractColorModel?
+    - AbstractPixel?
       - Fields:
-        - private RedPixel red
-        - private GreenPixel green
-        - private BluePixel blue
+        - private int red
+        - private int green
+        - private int blue
     - RGBColorModel
     - RGBAColorModel
   -
@@ -45,3 +45,42 @@ Nouns (classes, attributes):
   - transparency ([r,g,b,a] 0 <= a <= 255, 0 being fully transparent, 255 being opaque)
     - read spec for equations
   - image processing
+------------------------------------------------------------------------------------------------
+Model:
+Coord
+  - row
+  - col
+
+PixelInterface
+  - getRed
+  - getGreen
+  - getBlue
+AlphaPixelInterface extend PixelInterface
+  - getAlpha
+
+AbstractPixel implements PixelInterface
+  - int redVal
+  - int greenVal
+  - int blueVal
+Pixel
+  - super
+AlphaPixel extend AbstractPixel implement AlphaPixelInterface
+  - int alpha
+
+ProjectInterface
+- newProject
+- loadProject
+- saveProject
+AbstractProject implements ProjectInterface
+  - class textFileHandling
+  - class jsonFileHandling
+
+
+LayerInterface
+
+
+ImageInterface
+  - addImage
+
+class image
+  - field: some collection of layer
