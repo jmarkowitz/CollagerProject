@@ -67,6 +67,8 @@ Pixel
 AlphaPixel extend AbstractPixel implement AlphaPixelInterface
   - int alpha
 
+  -[do above]
+
 ProjectInterface
 - newProject
 - loadProject
