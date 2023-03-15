@@ -2,8 +2,8 @@ package model;
 
 import java.util.Stack;
 
-public class Project implements ProjectModel {
-  public static final int MAX_VALUE = 255;
+public class Project {//TODO: make this implement ProjectModel<P>
+  public static final int MAX_VALUE = 255;//TODO: probably get rid of this
 
   private String projectName;
   private int height;
