@@ -1,6 +1,8 @@
 package model;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface that represents the running state of a Collager project. This interface allows for
@@ -34,6 +36,6 @@ public interface ProjectModelState {
    * @throws IllegalStateException if this method is called before a new project has been created or
    *                               loaded in
    */
-  List<Layer> getLayers() throws IllegalStateException;
+  Map<String, LayerInterface> getLayers() throws IllegalStateException;
 
 }

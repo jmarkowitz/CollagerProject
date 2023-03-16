@@ -2,32 +2,38 @@ package model;
 
 public class Layer implements LayerInterface {
 
-  private String layerName;
+  private final String layerName;
   private String filterName;
   private PixelInterface[][] grid;
 
-  @Override
-  public int getHeight() {
-    return 0;
+  public Layer(String layerName) {
+    this.layerName = layerName;
+    this.filterName = "Normal";
   }
 
-  @Override
-  public int getWidth() {
-    return 0;
+  public Layer(String layerName, PixelInterface[][] grid) {
+    this.layerName = layerName;
+    this.filterName = "Normal";
+    this.grid = grid;
   }
 
   @Override
   public String getName() {
-    return null;
+    return this.layerName;
+  }
+
+  @Override
+  public String getFilterName() {
+    return this.filterName;
   }
 
   @Override
   public void setFilter(String filterOption) {
-
+    this.filterName = filterOption;
   }
 
   @Override
   public PixelInterface[][] getPixelGrid() {
-    return new PixelInterface[0][];
+    return this.grid.clone();
   }
 }
