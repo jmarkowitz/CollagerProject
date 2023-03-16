@@ -1,7 +1,6 @@
 package model;
 
 import java.io.FileNotFoundException;
-import java.nio.file.FileAlreadyExistsException;
 
 /**
  * Represents the model for a Project in the Collager project. This interface allows for the user to
@@ -28,18 +27,33 @@ public interface ProjectModel extends ProjectModelState {
   void newProject(int width, int height) throws IllegalArgumentException;
 
   /**
-   * Allows a layer to be added to the list of layers contained in the project if it is not null.
+   * Allows a layer to be added to the list of layers contained in the project if it does not exist
+   * in the layer list yet.
    *
-   * @param layer the layer to be added
+   * @param layerName the layer to be added
    * @throws IllegalStateException    if this method is called before a project is created or loaded
    *                                  in
-   * @throws IllegalArgumentException if the layer provided is null
+   * @throws IllegalArgumentException if the layer provided already exists
    */
-  void addLayer(LayerInterface layer) throws IllegalArgumentException, IllegalStateException;
+  void addLayer(String layerName) throws IllegalArgumentException, IllegalStateException;
+
+  /**
+   * Adds the particular filter name to the given layer name
+   *
+   * @param layerName  the layer name the filter will be added to
+   * @param filterName the name of the filter
+   * @throws IllegalArgumentException if the layer or filter name provided is invalid
+   * @throws IllegalStateException    if this method is called before a project has been created or
+   *                                  loaded
+   */
+  void setFilter(String layerName, String filterName)
+      throws IllegalArgumentException, IllegalStateException;
 
   /**
    * Adds an image to the specific layer provided based on the image path and will place the top
-   * left corner of the image at the given x and y position.
+   * left corner of the image at the given x and y position. If the image provided is larger than
+   * the height and width of the project, it will import only the part that can fit and the rest
+   * will be cut off.
    *
    * @param layerName the name of the layer to add the image to
    * @param imagePath the filepath of the image
@@ -88,8 +102,8 @@ public interface ProjectModel extends ProjectModelState {
    * </ul>
    *
    * @param filepath the filepath to save the project to
-   * @throws IllegalStateException      if this method is called before a project has been created
-   *                                    or loaded
+   * @throws IllegalStateException if this method is called before a project has been created or
+   *                               loaded
    */
   void saveProject(String filepath) throws IllegalStateException;
 
