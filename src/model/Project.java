@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -174,30 +175,41 @@ public class Project implements ProjectModel {
   /**
    * Applies each layer's respective filter and combines all layers into one image.
    *
-   * @param filepath the filepath and name to save the image to
    * @throws IllegalStateException    if this method is called before a new project is created or
    *                                  loaded in
    * @throws IllegalArgumentException if the filepath provided is invalid
    */
   @Override
-  public void saveImage(String filepath) throws IllegalStateException, IllegalArgumentException {
+  public String saveImage() throws IllegalStateException, IllegalArgumentException, IOException {
     if (!this.inProgress) {
       throw new IllegalStateException(
           "Cannot add image to layer until new project has been created");
       //TODO: finish implementing method
     }
+
+      Appendable outString = new StringBuilder();
+      //Do we need to check if the filepath provided is invalid?
+      //The parameter is the name of the file of the file path?
+      String output = "P3\n" + this.width + " " + this.height + "\n"
+                + this.MAX_VALUE + "\n";
+      int finalR;
+      int fianlG;
+      int finalB;
+      for (Map.Entry<String, LayerInterface> mapLayer: layerLinkedMap)
+      outString.append(output);
+      return outString.toString();
   }
 
   /**
    * Loads a collage project from the provided filepath and returns a {@code ProjectModel}.
    *
-   * @param filepath the filepath of the project to be loaded in
    * @throws IllegalStateException if this method is called while a project is currently being
    *                               worked on
    */
   @Override
-  public void loadProject(String filepath) throws IllegalStateException {
+  public String loadProject() throws IllegalStateException {
     //TODO: finish implementing method
+    //Scanner should be in controller or Model
   }
 
   /**
@@ -217,7 +229,7 @@ public class Project implements ProjectModel {
    *                               loaded
    */
   @Override
-  public void saveProject(String filepath) throws IllegalStateException {
+  public String saveProject() throws IllegalStateException {
     //TODO: finish implementing method
 
   }

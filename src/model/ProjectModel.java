@@ -1,6 +1,7 @@
 package model;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * Represents the model for a Project in the Collager project. This interface allows for the user to
@@ -77,7 +78,7 @@ public interface ProjectModel extends ProjectModelState {
    *                                  loaded in
    * @throws IllegalArgumentException if the filepath provided is invalid
    */
-  void saveImage(String filepath) throws IllegalStateException, IllegalArgumentException;
+  String saveImage() throws IllegalStateException, IllegalArgumentException, IOException;
 
   /**
    * Loads a collage project from the provided filepath and returns a {@code ProjectModel}.
@@ -87,7 +88,7 @@ public interface ProjectModel extends ProjectModelState {
    * @throws IllegalStateException if this method is called while a project is currently being
    *                               worked on
    */
-  void loadProject(String filepath)
+  String loadProject()
       throws FileNotFoundException, IllegalStateException; //TODO: should this be here?
 
   /**
@@ -105,6 +106,6 @@ public interface ProjectModel extends ProjectModelState {
    * @throws IllegalStateException if this method is called before a project has been created or
    *                               loaded
    */
-  void saveProject(String filepath) throws IllegalStateException;
+  String saveProject() throws IllegalStateException;
 
 }

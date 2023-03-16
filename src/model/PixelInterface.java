@@ -56,6 +56,7 @@ public interface PixelInterface {
    */
   int getLuma();
 
+
   /**
    * Converts this {@code Pixel} with the alpha channel and returns a new {@code Pixel} that
    * compresses the alpha value into each RGB value.
