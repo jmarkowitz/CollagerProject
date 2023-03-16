@@ -9,15 +9,15 @@ import static model.Project.MAX_VALUE;
  * the alpha value represents the {@code Pixel}'s transparency, where 0 being fully transparent, and
  * 255 being opaque.
  */
-public class Pixel implements PixelInterface {
+public class Pixel implements PixelInterface {//TODO: make version to convert max value into 0-255
 
-  private int redVal;
-  private int greenVal;
-  private int blueVal;
-  private int alphaVal;
-  private int value;
-  private int intensity;
-  private double luma;
+  private final int redVal;
+  private final int greenVal;
+  private final int blueVal;
+  private final int alphaVal;
+  private int value; //should this be final?
+  private int intensity; //should this be final?
+  private int luma; //should this be final?
 
   /**
    * Constructs an RGBA pixel.
@@ -29,7 +29,7 @@ public class Pixel implements PixelInterface {
    */
   public Pixel(int red, int green, int blue, int alpha) throws IllegalArgumentException {
     this.checkRGB(red, green, blue);
-    if (isInvalid(alpha)) {
+    if (isValid(alpha)) {
       throw new IllegalArgumentException("Invalid alpha value");
     }
     this.redVal = red;
@@ -56,23 +56,23 @@ public class Pixel implements PixelInterface {
   }
 
   private void checkRGB(int red, int green, int blue) throws IllegalArgumentException {
-    if (isInvalid(red)) {
+    if (!isValid(red)) {
       throw new IllegalArgumentException("Invalid red value");
-    } else if (isInvalid(green)) {
+    } else if (!isValid(green)) {
       throw new IllegalArgumentException("Invalid green value");
-    } else if (isInvalid(blue)) {
+    } else if (!isValid(blue)) {
       throw new IllegalArgumentException("Invalid blue value");
     }
   }
 
-  private boolean isInvalid(int value) {
-    return value < 0 || value > 255;
+  private boolean isValid(int value) {
+    return value >= 0 && value <= MAX_VALUE;
   }
 
   private void initValueIntensityLuma(int red, int green, int blue) {
     int val = max(max(red, blue), green);
     int intensity = (red + green + blue) / 3;
-    double luma = 0.2126 * (double) red + 0.7152 * (double) green + 0.0722 * (double) blue;
+    int luma = (int) (0.2126 * red + 0.7152 * green + 0.0722 * blue);
     this.value = val;
     this.intensity = intensity;
     this.luma = luma;
@@ -145,7 +145,7 @@ public class Pixel implements PixelInterface {
    * @return the luma value of the {@code Pixel}.
    */
   @Override
-  public double getLuma() {
+  public int getLuma() {
     return this.luma;
   }
 
@@ -156,12 +156,11 @@ public class Pixel implements PixelInterface {
    * @return a new {@code Pixel}
    */
   @Override
-  public PixelInterface convertToRGB() {//TODO normalizeAlpha
+  public PixelInterface convertToRGB() {
     int alphaFactor = this.alphaVal / MAX_VALUE;
     int redNew = this.redVal * alphaFactor;
     int greenNew = this.greenVal * alphaFactor;
     int blueNew = this.blueVal * alphaFactor;
-    //TODO: make setters
     return new Pixel(redNew, greenNew, blueNew);
   }
 
