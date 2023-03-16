@@ -1,36 +1,33 @@
 package model.filters;
-
 import model.FilterInterface;
 import model.Layer;
 import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
-public class RedFilter extends AbstractFilter {
+public abstract class AbstractFilter implements FilterInterface{
+  private final int height;
+  private final int width;
 
-  public RedFilter(int height, int width) {
-    super(height, width);
+  public AbstractFilter(int height, int width) {
+    this.height = height;
+    this.width = width;
   }
 
-  @Override
-  protected PixelInterface getPixelByType(PixelInterface p) {
-    return new Pixel(p.getRed(), 0, 0);
-  }
+  protected abstract PixelInterface getPixelByType(PixelInterface p);
 
 
-  /*
   @Override
   public LayerInterface apply(LayerInterface layer) {
     PixelInterface[][] grid = layer.getPixelGrid();
     PixelInterface[][] newGrid = new PixelInterface[height][width];
+
     for (int row = 0; row < this.width; row++) {
       for (int col = 0; col < this.height; col++) {
-        newGrid[row][col] = new Pixel(grid[row][col].getRed(), 0, 0);
+        newGrid[row][col] = getPixelByType(grid[row][col]);
       }
     }
     LayerInterface newLayer = new Layer(layer.getName(), newGrid);
     return newLayer;
   }
-
-   */
 }

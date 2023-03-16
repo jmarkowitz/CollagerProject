@@ -3,11 +3,38 @@ package model.filters;
 import model.FilterInterface;
 import model.Layer;
 import model.LayerInterface;
+import model.Pixel;
+import model.PixelInterface;
 
-public class DarkenValue implements FilterInterface {
+public class DarkenValue extends AbstractFilter {
+  public DarkenValue(int height, int width) {
+    super(height, width);}
 
   @Override
-  public LayerInterface apply(LayerInterface layer) {
-    return null;
+  protected PixelInterface getPixelByType(PixelInterface p) {
+    int Value = p.getValue();
+    return new Pixel(p.getRed() - Value,
+            p.getGreen() - Value,
+            p.getBlue() - Value);
   }
+
+
+  /*
+  @Override
+  public LayerInterface apply(LayerInterface layer) {
+    PixelInterface[][] grid = layer.getPixelGrid();
+    PixelInterface[][] newGrid = new PixelInterface[height][width];
+    for (int row = 0; row < this.width; row++) {
+      for (int col = 0; col < this.height; col++) {
+        int Value = newGrid[row][col].getValue();
+        newGrid[row][col] = new Pixel(grid[row][col].getRed() - Value,
+                grid[row][col].getGreen() - Value,
+                grid[row][col].getBlue() - Value);
+      }
+    }
+    LayerInterface newLayer = new Layer(layer.getName(), newGrid);
+    return newLayer;
+  }
+
+   */
 }
