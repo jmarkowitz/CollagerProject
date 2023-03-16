@@ -1,19 +1,33 @@
 package model;
 
-public class Layer {
+public class Layer implements LayerInterface {
 
-  private String name;
-  private int height;
-  private int width;
-
+  private String layerName;
   private String filterName;
+  private PixelInterface[][] grid;
 
-  private Pixel[][] layer;
+  @Override
+  public int getHeight() {
+    return 0;
+  }
 
-  //TODO: What should a layer consist of?
-  // Can a layer have multiple filters? up to us but not required
-  // Can a layer have multiple images? no
-  // How should we represent a stack of layers?
-  // Do we need to keep track of all filters, or when a new filter is added, any others prior are wiped?
+  @Override
+  public int getWidth() {
+    return 0;
+  }
 
+  @Override
+  public String getName() {
+    return null;
+  }
+
+  @Override
+  public void setFilter(String filterOption) {
+
+  }
+
+  @Override
+  public PixelInterface[][] getPixelGrid() {
+    return new PixelInterface[0][];
+  }
 }

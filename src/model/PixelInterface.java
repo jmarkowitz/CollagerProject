@@ -54,7 +54,7 @@ public interface PixelInterface {
    *
    * @return the luma value of the {@code Pixel}.
    */
-  double getLuma();
+  int getLuma();
 
   /**
    * Converts this {@code Pixel} with the alpha channel and returns a new {@code Pixel} that
