@@ -1,8 +1,5 @@
 package model.filters;
 
-import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
@@ -16,6 +13,11 @@ public class DarkenValue extends AbstractFilter {
     return new Pixel(p.getRed() - Value,
             p.getGreen() - Value,
             p.getBlue() - Value);
+  }
+
+  @Override
+  public String getFilterName() {
+    return "darken-value";
   }
 
 

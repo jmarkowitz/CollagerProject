@@ -1,8 +1,5 @@
 package model.filters;
 
-import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
@@ -16,6 +13,11 @@ public class BlueFilter extends AbstractFilter {
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
     return new Pixel(0, 0,p.getBlue());
+  }
+
+  @Override
+  public String getFilterName() {
+    return "blue-component";
   }
 
 

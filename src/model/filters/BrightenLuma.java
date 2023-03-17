@@ -1,8 +1,5 @@
 package model.filters;
 
-import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
@@ -16,6 +13,11 @@ public class BrightenLuma extends AbstractFilter {
     return new Pixel(p.getRed() + Luma,
             p.getGreen() + Luma,
             p.getBlue() + Luma);
+  }
+
+  @Override
+  public String getFilterName() {
+    return "brighten-luma";
   }
 
 

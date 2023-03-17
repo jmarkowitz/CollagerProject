@@ -1,8 +1,5 @@
 package model.filters;
 
-import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
@@ -15,6 +12,11 @@ public class RedFilter extends AbstractFilter {
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
     return new Pixel(p.getRed(), 0, 0);
+  }
+
+  @Override
+  public String getFilterName() {
+    return "red-component";
   }
 
 

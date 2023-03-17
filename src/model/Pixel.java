@@ -21,9 +21,10 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
 
   /**
    * Constructs an RGBA pixel.
-   * @param red the pixel's red value
+   *
+   * @param red   the pixel's red value
    * @param green the pixel's green value
-   * @param blue the pixel's blue value
+   * @param blue  the pixel's blue value
    * @param alpha the pixel's alpha value
    * @throws IllegalArgumentException if any of the arguments are less than 0 or greater than 255
    */
@@ -41,9 +42,10 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
 
   /**
    * Constructs and RGB pixel and assigns the alpha channel to be the maximum value of 255.
-   * @param red the pixel's red value
+   *
+   * @param red   the pixel's red value
    * @param green the pixel's green value
-   * @param blue the pixel's blue value
+   * @param blue  the pixel's blue value
    * @throws IllegalArgumentException if any of the arguments are less than 0 or greater than 255
    */
   public Pixel(int red, int green, int blue) throws IllegalArgumentException {
@@ -164,6 +166,22 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
     return new Pixel(redNew, greenNew, blueNew);
   }
 
-
-
+  /**
+   * Returns the representation of the pixel as a string. If the argument passed in is 0 it will be
+   * in the form of "r g b a" otherwise it will be in the form of "r g b".
+   *
+   * @param isRGBA boolean flag to determine whether the pixel is an RGBA or not
+   * @return the string representing the pixel
+   */
+  @Override
+  public String toString(int isRGBA) {
+    if (isRGBA == 0) {
+      return String.format("%s %s %s %s", this.getRed(), this.getGreen(), this.getBlue(),
+          this.getAlpha());
+    } else {
+      PixelInterface RGBPixel = this.convertToRGB();
+      return String.format("%s %s %s", RGBPixel.getRed(), RGBPixel.getGreen(),
+          RGBPixel.getBlue());
+    }
+  }
 }
