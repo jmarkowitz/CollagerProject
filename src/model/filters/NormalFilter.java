@@ -3,15 +3,15 @@ package model.filters;
 import model.Pixel;
 import model.PixelInterface;
 
-public class RedFilter extends AbstractFilter {
+public class NormalFilter extends AbstractFilter {
 
-  public RedFilter(int height, int width) {
+  public NormalFilter(int height, int width) {
     super(height, width);
-    this.filterName = "red-component";
+    this.filterName = "normal";
   }
 
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
-    return new Pixel(p.getRed(), 0, 0, p.getAlpha());
+    return p;
   }
 }

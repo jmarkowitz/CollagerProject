@@ -2,6 +2,7 @@ package model;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import model.filters.BlueFilter;
@@ -12,6 +13,7 @@ import model.filters.DarkenIntensity;
 import model.filters.DarkenLuma;
 import model.filters.DarkenValue;
 import model.filters.GreenFilter;
+import model.filters.NormalFilter;
 import model.filters.RedFilter;
 //TODO: write javadocs
 public class Project implements ProjectModel {
@@ -22,6 +24,7 @@ public class Project implements ProjectModel {
   private int height;
   private int width;
   private final Map<String, LayerInterface> layerLinkedMap;
+  private final Map<String, FilterInterface> allFilters;
   private boolean inProgress;
 
 
@@ -33,6 +36,20 @@ public class Project implements ProjectModel {
     this.screenWidth = (int) size.getWidth();
     this.screenHeight = (int) size.getHeight();
     this.layerLinkedMap = new LinkedHashMap<>();
+    this.allFilters = new HashMap<>();
+  }
+
+  private void initFilters() {
+    this.allFilters.put("red-component", new RedFilter(this.height, this.width));
+    this.allFilters.put("green-component", new GreenFilter(this.height, this.width));
+    this.allFilters.put("blue-component", new BlueFilter(this.height, this.width));
+    this.allFilters.put("brighten-luma", new BrightenLuma(this.height, this.width));
+    this.allFilters.put("darken-luma", new DarkenLuma(this.height, this.width));
+    this.allFilters.put("brighten-intensity", new BrightenIntensity(this.height, this.width));
+    this.allFilters.put("darken-intensity", new DarkenIntensity(this.height, this.width));
+    this.allFilters.put("brighten-value", new BrightenIntensity(this.height, this.width));
+    this.allFilters.put("darken-value", new BrightenValue(this.height, this.width));
+    this.allFilters.put("normal", new NormalFilter(this.height, this.width));
   }
 
   // Options:
@@ -74,6 +91,7 @@ public class Project implements ProjectModel {
     this.height= height;
     this.width = width;
     this.inProgress = true;
+    this.initFilters();
     this.layerLinkedMap.put("bg", new Layer("bg", this.makeTransparentOrOpaqueWhiteLayer(0)));
   }
 
@@ -114,39 +132,7 @@ public class Project implements ProjectModel {
     } else if (!this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Layer name provided does not exist");
     }
-    switch (filterName) {
-      case "red-component":
-        this.layerLinkedMap.get(layerName).setFilter(new RedFilter(this.height, this.width));
-        break;
-      case "blue-component":
-        this.layerLinkedMap.get(layerName).setFilter(new BlueFilter(this.height, this.width));
-        break;
-      case "green-component":
-        this.layerLinkedMap.get(layerName).setFilter(new GreenFilter(this.height, this.width));
-        break;
-      case "brighten-luma":
-        this.layerLinkedMap.get(layerName).setFilter(new BrightenLuma(this.height, this.width));
-        break;
-      case "darken-luma":
-        this.layerLinkedMap.get(layerName).setFilter(new DarkenLuma(this.height, this.width));
-        break;
-      case "brighten-intensity":
-        this.layerLinkedMap.get(layerName)
-            .setFilter(new BrightenIntensity(this.height, this.width));
-        break;
-      case "darken-intensity":
-        this.layerLinkedMap.get(layerName).setFilter(new DarkenIntensity(this.height, this.width));
-        break;
-      case "brighten-value":
-        this.layerLinkedMap.get(layerName).setFilter(new BrightenValue(this.height, this.width));
-        break;
-      case "darken-value":
-        this.layerLinkedMap.get(layerName).setFilter(new DarkenValue(this.height, this.width));
-        break;
-      default:
-        throw new IllegalArgumentException("Invalid filter name provided");
-
-    }
+    this.layerLinkedMap.get(layerName).setFilter(filterName);
   }
 
   /**
@@ -236,8 +222,23 @@ public class Project implements ProjectModel {
   @Override
   public Map<String, LayerInterface> getLayers() throws IllegalStateException {
     if (!this.inProgress) {
-      throw new IllegalStateException("Cannot get layer list until new project has been created");
+      throw new IllegalStateException("Cannot get all layers until new project has been created");
     }
     return new LinkedHashMap<>(this.layerLinkedMap);
+  }
+
+  /**
+   * Returns a copy of all filters available in the project
+   *
+   * @return all the filters in the canvas
+   * @throws IllegalStateException if this method is called before a new project has been created or
+   *                               loaded in
+   */
+  @Override
+  public Map<String, FilterInterface> getAllFilters() throws IllegalStateException {
+    if (!this.inProgress) {
+      throw new IllegalStateException("Cannot get all filters until new project has been created");
+    }
+    return new HashMap<>(this.allFilters);
   }
 }

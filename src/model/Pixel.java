@@ -9,15 +9,15 @@ import static model.Project.MAX_VALUE;
  * the alpha value represents the {@code Pixel}'s transparency, where 0 being fully transparent, and
  * 255 being opaque.
  */
-public class Pixel implements PixelInterface {//TODO: make version to convert max value into 0-255
+public class Pixel implements PixelInterface {
 
   private final int redVal;
   private final int greenVal;
   private final int blueVal;
   private final int alphaVal;
-  private int value; //should this be final?
-  private int intensity; //should this be final?
-  private int luma; //should this be final?
+  private int value;
+  private int intensity;
+  private int luma;
 
   /**
    * Constructs an RGBA pixel.
@@ -49,12 +49,7 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
    * @throws IllegalArgumentException if any of the arguments are less than 0 or greater than 255
    */
   public Pixel(int red, int green, int blue) throws IllegalArgumentException {
-    this.checkRGB(red, green, blue);
-    this.redVal = red;
-    this.greenVal = green;
-    this.blueVal = blue;
-    this.alphaVal = MAX_VALUE;
-    this.initValueIntensityLuma(this.redVal, this.greenVal, this.blueVal);
+    this(red, green, blue, MAX_VALUE);
   }
 
   private void checkRGB(int red, int green, int blue) throws IllegalArgumentException {
@@ -73,8 +68,8 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
 
   private void initValueIntensityLuma(int red, int green, int blue) {
     int val = max(max(red, blue), green);
-    int intensity = (red + green + blue) / 3;
-    int luma = (int) (0.2126 * red + 0.7152 * green + 0.0722 * blue);
+    int intensity = (int) Math.round((red + green + blue) / 3.0);
+    int luma = (int) Math.round(0.2126 * red + 0.7152 * green + 0.0722 * blue);
     this.value = val;
     this.intensity = intensity;
     this.luma = luma;
@@ -152,6 +147,25 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
   }
 
   /**
+   * //TODO: write this
+   *
+   * @param red
+   * @param green
+   * @param blue
+   * @param alpha
+   */
+  @Override
+  public PixelInterface bgPixelConverter(int red, int green, int blue, int alpha) {
+    int aPrev = alpha;
+    int a0 = (this.alphaVal / MAX_VALUE + alpha / MAX_VALUE * (1 - this.alphaVal / MAX_VALUE));
+    alpha = a0 * MAX_VALUE;  //calculated a
+    red = (this.alphaVal / MAX_VALUE * this.redVal + red * (aPrev / MAX_VALUE) * (1 - this.alphaVal / MAX_VALUE)) * (1 / a0);
+    green = (this.alphaVal / MAX_VALUE * this.greenVal + green * (aPrev / MAX_VALUE) * (1 - this.alphaVal / MAX_VALUE)) * (1 / a0);
+    blue = (this.alphaVal / MAX_VALUE * this.blueVal + blue * (aPrev / MAX_VALUE) * (1 - this.alphaVal / MAX_VALUE)) * (1 / a0);
+    return new Pixel(red, green, blue, alpha);
+  }
+
+  /**
    * Converts this {@code Pixel} with the alpha channel and returns a new {@code Pixel} that
    * compresses the alpha value into each RGB value.
    *
@@ -159,10 +173,10 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
    */
   @Override
   public PixelInterface convertToRGB() {
-    int alphaFactor = this.alphaVal / MAX_VALUE;
-    int redNew = this.redVal * alphaFactor;
-    int greenNew = this.greenVal * alphaFactor;
-    int blueNew = this.blueVal * alphaFactor;
+    double alphaFactor = this.alphaVal / (double) MAX_VALUE;
+    int redNew = (int) Math.round(this.redVal * alphaFactor);
+    int greenNew = (int) Math.round(this.greenVal * alphaFactor);
+    int blueNew = (int) Math.round(this.blueVal * alphaFactor);
     return new Pixel(redNew, greenNew, blueNew);
   }
 

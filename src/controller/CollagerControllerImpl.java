@@ -20,7 +20,7 @@ public class CollagerControllerImpl implements CollagerController {
   private final ProjectModel model;
   private final ProjectView view;
   private final Readable in;
-  private boolean programStarted;
+  private boolean programStarted; //TODO: need to implement this so new project
 
   Map<String, Function<Scanner, CollagerCommand>> knownCommands;
 

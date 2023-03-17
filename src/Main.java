@@ -1,6 +1,5 @@
 import controller.CollagerControllerImpl;
 import java.io.InputStreamReader;
-import model.ImageUtil;
 import model.Project;
 import model.ProjectModel;
 import view.CommandLineTextView;

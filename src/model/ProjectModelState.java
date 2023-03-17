@@ -30,12 +30,21 @@ public interface ProjectModelState {
   int getHeight() throws IllegalStateException;
 
   /**
-   * Returns a copy of the list of all the layers currently in the canvas
+   * Returns a copy of all the layers currently in the canvas
    *
-   * @return the list of all layers in the canvas
+   * @return all the layers in the canvas
    * @throws IllegalStateException if this method is called before a new project has been created or
    *                               loaded in
    */
   Map<String, LayerInterface> getLayers() throws IllegalStateException;
+
+  /**
+   * Returns a copy of all filters available in the project
+   *
+   * @return all the filters in the canvas
+   * @throws IllegalStateException if this method is called before a new project has been created or
+   *                               loaded in
+   */
+  Map<String, FilterInterface> getAllFilters() throws IllegalStateException;
 
 }

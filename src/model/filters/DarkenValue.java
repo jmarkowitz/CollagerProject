@@ -5,38 +5,16 @@ import model.PixelInterface;
 
 public class DarkenValue extends AbstractFilter {
   public DarkenValue(int height, int width) {
-    super(height, width);}
+    super(height, width);
+    this.filterName = "darken-value";
+  }
 
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
     int Value = p.getValue();
     return new Pixel(p.getRed() - Value,
             p.getGreen() - Value,
-            p.getBlue() - Value);
+            p.getBlue() - Value,
+        p.getAlpha());
   }
-
-  @Override
-  public String getFilterName() {
-    return "darken-value";
-  }
-
-
-  /*
-  @Override
-  public LayerInterface apply(LayerInterface layer) {
-    PixelInterface[][] grid = layer.getPixelGrid();
-    PixelInterface[][] newGrid = new PixelInterface[height][width];
-    for (int row = 0; row < this.width; row++) {
-      for (int col = 0; col < this.height; col++) {
-        int Value = newGrid[row][col].getValue();
-        newGrid[row][col] = new Pixel(grid[row][col].getRed() - Value,
-                grid[row][col].getGreen() - Value,
-                grid[row][col].getBlue() - Value);
-      }
-    }
-    LayerInterface newLayer = new Layer(layer.getName(), newGrid);
-    return newLayer;
-  }
-
-   */
 }

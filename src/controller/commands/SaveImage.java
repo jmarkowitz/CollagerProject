@@ -7,10 +7,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
+import model.FilterInterface;
 import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
+import model.Project;
 import model.ProjectModel;
+import model.ProjectModelState;
 
 public class SaveImage implements CollagerCommand {
 
@@ -29,26 +32,51 @@ public class SaveImage implements CollagerCommand {
       // initial ppm file setup
       String imagePath = this.scanner.next();
       StringBuilder finalImage = new StringBuilder();
+      int height = model.getHeight();
+      int width = model.getWidth();
       finalImage.append("P3").append(System.lineSeparator());
-      finalImage.append(model.getWidth()).append(" ").append(model.getHeight())
+      finalImage.append(width).append(" ").append(height)
           .append(System.lineSeparator());
       finalImage.append(MAX_VALUE).append(System.lineSeparator());
 
-      int index = 0;
       // main loop for looping through all layers
+      int index = 0;
       Map<String, LayerInterface> allLayers = model.getLayers();
+      Map<String, FilterInterface> allFilters = model.getAllFilters();
+      PixelInterface[][] finalPixelGrid = null;
       for (Map.Entry<String, LayerInterface> layer : allLayers.entrySet()) {
         LayerInterface currentLayer = layer.getValue();
-        if (!currentLayer.getFilter().getFilterName().equals("Normal")) { // do not apply filter for "Normal" layers
-          LayerInterface filteredLayer = currentLayer.getFilter().apply(currentLayer);
-          currentLayer = filteredLayer;
+        FilterInterface currentFilter = allFilters.get(currentLayer.getFilter());
+        LayerInterface filteredLayer = currentFilter.apply(currentLayer);
+        if (index == 0) {
+          finalPixelGrid = filteredLayer.getPixelGrid();
         }
-        PixelInterface[][] currentPixelGrid = currentLayer.getPixelGrid();
-        this.pixelMath(model, finalImage, index, currentPixelGrid);
+        PixelInterface[][] curGrid = filteredLayer.getPixelGrid();
+        this.compressLayer(height, width, curGrid, finalPixelGrid);
         index++;
+      }
+      for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+          finalImage.append(finalPixelGrid[row][col].toString(1));
+        }
       }
       this.imageWrite(imagePath, finalImage);
     }
+  }
+
+  private PixelInterface[][] compressLayer(int height, int width, PixelInterface[][] currentGrid,
+      PixelInterface[][] prevGrid) {
+    PixelInterface[][] updatedGrid = new PixelInterface[height][width];
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        PixelInterface prevPixel = prevGrid[row][col];
+        PixelInterface currentPixel = currentGrid[row][col];
+        PixelInterface newPixel = currentPixel.bgPixelConverter(prevPixel.getRed(),
+            prevPixel.getGreen(), prevPixel.getBlue(), prevPixel.getAlpha());
+        updatedGrid[row][col] = newPixel;
+      }
+    }
+    return updatedGrid;
   }
 
   private void imageWrite(String imagePath, StringBuilder finalImage) {
@@ -61,38 +89,5 @@ public class SaveImage implements CollagerCommand {
       System.err.println(ex.getMessage());
       //do something with the exception
     }//TODO: make filewriter class
-  }
-
-  private void pixelMath(ProjectModel model, StringBuilder finalImage, int index,
-      PixelInterface[][] currentPixelGrid) {
-    int a0;
-    int a1 = 0;
-    int r1 = 0;
-    int g1 = 0;
-    int b1 = 0;
-    for (int row = 0; row < model.getHeight(); row++) {
-      for (int col = 0; col < model.getHeight(); col++) {
-        int r = currentPixelGrid[row][col].getRed();
-        int g = currentPixelGrid[row][col].getGreen();
-        int b = currentPixelGrid[row][col].getBlue();
-        int a = currentPixelGrid[row][col].getAlpha();
-        if (index == 0) {
-          a1 = a;
-          r1 = r;
-          g1 = g;
-          b1 = b;
-        }
-        if (index != 0) {
-          int aPrev = a1; //previous a
-          a0 = (a / MAX_VALUE + a1 / MAX_VALUE * (1 - a / MAX_VALUE));
-          a1 = a0 * MAX_VALUE;  //calculated a
-          r1 = (a / MAX_VALUE * r + r1 * (aPrev / MAX_VALUE) * (1 - a / MAX_VALUE)) * (1 / a0);
-          g1 = (a / MAX_VALUE * g + g1 * (aPrev / MAX_VALUE) * (1 - a / MAX_VALUE)) * (1 / a0);
-          b1 = (a / MAX_VALUE * b + b1 * (aPrev / MAX_VALUE) * (1 - a / MAX_VALUE)) * (1 / a0);
-        }
-        PixelInterface finalPixel = new Pixel(r1, g1, b1, a1).convertToRGB();
-        finalImage.append(finalPixel.toString(1));
-      }
-    }
   }
 }

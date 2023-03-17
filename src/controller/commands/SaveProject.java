@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
+import model.FilterInterface;
 import model.LayerInterface;
 import model.PixelInterface;
 import model.ProjectModel;
@@ -46,7 +47,6 @@ public class SaveProject implements CollagerCommand {
         fileWriter.close();
       } catch (IOException ex) {
         System.err.println(ex.getMessage());
-        //do something with the exception
       }//TODO: make filewriter class
     }
   }
@@ -57,7 +57,7 @@ public class SaveProject implements CollagerCommand {
     finalString.append(width).append(" ").append(height).append(System.lineSeparator());
     for (Map.Entry<String, LayerInterface> mapLayer : projectLayers.entrySet()) {
       LayerInterface currentLayer = mapLayer.getValue();
-      finalString.append(currentLayer.getName()).append(" ").append(currentLayer.getFilter().getFilterName());
+      finalString.append(currentLayer.getName()).append(" ").append(currentLayer.getFilter());
       PixelInterface[][] curLayerPixels = currentLayer.getPixelGrid();
       for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
@@ -65,6 +65,6 @@ public class SaveProject implements CollagerCommand {
         }
       }
     }
-    return finalString.toString(); //TODO: is it fine if there is a new line after the last pixel of last layer
+    return finalString.toString();
   }
 }
