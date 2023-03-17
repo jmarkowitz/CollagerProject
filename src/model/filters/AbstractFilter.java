@@ -2,10 +2,9 @@ package model.filters;
 import model.FilterInterface;
 import model.Layer;
 import model.LayerInterface;
-import model.Pixel;
 import model.PixelInterface;
 
-public abstract class AbstractFilter implements FilterInterface{
+public abstract class AbstractFilter implements FilterInterface {
   private final int height;
   private final int width;
 
@@ -15,7 +14,6 @@ public abstract class AbstractFilter implements FilterInterface{
   }
 
   protected abstract PixelInterface getPixelByType(PixelInterface p);
-
 
   @Override
   public LayerInterface apply(LayerInterface layer) {
@@ -27,7 +25,6 @@ public abstract class AbstractFilter implements FilterInterface{
         newGrid[row][col] = getPixelByType(grid[row][col]);
       }
     }
-    LayerInterface newLayer = new Layer(layer.getName(), newGrid);
-    return newLayer;
+    return new Layer(layer.getName(), newGrid);
   }
 }

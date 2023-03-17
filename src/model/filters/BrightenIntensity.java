@@ -1,8 +1,5 @@
 package model.filters;
 
-import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 
@@ -18,6 +15,11 @@ public class BrightenIntensity extends AbstractFilter {
     return new Pixel(p.getRed() + Intensity,
             p.getGreen() + Intensity,
             p.getBlue() + Intensity);
+  }
+
+  @Override
+  public String getFilterName() {
+    return "brighten-intensity";
   }
 
   /*

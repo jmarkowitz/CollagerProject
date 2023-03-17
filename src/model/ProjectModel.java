@@ -20,12 +20,12 @@ public interface ProjectModel extends ProjectModelState {
   /**
    * Creates a new project of the size based on the given height and width.
    *
-   * @param width  the width of the canvas
    * @param height the height of the canvas
+   * @param width  the width of the canvas
    * @throws IllegalArgumentException if the provided height and width are negative, or too large
    *                                  for the computer screen
    */
-  void newProject(int width, int height) throws IllegalArgumentException;
+  void newProject(int height, int width) throws IllegalArgumentException;
 
   /**
    * Allows a layer to be added to the list of layers contained in the project if it does not exist
@@ -43,7 +43,7 @@ public interface ProjectModel extends ProjectModelState {
    *
    * @param layerName  the layer name the filter will be added to
    * @param filterName the name of the filter
-   * @throws IllegalArgumentException if the layer or filter name provided is invalid
+   * @throws IllegalArgumentException if the layer name or filter name provided is invalid
    * @throws IllegalStateException    if this method is called before a project has been created or
    *                                  loaded
    */
@@ -56,56 +56,16 @@ public interface ProjectModel extends ProjectModelState {
    * the height and width of the project, it will import only the part that can fit and the rest
    * will be cut off.
    *
-   * @param layerName the name of the layer to add the image to
-   * @param imagePath the filepath of the image
-   * @param x         the x position offset
-   * @param y         the y position offset
-   * @throws FileNotFoundException    if the filepath of the image provided does not exist
+   * @param layerName      the name of the layer to add the image to
+   * @param imagePixelGrid the image file represented as a 2D array of {@code Pixel}s
+   * @param x              the x position offset
+   * @param y              the y position offset
    * @throws IllegalArgumentException if layer name provided does not exist, the x position is
    *                                  negative or off the grid, and if the y position is negative or
    *                                  off the grid
    * @throws IllegalStateException    if this method is called before a project is created or loaded
    *                                  in
    */
-  void addImageToLayer(String layerName, String imagePath, int x, int y)
-      throws FileNotFoundException, IllegalArgumentException, IllegalStateException;
-
-  /**
-   * Applies each layer's respective filter and combines all layers into one image.
-   *
-   * @param filepath the filepath and name to save the image to
-   * @throws IllegalStateException    if this method is called before a new project is created or
-   *                                  loaded in
-   * @throws IllegalArgumentException if the filepath provided is invalid
-   */
-  String saveImage() throws IllegalStateException, IllegalArgumentException, IOException;
-
-  /**
-   * Loads a collage project from the provided filepath and returns a {@code ProjectModel}.
-   *
-   * @param filepath the filepath of the project to be loaded in
-   * @throws FileNotFoundException if the filepath provided does not exist
-   * @throws IllegalStateException if this method is called while a project is currently being
-   *                               worked on
-   */
-  String loadProject()
-      throws FileNotFoundException, IllegalStateException; //TODO: should this be here?
-
-  /**
-   * Saves and exports all the data in the model to a file location that includes the following
-   * below.
-   * <ul>
-   * <li> the project name</li>
-   * <li> the width and height</li>
-   * <li> the maximum value for one pixel</li>
-   * <li> all layers' name, their respective filter and the UNMODIFIED RGBA pixels in each layer
-   * separated by a new line </li>
-   * </ul>
-   *
-   * @param filepath the filepath to save the project to
-   * @throws IllegalStateException if this method is called before a project has been created or
-   *                               loaded
-   */
-  String saveProject() throws IllegalStateException;
-
+  void addImageToLayer(String layerName, PixelInterface[][] imagePixelGrid, int x, int y)
+      throws IllegalArgumentException, IllegalStateException;//TODO: is it fine to pass in 2D array of pixels that is created in controller?
 }

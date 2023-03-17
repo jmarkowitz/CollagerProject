@@ -64,4 +64,13 @@ public interface PixelInterface {
    * @return a new {@code Pixel}
    */
   PixelInterface convertToRGB();
+
+  /**
+   * Returns the representation of the pixel as a string. If the argument passed in is 0 it will be
+   * in the form of "r g b a" otherwise it will be in the form of "r g b".
+   *
+   * @param isRGBA boolean flag to determine whether the pixel is an RGBA or not
+   * @return the string representing the pixel
+   */
+  String toString(int isRGBA);
 }

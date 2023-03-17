@@ -3,17 +3,16 @@ package model;
 public class Layer implements LayerInterface {
 
   private final String layerName;
-  private String filterName;
+  private FilterInterface filterName;
   private PixelInterface[][] grid;
 
   public Layer(String layerName) {
     this.layerName = layerName;
-    this.filterName = "Normal";
+    this.filterName = null;
   }
 
   public Layer(String layerName, PixelInterface[][] grid) {
     this.layerName = layerName;
-    this.filterName = "Normal";
     this.grid = grid;
   }
 
@@ -23,12 +22,12 @@ public class Layer implements LayerInterface {
   }
 
   @Override
-  public String getFilterName() {
+  public FilterInterface getFilter() {
     return this.filterName;
   }
 
   @Override
-  public void setFilter(String filterOption) {
+  public void setFilter(FilterInterface filterOption) {
     this.filterName = filterOption;
   }
 

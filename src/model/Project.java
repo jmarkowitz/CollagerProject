@@ -2,24 +2,27 @@ package model;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
-
+import model.filters.BlueFilter;
+import model.filters.BrightenIntensity;
+import model.filters.BrightenLuma;
+import model.filters.BrightenValue;
+import model.filters.DarkenIntensity;
+import model.filters.DarkenLuma;
+import model.filters.DarkenValue;
+import model.filters.GreenFilter;
+import model.filters.RedFilter;
+//TODO: write javadocs
 public class Project implements ProjectModel {
 
   public static final int MAX_VALUE = 255;
-  private PixelInterface[][] transparentWhiteGrid;
-  private PixelInterface[][] opaqueWhiteGrid;
   private final int screenWidth;
   private final int screenHeight;
   private int height;
   private int width;
   private final Map<String, LayerInterface> layerLinkedMap;
   private boolean inProgress;
-  //TODO: might need more flags
 
 
   /**
@@ -52,28 +55,26 @@ public class Project implements ProjectModel {
   /**
    * Creates a new project of the size based on the given height and width.
    *
-   * @param width  the width of the canvas
    * @param height the height of the canvas
+   * @param width  the width of the canvas
    * @throws IllegalArgumentException if the provided height and width are negative, or too large
    *                                  for the computer screen
    */
   @Override
-  public void newProject(int width, int height) throws IllegalArgumentException {
-    if (width < 0) {
+  public void newProject(int height, int width) throws IllegalArgumentException {
+    if (height < 0) {
       throw new IllegalArgumentException("Invalid width provided");
-    } else if (height < 0) {
+    } else if (width < 0) {
       throw new IllegalArgumentException("Invalid height provided");
-    } else if (width > this.screenWidth) {
+    } else if (height > this.screenWidth) {
       throw new IllegalArgumentException("Invalid width provided for screen size");
-    } else if (height > this.screenHeight) {
+    } else if (width > this.screenHeight) {
       throw new IllegalArgumentException("Invalid height provided for screen size");
     }
+    this.height= height;
     this.width = width;
-    this.height = height;
     this.inProgress = true;
-    this.transparentWhiteGrid = this.makeTransparentOrOpaqueWhiteLayer(0);
-    this.opaqueWhiteGrid = this.makeTransparentOrOpaqueWhiteLayer(1);
-    this.layerLinkedMap.put("bg", new Layer("bg", this.opaqueWhiteGrid));
+    this.layerLinkedMap.put("bg", new Layer("bg", this.makeTransparentOrOpaqueWhiteLayer(0)));
   }
 
   /**
@@ -93,8 +94,7 @@ public class Project implements ProjectModel {
     } else if (this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Layer name provided already exists");
     }
-    this.layerLinkedMap.put(layerName, new Layer(layerName, this.transparentWhiteGrid));
-
+    this.layerLinkedMap.put(layerName, new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(1)));
   }
 
   /**
@@ -102,7 +102,7 @@ public class Project implements ProjectModel {
    *
    * @param layerName  the layer name the filter will be added to
    * @param filterName the name of the filter
-   * @throws IllegalArgumentException if the layer name provided is invalid
+   * @throws IllegalArgumentException if the layer name or filter name provided is invalid
    * @throws IllegalStateException    if this method is called before a project has been created or
    *                                  loaded
    */
@@ -114,15 +114,40 @@ public class Project implements ProjectModel {
     } else if (!this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Layer name provided does not exist");
     }
-    this.layerLinkedMap.get(layerName).setFilter(filterName);
-  }//TODO: I don't like this but we need a way to add filters to layers but what if filter provided doesn't exist? Handled in the controller?
+    switch (filterName) {
+      case "red-component":
+        this.layerLinkedMap.get(layerName).setFilter(new RedFilter(this.height, this.width));
+        break;
+      case "blue-component":
+        this.layerLinkedMap.get(layerName).setFilter(new BlueFilter(this.height, this.width));
+        break;
+      case "green-component":
+        this.layerLinkedMap.get(layerName).setFilter(new GreenFilter(this.height, this.width));
+        break;
+      case "brighten-luma":
+        this.layerLinkedMap.get(layerName).setFilter(new BrightenLuma(this.height, this.width));
+        break;
+      case "darken-luma":
+        this.layerLinkedMap.get(layerName).setFilter(new DarkenLuma(this.height, this.width));
+        break;
+      case "brighten-intensity":
+        this.layerLinkedMap.get(layerName)
+            .setFilter(new BrightenIntensity(this.height, this.width));
+        break;
+      case "darken-intensity":
+        this.layerLinkedMap.get(layerName).setFilter(new DarkenIntensity(this.height, this.width));
+        break;
+      case "brighten-value":
+        this.layerLinkedMap.get(layerName).setFilter(new BrightenValue(this.height, this.width));
+        break;
+      case "darken-value":
+        this.layerLinkedMap.get(layerName).setFilter(new DarkenValue(this.height, this.width));
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid filter name provided");
 
-//  private boolean layerNameExists(String layerName) {
-//    for (LayerInterface layer : this.layerLinkedMap) {
-//      return (layer.getName().equals(layerName));
-//    }
-//    return false;
-//  } //TODO: delete or reuse this
+    }
+  }
 
   /**
    * Adds an image to the specific layer provided based on the image path and will place the top
@@ -130,10 +155,10 @@ public class Project implements ProjectModel {
    * the height and width of the project, it will import only the part that can fit and the rest
    * will be cut off.
    *
-   * @param layerName the name of the layer to add the image to
-   * @param imagePath the filepath of the image
-   * @param x         the x position offset
-   * @param y         the y position offset
+   * @param layerName      the name of the layer to add the image to
+   * @param imagePixelGrid the filepath of the image
+   * @param x              the x position offset
+   * @param y              the y position offset
    * @throws IllegalArgumentException if layer name provided does not exist, the x position is
    *                                  negative or off the grid, and if the y position is negative or
    *                                  off the grid
@@ -141,7 +166,7 @@ public class Project implements ProjectModel {
    *                                  in
    */
   @Override
-  public void addImageToLayer(String layerName, String imagePath, int x, int y)
+  public void addImageToLayer(String layerName, PixelInterface[][] imagePixelGrid, int x, int y)
       throws IllegalArgumentException, IllegalStateException {
     if (!this.inProgress) {
       throw new IllegalStateException(
@@ -156,82 +181,19 @@ public class Project implements ProjectModel {
 
     LayerInterface layerCurrent = this.layerLinkedMap.get(layerName);
     PixelInterface[][] layerPixelGrid = layerCurrent.getPixelGrid();
-    PixelInterface[][] imagePixelGrid = fileReader.readImage(imagePath); //TODO: finish file reader
-    PixelInterface[][] updatedLayerGrid = this.changePixels(layerPixelGrid, imagePixelGrid);
+    PixelInterface[][] updatedLayerGrid = this.changePixels(layerPixelGrid, imagePixelGrid, x, y);
     LayerInterface updatedLayer = new Layer(layerName, updatedLayerGrid);
     this.layerLinkedMap.replace(layerName, updatedLayer);
   }
 
   private PixelInterface[][] changePixels(PixelInterface[][] layerGrid,
-      PixelInterface[][] imageGrid) {
-    for (int row = 0; row < this.width; row++) {
-      for (int col = 0; col < this.height; col++) {
+      PixelInterface[][] imageGrid, int x, int y) {
+    for (int row = y; row < this.width; row++) {
+      for (int col = x; col < this.height; col++) {
         layerGrid[row][col] = imageGrid[row][col];
       }
     }
     return layerGrid;
-  }
-
-  /**
-   * Applies each layer's respective filter and combines all layers into one image.
-   *
-   * @throws IllegalStateException    if this method is called before a new project is created or
-   *                                  loaded in
-   * @throws IllegalArgumentException if the filepath provided is invalid
-   */
-  @Override
-  public String saveImage() throws IllegalStateException, IllegalArgumentException, IOException {
-    if (!this.inProgress) {
-      throw new IllegalStateException(
-          "Cannot add image to layer until new project has been created");
-      //TODO: finish implementing method
-    }
-
-      Appendable outString = new StringBuilder();
-      //Do we need to check if the filepath provided is invalid?
-      //The parameter is the name of the file of the file path?
-      String output = "P3\n" + this.width + " " + this.height + "\n"
-                + this.MAX_VALUE + "\n";
-      int finalR;
-      int fianlG;
-      int finalB;
-      for (Map.Entry<String, LayerInterface> mapLayer: layerLinkedMap)
-      outString.append(output);
-      return outString.toString();
-  }
-
-  /**
-   * Loads a collage project from the provided filepath and returns a {@code ProjectModel}.
-   *
-   * @throws IllegalStateException if this method is called while a project is currently being
-   *                               worked on
-   */
-  @Override
-  public String loadProject() throws IllegalStateException {
-    //TODO: finish implementing method
-    //Scanner should be in controller or Model
-  }
-
-  /**
-   * Saves and exports all the data in the model to a file location that includes the following
-   * below.
-   * <ul>
-   * <li> the project name</li>
-   * <li> the width and height</li>
-   * <li> the maximum value for one pixel</li>
-   * <li> all layers' name, their respective filter and the UNMODIFIED RGBA pixels in each layer
-   * separated by a new line </li>
-   * </ul>
-   *
-   * @param filepath the filepath to save the project to
-   * @throws IllegalArgumentException if the filepath provided cannot be written to or is invalid
-   * @throws IllegalStateException if this method is called before a project has been created or
-   *                               loaded
-   */
-  @Override
-  public String saveProject() throws IllegalStateException {
-    //TODO: finish implementing method
-
   }
 
   /**

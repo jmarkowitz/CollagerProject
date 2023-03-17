@@ -1,18 +1,27 @@
 package controller.commands;
 
 import controller.CollagerCommand;
+import java.util.Scanner;
 import model.ProjectModel;
 
 public class LoadProject implements CollagerCommand {
 
-  public LoadProject(String filepath) {
+  private final Scanner scanner;
+
+  public LoadProject(Scanner scanner) {
+    this.scanner = scanner;
   }
 
-  /**
-   * Method that will execute the command
-   */
+
   @Override
-  public void execute() {
+  public void execute(ProjectModel model) {
+    while (this.scanner.hasNext()) {
+      String projectFilepath = this.scanner.next();
+      //TODO: some file reading stuff happens...
+      model.newProject(height, width);
+      model.addLayer();
+
+    }
 
   }
 }
