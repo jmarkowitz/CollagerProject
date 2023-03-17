@@ -1,17 +1,16 @@
 package controller.commands;
 
 import controller.CollagerCommand;
-import java.io.IOException;
+import controller.FileUtil;
 import java.util.Scanner;
-import model.ImageUtil;
-import model.PixelInterface;
+import model.Image;
 import model.ProjectModel;
 
 public class AddImage implements CollagerCommand {
 
-  private final Scanner scanner;
+  private final Scanner scanner;//TODO: should we be handling exceptions in each command? Or in controller
 
-  public AddImage(Scanner scanner) {
+  public AddImage(Scanner scanner) { //TODO: could pass in the view so we can render the message
     this.scanner = scanner;
   }
 
@@ -25,8 +24,9 @@ public class AddImage implements CollagerCommand {
       String imagePath = this.scanner.next();
       int x = this.scanner.nextInt();
       int y = this.scanner.nextInt();
-      PixelInterface[][] imageGrid = ImageUtil.readPPM(imagePath);
-      model.addImageToLayer(layerName, imageGrid, x, y);
+      String imageString = FileUtil.readFileAsString(imagePath);
+
+      model.addImageToLayer(layerName, Image.readPPM(imageString), x, y);
     }
 
   }

@@ -5,8 +5,9 @@ import model.LayerInterface;
 import model.PixelInterface;
 
 public abstract class AbstractFilter implements FilterInterface {
-  private final int height;
-  private final int width;
+  protected final int height;
+  protected final int width;
+  protected String filterName;
 
   public AbstractFilter(int height, int width) {
     this.height = height;
@@ -27,4 +28,10 @@ public abstract class AbstractFilter implements FilterInterface {
     }
     return new Layer(layer.getName(), newGrid);
   }
+
+  @Override
+  public String getFilterName() {
+    return this.filterName;
+  }
+
 }

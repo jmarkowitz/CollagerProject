@@ -78,12 +78,6 @@ public class ProjectTest {
     //TODO: add test for ensuring exception is thrown for trying to add a layer that already exists
     //TODO: add test for valid layer adding
 
-    ProjectModel pLoad1 = new Project();
-    try { // load in project and have to handle IOException (FileNotFoundException)
-      pLoad1.loadProject("/projects/C1");
-    } catch (FileNotFoundException e) {
-      // do nothing
-    }
     //TODO: add test for valid layer adding after loading in project
     //TODO: add test for ensuring layer cannot be added if it already exists
 

@@ -56,6 +56,11 @@ public interface PixelInterface {
    */
   int getLuma();
 
+  /**
+   * //TODO: write this
+   */
+  PixelInterface bgPixelConverter(int red, int green, int blue, int alpha);
+
 
   /**
    * Converts this {@code Pixel} with the alpha channel and returns a new {@code Pixel} that

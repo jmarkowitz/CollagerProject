@@ -13,23 +13,28 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
 import model.ProjectModel;
+import view.ProjectView;
 
 public class CollagerControllerImpl implements CollagerController {
 
   private final ProjectModel model;
+  private final ProjectView view;
   private final Readable in;
-  private boolean programStarted;
+  private boolean programStarted; //TODO: need to implement this so new project
 
   Map<String, Function<Scanner, CollagerCommand>> knownCommands;
 
-  public CollagerControllerImpl(ProjectModel model, Readable in) {
+  public CollagerControllerImpl(ProjectModel model, ProjectView view, Readable in) {
     if (model == null) {
       throw new IllegalArgumentException("Cannot give null model. Must be initialized.");
     } else if (in == null) {
       throw new IllegalArgumentException(
           "Cannot give null Readable input. Must be initialized first.");
+    } else if (view == null) {
+      throw new IllegalArgumentException("Cannot give null view. Must be initialized");
     }
     this.model = model;
+    this.view = view;
     this.in = in;
     this.knownCommands = new HashMap<>();
   }
@@ -50,12 +55,29 @@ public class CollagerControllerImpl implements CollagerController {
    */
   @Override
   public void startProgram() throws IllegalStateException {
-    Scanner programScanner = new Scanner(this.in);
-    this.initCommands();
     try {
-      // something
+      Scanner programScanner = new Scanner(this.in);
+      this.initCommands();
+      while(programScanner.hasNext()) {
+        CollagerCommand c;
+        String in = programScanner.next();
+        if (in.equalsIgnoreCase("q") || in.equalsIgnoreCase("quit"))
+          return;
+        Function<Scanner, CollagerCommand> cmd = knownCommands.getOrDefault(in, null);
+        if (cmd == null) {
+          view.renderMessage("Invalid command" + System.lineSeparator());
+        } else {
+          c = cmd.apply(programScanner);
+          //commands.add(c);
+          try {
+            c.execute(model);
+          } catch (Exception e) {
+            view.renderMessage(e.getMessage() + System.lineSeparator());
+          }
+        }
+      }
     } catch (IOException e) {
-      throw new IllegalStateException("Error transmitting output");
+      throw new RuntimeException(e);
     }
 
   }
