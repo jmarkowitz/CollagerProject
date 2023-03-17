@@ -30,7 +30,7 @@ public class Pixel implements PixelInterface {//TODO: make version to convert ma
    */
   public Pixel(int red, int green, int blue, int alpha) throws IllegalArgumentException {
     this.checkRGB(red, green, blue);
-    if (isValid(alpha)) {
+    if (!isValid(alpha)) {
       throw new IllegalArgumentException("Invalid alpha value");
     }
     this.redVal = red;

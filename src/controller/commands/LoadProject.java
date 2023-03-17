@@ -18,8 +18,8 @@ public class LoadProject implements CollagerCommand {
     while (this.scanner.hasNext()) {
       String projectFilepath = this.scanner.next();
       //TODO: some file reading stuff happens...
-      model.newProject(height, width);
-      model.addLayer();
+      //model.newProject(height, width);
+      //model.addLayer();
 
     }
 

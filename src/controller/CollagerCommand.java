@@ -11,6 +11,6 @@ public interface CollagerCommand {
   /**
    * Method that will execute the command
    */
-  void execute(ProjectModel model); //TODO: need to add parameter for model here
+  void execute(ProjectModel model);
 
 }
