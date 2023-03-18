@@ -28,11 +28,17 @@ public class AddImage implements CollagerCommand {
       String imagePath = this.scanner.next();
       int x = this.scanner.nextInt();
       int y = this.scanner.nextInt();
-      String imageString = FileUtil.readFileAsString(imagePath);
+      String imageString = null;
+      try {
+        imageString = FileUtil.readFileAsString(imagePath);
+      } catch (Exception e) {
+        this.view.renderMessage(e.getMessage() + System.lineSeparator());
+        throw new IOException();
+      }
 
       try {
         model.addImageToLayer(layerName, Image.readPPM(imageString), x, y);
-        view.renderMessage("added successfully" + System.lineSeparator());
+        view.renderMessage(imagePath + " added successfully" + System.lineSeparator());
         break;
       } catch (IllegalArgumentException | IllegalStateException e) {
         this.view.renderMessage(e.getMessage() + System.lineSeparator());

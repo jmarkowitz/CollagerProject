@@ -9,6 +9,7 @@ import controller.commands.SaveProject;
 import controller.commands.SetFilter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.InputMismatchException;
 import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Function;
@@ -70,7 +71,7 @@ public class CollagerControllerImpl implements CollagerController {
           c = cmd.apply(programScanner);
           try {
             c.execute(model);
-          } catch (IOException e) {
+          } catch (InputMismatchException e) {
             view.renderMessage("Try again" + System.lineSeparator());
           }
         }

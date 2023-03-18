@@ -21,8 +21,8 @@ public abstract class AbstractFilter implements FilterInterface {
     PixelInterface[][] grid = layer.getPixelGrid();
     PixelInterface[][] newGrid = new PixelInterface[height][width];
 
-    for (int row = 0; row < this.width; row++) {
-      for (int col = 0; col < this.height; col++) {
+    for (int row = 0; row < this.height; row++) {
+      for (int col = 0; col < this.width; col++) {
         newGrid[row][col] = getPixelByType(grid[row][col]);
       }
     }
