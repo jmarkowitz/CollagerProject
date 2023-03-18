@@ -159,9 +159,9 @@ public class Project implements ProjectModel {
           "Cannot add image to layer until new project has been created");
     } else if (!this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Cannot add image to layer that does not exist");
-    } else if (x < this.width || x > this.width) {
+    } else if (x < 0|| x > this.width) {
       throw new IllegalArgumentException("Invalid x coordinate to place image");
-    } else if (y < this.height || y > this.height) {
+    } else if (y < 0 || y > this.height) {
       throw new IllegalArgumentException("Invalid y coordinate to place image");
     } //TODO: determine if we need to handle invalid imagePath provided or will filereader handle that?
 

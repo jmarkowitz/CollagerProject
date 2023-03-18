@@ -40,13 +40,13 @@ public class CollagerControllerImpl implements CollagerController {
   }
 
   private void initCommands() {
-    this.knownCommands.put("new-project", (Scanner s) -> new NewProject(s));
-    this.knownCommands.put("load-project", (Scanner s) -> new LoadProject(s));
-    this.knownCommands.put("save-project", (Scanner s) ->  new SaveProject(s));
-    this.knownCommands.put("add-layer", (Scanner s) ->  new AddLayer(s));
-    this.knownCommands.put("add-image-to-layer", (Scanner s) ->  new AddImage(s));
-    this.knownCommands.put("set-filter", (Scanner s) ->  new SetFilter(s));
-    this.knownCommands.put("save-image", (Scanner s) ->  new SaveImage(s));
+    this.knownCommands.put("new-project", (Scanner s) -> new NewProject(s, view));
+    this.knownCommands.put("load-project", (Scanner s) -> new LoadProject(s, view));
+    this.knownCommands.put("save-project", (Scanner s) ->  new SaveProject(s, view));
+    this.knownCommands.put("add-layer", (Scanner s) ->  new AddLayer(s, view));
+    this.knownCommands.put("add-image-to-layer", (Scanner s) ->  new AddImage(s, view));
+    this.knownCommands.put("set-filter", (Scanner s) ->  new SetFilter(s, view));
+    this.knownCommands.put("save-image", (Scanner s) ->  new SaveImage(s, view));
   }
 
   /**
@@ -68,16 +68,15 @@ public class CollagerControllerImpl implements CollagerController {
           view.renderMessage("Invalid command" + System.lineSeparator());
         } else {
           c = cmd.apply(programScanner);
-          //commands.add(c);
           try {
             c.execute(model);
-          } catch (Exception e) {
-            view.renderMessage(e.getMessage() + System.lineSeparator());
+          } catch (IOException e) {
+            view.renderMessage("Try again" + System.lineSeparator());
           }
         }
       }
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new IllegalStateException("Something went wrong when controlling");
     }
 
   }

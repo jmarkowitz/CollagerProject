@@ -9,31 +9,38 @@ import java.util.Map;
 import java.util.Scanner;
 import model.FilterInterface;
 import model.LayerInterface;
-import model.Pixel;
 import model.PixelInterface;
-import model.Project;
 import model.ProjectModel;
-import model.ProjectModelState;
+import view.ProjectView;
 
 public class SaveImage implements CollagerCommand {
 
   private final Scanner scanner;
+  private final ProjectView view;
 
-  public SaveImage(Scanner scanner) {
+  public SaveImage(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
+    this.view = view;
   }
 
   /**
    * Method that will execute the command
    */
   @Override
-  public void execute(ProjectModel model) {
+  public void execute(ProjectModel model) throws IOException {
     while (this.scanner.hasNext()) {
       // initial ppm file setup
       String imagePath = this.scanner.next();
       StringBuilder finalImage = new StringBuilder();
-      int height = model.getHeight();
-      int width = model.getWidth();
+      int height = 0;
+      int width = 0;
+      try {
+        height = model.getHeight();
+        width = model.getWidth();
+      } catch (IllegalStateException e) {
+        view.renderMessage(e.getMessage());
+        throw new IOException();
+      }
       finalImage.append("P3").append(System.lineSeparator());
       finalImage.append(width).append(" ").append(height)
           .append(System.lineSeparator());
@@ -41,8 +48,15 @@ public class SaveImage implements CollagerCommand {
 
       // main loop for looping through all layers
       int index = 0;
-      Map<String, LayerInterface> allLayers = model.getLayers();
-      Map<String, FilterInterface> allFilters = model.getAllFilters();
+      Map<String, LayerInterface> allLayers = null;
+      Map<String, FilterInterface> allFilters = null;
+      try {
+        allLayers = model.getLayers();
+        allFilters = model.getAllFilters();
+      } catch (IllegalStateException e) {
+        view.renderMessage(e.getMessage());
+        throw new IOException();
+      }
       PixelInterface[][] finalPixelGrid = null;
       for (Map.Entry<String, LayerInterface> layer : allLayers.entrySet()) {
         LayerInterface currentLayer = layer.getValue();
@@ -61,6 +75,8 @@ public class SaveImage implements CollagerCommand {
         }
       }
       this.imageWrite(imagePath, finalImage);
+      this.view.renderMessage("Image was successfully saved at: " + imagePath + System.lineSeparator());
+      break;
     }
   }
 
@@ -79,15 +95,15 @@ public class SaveImage implements CollagerCommand {
     return updatedGrid;
   }
 
-  private void imageWrite(String imagePath, StringBuilder finalImage) {
+  private void imageWrite(String imagePath, StringBuilder finalImage) throws IOException {
     FileWriter fileWriter = null;
     try {
       fileWriter = new FileWriter(imagePath);
       fileWriter.write(finalImage.toString());
       fileWriter.close();
     } catch (IOException ex) {
-      System.err.println(ex.getMessage());
-      //do something with the exception
-    }//TODO: make filewriter class
+      view.renderMessage(ex.getMessage() + System.lineSeparator());
+      throw new IOException();
+    }
   }
 }
