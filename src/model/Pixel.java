@@ -156,14 +156,14 @@ public class Pixel implements PixelInterface {
    */
   @Override
   public PixelInterface bgPixelConverter(int red, int green, int blue, int alpha) {
-    double redD = (double) red;
-    double greenD = (double) green;
-    double blueD = (double) blue;
-    double alphaD = (double) alpha;
-    double thisRedD = (double) this.redVal;
-    double thisGreenD = (double) this.greenVal;
-    double thisBlueD = (double) this.blueVal;
-    double thisAlphaD = (double) this.alphaVal;
+    double redD = red;
+    double greenD = green;
+    double blueD = blue;
+    double alphaD = alpha;
+    double thisRedD = this.redVal;
+    double thisGreenD = this.greenVal;
+    double thisBlueD = this.blueVal;
+    double thisAlphaD = this.alphaVal;
 
     double aPrev = alphaD;
     double a0 = (thisAlphaD / MAX_VALUE + alphaD / MAX_VALUE * (1 - thisAlphaD / MAX_VALUE));

@@ -13,10 +13,10 @@ public class BrightenIntensity extends AbstractFilter {
 
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
-    int Intensity = p.getIntensity();
-    return new Pixel(p.getRed() + Intensity,
-        p.getGreen() + Intensity,
-        p.getBlue() + Intensity,
-        p.getAlpha());
+    int intensity = p.getIntensity();
+    return new Pixel(this.produceValidValue(p.getRed() + intensity),
+            this.produceValidValue(p.getGreen() + intensity),
+            this.produceValidValue(p.getBlue() + intensity),
+            this.produceValidValue(p.getAlpha() + intensity));
   }
 }

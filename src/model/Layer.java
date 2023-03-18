@@ -8,11 +8,12 @@ public class Layer implements LayerInterface {
 
   public Layer(String layerName) {
     this.layerName = layerName;
-    this.filter = null;
+    this.filter = "normal";
   }
 
   public Layer(String layerName, PixelInterface[][] grid) {
     this.layerName = layerName;
+    this.filter = "normal";
     this.grid = grid;
   }
 

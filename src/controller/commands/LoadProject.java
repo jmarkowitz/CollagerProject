@@ -22,6 +22,7 @@ public class LoadProject implements CollagerCommand {
 
   @Override
   public void execute(ProjectModel model) throws IOException {
+    boolean isBGLayer = true;
     while (this.scanner.hasNext()) {
       String projectFilepath = this.scanner.next();
       String projectString = FileUtil.readFileAsString(projectFilepath);
@@ -39,26 +40,25 @@ public class LoadProject implements CollagerCommand {
       height = sc.nextInt();
       try {
         model.newProject(height, width);
+        this.view.renderMessage("loaded project successfully created" + System.lineSeparator());
       } catch (IllegalArgumentException e) {
         this.view.renderMessage(e.getMessage());
-        throw new IOException();
+        throw new IOException("Could not create new project");
       }
       int maxValue = sc.nextInt();
       while (sc.hasNext()) {
         String layerName = sc.next();
         try {
-          model.addLayer(layerName);
+          if (!isBGLayer) {
+            model.addLayer(layerName);
+            this.view.renderMessage(layerName + " layer successfully loaded in" + System.lineSeparator());
+
+          }
         } catch (IllegalArgumentException | IllegalStateException e) {
           this.view.renderMessage(e.getMessage());
-          throw new IOException();
+          throw new IOException("Could not add layer");
         }
         String filterName = sc.next();
-        try {
-          model.setFilter(layerName, filterName);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-          this.view.renderMessage(e.getMessage());
-          throw new IOException();
-        }
         PixelInterface[][] currentLayer = new PixelInterface[height][width];
         for (int row = 0; row < height; row++) {
           for (int col = 0; col < width; col++) {
@@ -72,14 +72,26 @@ public class LoadProject implements CollagerCommand {
           }
         }
         try {
-          model.addImageToLayer(layerName, currentLayer, 0, 0);
-          this.view.renderMessage("layer successfully loaded in" + System.lineSeparator());
+          if (!isBGLayer) {
+            model.addImageToLayer(layerName, currentLayer, 0, 0);
+            this.view.renderMessage("layer successfully loaded in" + System.lineSeparator());
+          }
         } catch (IllegalArgumentException | IllegalStateException e) {
           this.view.renderMessage(e.getMessage() + System.lineSeparator());
-          throw new IOException();
+          throw new IOException("Could not add image to layer");
         }
-        break;
+        try {
+          if (!isBGLayer) {
+            model.setFilter(layerName, filterName);
+            this.view.renderMessage(filterName + " filter successfully set on layer " + layerName + System.lineSeparator());
+          }
+        } catch (IllegalArgumentException | IllegalStateException e) {
+          this.view.renderMessage(e.getMessage());
+          throw new IOException("Could not set filter");
+        }
+        isBGLayer = false;
       }
+      break;
     }
   }
 

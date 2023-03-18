@@ -47,8 +47,8 @@ public class Project implements ProjectModel {
     this.allFilters.put("darken-luma", new DarkenLuma(this.height, this.width));
     this.allFilters.put("brighten-intensity", new BrightenIntensity(this.height, this.width));
     this.allFilters.put("darken-intensity", new DarkenIntensity(this.height, this.width));
-    this.allFilters.put("brighten-value", new BrightenIntensity(this.height, this.width));
-    this.allFilters.put("darken-value", new BrightenValue(this.height, this.width));
+    this.allFilters.put("brighten-value", new BrightenValue(this.height, this.width));
+    this.allFilters.put("darken-value", new DarkenValue(this.height, this.width));
     this.allFilters.put("normal", new NormalFilter(this.height, this.width));
   }
 
@@ -93,7 +93,6 @@ public class Project implements ProjectModel {
     this.inProgress = true;
     this.initFilters();
     this.layerLinkedMap.put("bg", new Layer("bg", this.makeTransparentOrOpaqueWhiteLayer(1)));
-    this.setFilter("bg", "normal");
   }
 
   /**
@@ -114,7 +113,6 @@ public class Project implements ProjectModel {
       throw new IllegalArgumentException("Layer name provided already exists");
     }
     this.layerLinkedMap.put(layerName, new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(0)));
-    this.setFilter(layerName, "normal");
   }
 
   /**

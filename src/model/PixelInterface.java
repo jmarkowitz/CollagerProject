@@ -57,7 +57,8 @@ public interface PixelInterface {
   int getLuma();
 
   /**
-   * //TODO: write this
+   * Uses the given red, green, blue, and alpha values to use alpha composition with this
+   * {@code Pixel}'s values and creates a new compressed {@code Pixel} and returns it.
    */
   PixelInterface bgPixelConverter(int red, int green, int blue, int alpha);
 

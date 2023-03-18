@@ -37,7 +37,8 @@ public class AddImage implements CollagerCommand {
       }
 
       try {
-        model.addImageToLayer(layerName, Image.readPPM(imageString), x, y);
+        model.addImageToLayer(layerName, Image.readPPM(imageString, model.getHeight(),
+            model.getWidth()), x, y);
         view.renderMessage(imagePath + " added successfully" + System.lineSeparator());
         break;
       } catch (IllegalArgumentException | IllegalStateException e) {

@@ -71,8 +71,8 @@ public class CollagerControllerImpl implements CollagerController {
           c = cmd.apply(programScanner);
           try {
             c.execute(model);
-          } catch (InputMismatchException e) {
-            view.renderMessage("Try again" + System.lineSeparator());
+          } catch (IOException | InputMismatchException e) {
+            view.renderMessage("Try again: " + e.getMessage() + System.lineSeparator());
           }
         }
       }

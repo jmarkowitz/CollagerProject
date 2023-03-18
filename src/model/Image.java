@@ -15,7 +15,7 @@ public class Image {
    *
    * @param imageFile the image file as a string.
    */
-  public static PixelInterface[][] readPPM(String imageFile) throws IllegalArgumentException {
+  public static PixelInterface[][] readPPM(String imageFile, int projectHeight, int projectWidth) throws IllegalArgumentException {
     int width;
     int height;
     PixelInterface[][] imageLayer;
@@ -29,17 +29,24 @@ public class Image {
     }
     width = sc.nextInt();
     height = sc.nextInt();
-    imageLayer = new PixelInterface[height][width];
+    imageLayer = new PixelInterface[projectHeight][projectWidth];
     int maxValue = sc.nextInt();
-    for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        int red = sc.nextInt();
-        int green = sc.nextInt();
-        int blue = sc.nextInt();
-        imageLayer[row][col] = new Pixel(scalePixel(red, maxValue),
-            scalePixel(green, maxValue),
-            scalePixel(blue, maxValue),
-            255);
+    for (int row = 0; row < projectHeight; row++) {
+      for (int col = 0; col < projectWidth; col++) {
+        int red = 0;
+        int green = 0;
+        int blue = 0;
+        if (row < height && col < width) {
+          red = sc.nextInt();
+          green = sc.nextInt();
+          blue = sc.nextInt();
+          imageLayer[row][col] = new Pixel(scalePixel(red, maxValue),
+              scalePixel(green, maxValue),
+              scalePixel(blue, maxValue),
+              255);
+        } else {
+          imageLayer[row][col] = new Pixel(255, 255, 255, 0);
+        }
       }
     }
     return imageLayer;

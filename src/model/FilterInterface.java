@@ -8,4 +8,6 @@ public interface FilterInterface extends Function<LayerInterface, LayerInterface
   LayerInterface apply(LayerInterface layer);
 
   String getFilterName();
+
+  int produceValidValue(int value);
 }
