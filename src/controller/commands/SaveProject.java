@@ -5,18 +5,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Scanner;
-import model.FilterInterface;
 import model.LayerInterface;
 import model.PixelInterface;
 import model.ProjectModel;
+import view.ProjectView;
 
 
 public class SaveProject implements CollagerCommand {
 
   private final Scanner scanner;
+  private final ProjectView view;
 
-  public SaveProject(Scanner scanner) {
+  public SaveProject(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
+    this.view = view;
   }
 
   /**
@@ -34,20 +36,31 @@ public class SaveProject implements CollagerCommand {
    *                               loaded
    */
   @Override
-  public void execute(ProjectModel model) {
+  public void execute(ProjectModel model) throws IOException {
     while (this.scanner.hasNext()) {
       String filepath = this.scanner.next();
-      int projectWidth = model.getWidth();
-      int projectHeight = model.getHeight();
-      Map<String, LayerInterface> projectLayers = model.getLayers();
+      int projectWidth;
+      int projectHeight;
+      Map<String, LayerInterface> projectLayers;
+      try {
+        projectWidth = model.getWidth();
+        projectHeight = model.getHeight();
+        projectLayers = model.getLayers();
+      } catch (IllegalStateException | IllegalArgumentException e) {
+        this.view.renderMessage(e.getMessage());
+        throw new IOException();
+      }
       FileWriter fileWriter = null;
       try {
         fileWriter = new FileWriter(filepath);
         fileWriter.write(this.formatExport(projectWidth, projectHeight, projectLayers));
+        this.view.renderMessage("Project was successfully saved at: " + filepath + System.lineSeparator());
         fileWriter.close();
       } catch (IOException ex) {
-        System.err.println(ex.getMessage());
-      }//TODO: make filewriter class
+        view.renderMessage(ex.getMessage() + System.lineSeparator());
+        throw new IOException();
+      }
+      break;
     }
   }
 

@@ -45,53 +45,6 @@ public class Image {
     return imageLayer;
   }
 
-//  public void readProjectFile(String filename) throws IllegalArgumentException{
-//    String fileAsString = readFileAsString(filename);
-//    Scanner sc;
-//    sc = new Scanner(fileAsString);
-//    String token;
-//    token = sc.next();
-//    if (!token.equals("C1")) {
-//      System.out.println("Invalid Project file: plain RAW file should begin with C1");
-//    }
-//    width = sc.nextInt();
-//    height = sc.nextInt();
-//    int maxValue = sc.nextInt();
-//
-//    for (int row = 0; row < height; row++) {
-//      for (int col = 0; col < width; col++) {
-//        int red = sc.nextInt();
-//        int green = sc.nextInt();
-//        int blue = sc.nextInt();
-//        imageLayer[row][col] = new Pixel(scalePixel(red, maxValue),
-//            scalePixel(green, maxValue),
-//            scalePixel(blue, maxValue),
-//            255);
-//      }
-//    }
-//  }
-
-//  public int getImageWidth() throws IllegalStateException {
-//    if (!this.isValidFile) {
-//      throw new IllegalStateException("Must read the file first");
-//    }
-//    return this.width;
-//  }
-//
-//  public int getImageHeight() throws IllegalStateException {
-//    if (!this.isValidFile) {
-//      throw new IllegalStateException("Must read the file first");
-//    }
-//    return this.height;
-//  }
-//
-//  public PixelInterface[][] getImageLayer() throws IllegalStateException {
-//    if (!this.isValidFile) {
-//      throw new IllegalStateException("Must read the file first");
-//    }
-//    return this.imageLayer;
-//  }
-
   private static int scalePixel(int pixelValue, int maxValue) {
     return (int) Math.round(pixelValue * (255.0 / maxValue));
   }

@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import model.ProjectModel;
 
 /**
@@ -11,6 +12,6 @@ public interface CollagerCommand {
   /**
    * Method that will execute the command
    */
-  void execute(ProjectModel model);
+  void execute(ProjectModel model) throws IOException;
 
 }
