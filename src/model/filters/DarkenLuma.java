@@ -11,10 +11,10 @@ public class DarkenLuma extends AbstractFilter {
 
   @Override
   protected PixelInterface getPixelByType(PixelInterface p) {
-    int Luma = p.getLuma();
-    return new Pixel(p.getRed() - Luma,
-            p.getGreen() - Luma,
-            p.getBlue() - Luma,
-        p.getAlpha());
+    int luma = p.getLuma();
+    return new Pixel(this.produceValidValue(p.getRed() - luma),
+            this.produceValidValue(p.getGreen() - luma),
+            this.produceValidValue(p.getBlue() - luma),
+            this.produceValidValue(p.getAlpha() - luma));
   }
 }

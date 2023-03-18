@@ -24,6 +24,7 @@ public class FileUtil {
         builder.append(s + System.lineSeparator());
       }
     }
+    System.out.println(builder.toString());
     return builder.toString();
   }
 

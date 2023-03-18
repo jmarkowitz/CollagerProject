@@ -66,9 +66,9 @@ public class SaveImage implements CollagerCommand {
         if (index == 0) {
           finalPixelGrid = filteredLayer.getPixelGrid();
         }
-        finalPixelGrid = filteredLayer.getPixelGrid();//TODO: fix this
+        //finalPixelGrid = filteredLayer.getPixelGrid();//TODO: fix this
         PixelInterface[][] curGrid = filteredLayer.getPixelGrid();
-        this.compressLayer(height, width, curGrid, finalPixelGrid);
+        finalPixelGrid = this.compressLayer(height, width, curGrid, finalPixelGrid);
         index++;
       }
       for (int row = 0; row < height; row++) {
