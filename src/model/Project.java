@@ -92,7 +92,8 @@ public class Project implements ProjectModel {
     this.width = width;
     this.inProgress = true;
     this.initFilters();
-    this.layerLinkedMap.put("bg", new Layer("bg", this.makeTransparentOrOpaqueWhiteLayer(0)));
+    this.layerLinkedMap.put("bg", new Layer("bg", this.makeTransparentOrOpaqueWhiteLayer(1)));
+    this.setFilter("bg", "normal");
   }
 
   /**
@@ -112,7 +113,8 @@ public class Project implements ProjectModel {
     } else if (this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Layer name provided already exists");
     }
-    this.layerLinkedMap.put(layerName, new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(1)));
+    this.layerLinkedMap.put(layerName, new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(0)));
+    this.setFilter(layerName, "normal");
   }
 
   /**
@@ -159,7 +161,7 @@ public class Project implements ProjectModel {
           "Cannot add image to layer until new project has been created");
     } else if (!this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Cannot add image to layer that does not exist");
-    } else if (x < 0|| x > this.width) {
+    } else if (x < 0 || x > this.width) {
       throw new IllegalArgumentException("Invalid x coordinate to place image");
     } else if (y < 0 || y > this.height) {
       throw new IllegalArgumentException("Invalid y coordinate to place image");
@@ -174,8 +176,8 @@ public class Project implements ProjectModel {
 
   private PixelInterface[][] changePixels(PixelInterface[][] layerGrid,
       PixelInterface[][] imageGrid, int x, int y) {
-    for (int row = y; row < this.width; row++) {
-      for (int col = x; col < this.height; col++) {
+    for (int row = y; row < this.height; row++) {
+      for (int col = x; col < this.width; col++) {
         layerGrid[row][col] = imageGrid[row][col];
       }
     }

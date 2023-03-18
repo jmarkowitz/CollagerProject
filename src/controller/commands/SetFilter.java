@@ -27,7 +27,7 @@ public class SetFilter implements CollagerCommand {
       String filterName = this.scanner.next();
       try {
         model.setFilter(layer, filterName);
-        this.view.renderMessage(filterName + " was successfully added to " + layer + " layer" + System.lineSeparator());
+        this.view.renderMessage(filterName + " filter was successfully added to " + layer + " layer" + System.lineSeparator());
         break;
       } catch (IllegalArgumentException | IllegalStateException e) {
         this.view.renderMessage(e.getMessage() + System.lineSeparator());

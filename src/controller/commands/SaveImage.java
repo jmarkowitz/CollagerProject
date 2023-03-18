@@ -3,6 +3,7 @@ package controller.commands;
 import static model.Project.MAX_VALUE;
 
 import controller.CollagerCommand;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
@@ -65,13 +66,14 @@ public class SaveImage implements CollagerCommand {
         if (index == 0) {
           finalPixelGrid = filteredLayer.getPixelGrid();
         }
+        finalPixelGrid = filteredLayer.getPixelGrid();//TODO: fix this
         PixelInterface[][] curGrid = filteredLayer.getPixelGrid();
         this.compressLayer(height, width, curGrid, finalPixelGrid);
         index++;
       }
       for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
-          finalImage.append(finalPixelGrid[row][col].toString(1));
+          finalImage.append(finalPixelGrid[row][col].toString(1)).append(" ");
         }
       }
       this.imageWrite(imagePath, finalImage);
@@ -96,9 +98,11 @@ public class SaveImage implements CollagerCommand {
   }
 
   private void imageWrite(String imagePath, StringBuilder finalImage) throws IOException {
+    String workingDir = System.getProperty("user.dir");
+    String absoluteFilePath = workingDir + File.separator + imagePath;
     FileWriter fileWriter = null;
     try {
-      fileWriter = new FileWriter(imagePath);
+      fileWriter = new FileWriter(absoluteFilePath);
       fileWriter.write(finalImage.toString());
       fileWriter.close();
     } catch (IOException ex) {
