@@ -1,13 +1,11 @@
 package model;
 
-import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
  * Interface that represents the running state of a Collager project. This interface allows for
- * observation of the model's width, height, and a list of layers. This does not allow for any
- * mutation of the width, height, and layers.
+ * observation of the model's width, height, an ordered map of layers, and a map of all the filters. This does not allow for any
+ * mutation of the width, height, layers, or filters.
  */
 public interface ProjectModelState {
 

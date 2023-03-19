@@ -9,19 +9,34 @@ import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
+/**
+ * Class that represents the load project command.
+ */
 public class LoadProject implements CollagerCommand {
 
   private final Scanner scanner;
   private final ProjectView view;
 
+  /**
+   * Constructor for the load project command.
+   *
+   * @param scanner the scanner that will be used to read the file
+   * @param view    the view that will be used to render the message
+   */
   public LoadProject(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
     this.view = view;
   }
 
-
+  /**
+   * Method that will execute the load project command.
+   *
+   * @param model the model that will be used to load the project
+   * @throws IOException              if there is an issue rendering the message
+   * @throws IllegalArgumentException if the file is invalid
+   */
   @Override
-  public void execute(ProjectModel model) throws IOException {
+  public void execute(ProjectModel model) throws IOException, IllegalArgumentException {
     boolean isBGLayer = true;
     while (this.scanner.hasNext()) {
       String projectFilepath = this.scanner.next();
@@ -51,7 +66,8 @@ public class LoadProject implements CollagerCommand {
         try {
           if (!isBGLayer) {
             model.addLayer(layerName);
-            this.view.renderMessage(layerName + " layer successfully loaded in" + System.lineSeparator());
+            this.view.renderMessage(
+                layerName + " layer successfully loaded in" + System.lineSeparator());
 
           }
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -83,7 +99,8 @@ public class LoadProject implements CollagerCommand {
         try {
           if (!isBGLayer) {
             model.setFilter(layerName, filterName);
-            this.view.renderMessage(filterName + " filter successfully set on layer " + layerName + System.lineSeparator());
+            this.view.renderMessage(filterName + " filter successfully set on layer " + layerName
+                + System.lineSeparator());
           }
         } catch (IllegalArgumentException | IllegalStateException e) {
           this.view.renderMessage(e.getMessage());

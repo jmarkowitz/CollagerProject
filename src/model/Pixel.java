@@ -147,12 +147,14 @@ public class Pixel implements PixelInterface {
   }
 
   /**
-   * //TODO: write this
+   * Uses the given red, green, blue, and alpha values to use alpha composition with this
+   * {@code Pixel}'s values and creates a new compressed {@code Pixel} and returns it.
    *
-   * @param red
-   * @param green
-   * @param blue
-   * @param alpha
+   * @param red   the red value of the bg pixel
+   * @param green the green value of the bg pixel
+   * @param blue  the blue value of the bg pixel
+   * @param alpha the alpha value of the bg pixel
+   * @return the new compressed {@code Pixel}
    */
   @Override
   public PixelInterface bgPixelConverter(int red, int green, int blue, int alpha) {
@@ -168,9 +170,12 @@ public class Pixel implements PixelInterface {
     double aPrev = alphaD;
     double a0 = (thisAlphaD / MAX_VALUE + alphaD / MAX_VALUE * (1 - thisAlphaD / MAX_VALUE));
     alphaD = a0 * MAX_VALUE;  //calculated a
-    redD = (thisAlphaD / MAX_VALUE * thisRedD + redD * (aPrev / MAX_VALUE) * (1 - thisAlphaD / MAX_VALUE)) * (1 / a0);
-    greenD = (thisAlphaD / MAX_VALUE * thisGreenD + greenD * (aPrev / MAX_VALUE) * (1 - thisAlphaD / MAX_VALUE)) * (1 / a0);
-    blueD = (thisAlphaD / MAX_VALUE * thisBlueD + blueD * (aPrev / MAX_VALUE) * (1 - thisAlphaD / MAX_VALUE)) * (1 / a0);
+    redD = (thisAlphaD / MAX_VALUE * thisRedD + redD * (aPrev / MAX_VALUE) * (1
+        - thisAlphaD / MAX_VALUE)) * (1 / a0);
+    greenD = (thisAlphaD / MAX_VALUE * thisGreenD + greenD * (aPrev / MAX_VALUE) * (1
+        - thisAlphaD / MAX_VALUE)) * (1 / a0);
+    blueD = (thisAlphaD / MAX_VALUE * thisBlueD + blueD * (aPrev / MAX_VALUE) * (1
+        - thisAlphaD / MAX_VALUE)) * (1 / a0);
     int finalRed = (int) Math.round(redD);
     int finalGreen = (int) Math.round(greenD);
     int finalBlue = (int) Math.round(blueD);

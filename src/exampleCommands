@@ -1,0 +1,7 @@
+new-project 100 100
+add-layer layer1
+add-image-to-layer layer1 images/image1.ppm 0 0
+set-filter layer1 brighten-intensity
+save-image images/imageNew.ppm
+save-project projects/projectNew.ppm
+q

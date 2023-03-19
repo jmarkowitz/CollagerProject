@@ -5,8 +5,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
 
+/**
+ * A utility class that reads a file and returns it as a string.
+ */
 public class FileUtil {
 
+  /**
+   * Reads a file and returns it as a string.
+   *
+   * @param filename the name of the file to be read
+   * @return the file as a string
+   */
   public static String readFileAsString(String filename) {
     String workingDir = System.getProperty("user.dir");
     String fullPath = workingDir + File.separator + filename;
@@ -24,7 +33,6 @@ public class FileUtil {
         builder.append(s + System.lineSeparator());
       }
     }
-    System.out.println(builder.toString());
     return builder.toString();
   }
 

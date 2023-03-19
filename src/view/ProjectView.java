@@ -3,9 +3,8 @@ package view;
 import java.io.IOException;
 
 /**
- * The interface for a client's perspective of the model of a game of Set.
+ * The interface for a client's perspective of the model of a collager project.
  */
-
 public interface ProjectView {
 
   /**
