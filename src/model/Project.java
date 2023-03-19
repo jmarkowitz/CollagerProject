@@ -15,7 +15,11 @@ import model.filters.DarkenValue;
 import model.filters.GreenFilter;
 import model.filters.NormalFilter;
 import model.filters.RedFilter;
-//TODO: write javadocs
+
+/**
+ * Represents a collager project that can be created and edited. Allows the user to create a new
+ * project, add layers and images, and set filters.
+ */
 public class Project implements ProjectModel {
 
   public static final int MAX_VALUE = 255;
@@ -79,16 +83,16 @@ public class Project implements ProjectModel {
    */
   @Override
   public void newProject(int height, int width) throws IllegalArgumentException {
-    if (height < 0) {
+    if (height <= 0) {
       throw new IllegalArgumentException("Invalid width provided");
-    } else if (width < 0) {
+    } else if (width <= 0) {
       throw new IllegalArgumentException("Invalid height provided");
     } else if (height > this.screenWidth) {
       throw new IllegalArgumentException("Invalid width provided for screen size");
     } else if (width > this.screenHeight) {
       throw new IllegalArgumentException("Invalid height provided for screen size");
     }
-    this.height= height;
+    this.height = height;
     this.width = width;
     this.inProgress = true;
     this.initFilters();
@@ -112,11 +116,12 @@ public class Project implements ProjectModel {
     } else if (this.layerLinkedMap.containsKey(layerName)) {
       throw new IllegalArgumentException("Layer name provided already exists");
     }
-    this.layerLinkedMap.put(layerName, new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(0)));
+    this.layerLinkedMap.put(layerName,
+        new Layer(layerName, this.makeTransparentOrOpaqueWhiteLayer(0)));
   }
 
   /**
-   * Adds the particular filter name to the given layer name
+   * Adds the particular filter name to the given layer name.
    *
    * @param layerName  the layer name the filter will be added to
    * @param filterName the name of the filter
@@ -163,7 +168,7 @@ public class Project implements ProjectModel {
       throw new IllegalArgumentException("Invalid x coordinate to place image");
     } else if (y < 0 || y > this.height) {
       throw new IllegalArgumentException("Invalid y coordinate to place image");
-    } //TODO: determine if we need to handle invalid imagePath provided or will filereader handle that?
+    }
 
     LayerInterface layerCurrent = this.layerLinkedMap.get(layerName);
     PixelInterface[][] layerPixelGrid = layerCurrent.getPixelGrid();
@@ -213,7 +218,7 @@ public class Project implements ProjectModel {
   }
 
   /**
-   * Returns a cloned list of all the layers currently in the canvas
+   * Returns a cloned list of all the layers currently in the canvas.
    *
    * @return the Map of all layers in the canvas
    * @throws IllegalStateException if this method is called before a new project has been created or
@@ -228,7 +233,7 @@ public class Project implements ProjectModel {
   }
 
   /**
-   * Returns a copy of all filters available in the project
+   * Returns a copy of all filters available in the project.
    *
    * @return all the filters in the canvas
    * @throws IllegalStateException if this method is called before a new project has been created or

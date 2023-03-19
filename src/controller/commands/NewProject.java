@@ -14,13 +14,19 @@ public class NewProject implements CollagerCommand {
   private final Scanner scanner;
   private final ProjectView view;
 
+  /**
+   * Constructor for the new project command.
+   *
+   * @param scanner the scanner that will be used to read the user input
+   * @param view    the view that will be used to display the output
+   */
   public NewProject(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
     this.view = view;
   }
 
   /**
-   * Method that will execute the command
+   * Method that will execute the new project command.
    */
   @Override
   public void execute(ProjectModel model) throws IOException {
@@ -29,7 +35,8 @@ public class NewProject implements CollagerCommand {
       int width = this.scanner.nextInt();
       try {
         model.newProject(height, width);
-        view.renderMessage("New Project created" + System.lineSeparator());
+        view.renderMessage(
+            "New Project created with dimensions " + height + "x" + width + System.lineSeparator());
         break;
       } catch (IllegalArgumentException e) {
         this.view.renderMessage(e.getMessage() + System.lineSeparator());

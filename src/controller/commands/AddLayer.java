@@ -14,13 +14,18 @@ public class AddLayer implements CollagerCommand {
   private final Scanner scanner;
   private final ProjectView view;
 
+  /**
+   * Constructor for the AddLayer command
+   * @param scanner the scanner to read the layer name from
+   * @param view the view to render the message to
+   */
   public AddLayer(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
     this.view = view;
   }
 
   /**
-   * Method that will execute the command
+   * Executes the command to add a layer to the project
    */
   @Override
   public void execute(ProjectModel model) throws IOException {

@@ -10,12 +10,20 @@ import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
-
+/**
+ * Saves and exports all the data in the model to a file location.
+ */
 public class SaveProject implements CollagerCommand {
 
   private final Scanner scanner;
   private final ProjectView view;
 
+  /**
+   * Constructs a SaveProject object.
+   *
+   * @param scanner the scanner to read the file path
+   * @param view    the view to render the message
+   */
   public SaveProject(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
     this.view = view;
@@ -54,7 +62,8 @@ public class SaveProject implements CollagerCommand {
       try {
         fileWriter = new FileWriter(filepath);
         fileWriter.write(this.formatExport(projectWidth, projectHeight, projectLayers));
-        this.view.renderMessage("Project was successfully saved at: " + filepath + System.lineSeparator());
+        this.view.renderMessage(
+            "Project was successfully saved at: " + filepath + System.lineSeparator());
         fileWriter.close();
       } catch (IOException ex) {
         view.renderMessage(ex.getMessage() + System.lineSeparator());
@@ -72,11 +81,12 @@ public class SaveProject implements CollagerCommand {
     for (Map.Entry<String, LayerInterface> mapLayer : projectLayers.entrySet()) {
       LayerInterface currentLayer = mapLayer.getValue();
       String currentLayerName = mapLayer.getKey();
-      finalString.append(currentLayerName).append(" ").append(currentLayer.getFilter()).append(System.lineSeparator());
+      finalString.append(currentLayerName).append(" ").append(currentLayer.getFilter())
+          .append(System.lineSeparator());
       PixelInterface[][] curLayerPixels = currentLayer.getPixelGrid();
       for (int row = 0; row < height; row++) {
         for (int col = 0; col < width; col++) {
-            finalString.append(curLayerPixels[row][col].toString(0)).append(System.lineSeparator());
+          finalString.append(curLayerPixels[row][col].toString(0)).append(System.lineSeparator());
         }
       }
     }

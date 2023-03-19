@@ -16,14 +16,16 @@ import java.util.function.Function;
 import model.ProjectModel;
 import view.ProjectView;
 
+/**
+ * Represents the controller for the Image Collage program. Allows the user to control the program by giving commands.
+ */
 public class CollagerControllerImpl implements CollagerController {
 
   private final ProjectModel model;
   private final ProjectView view;
   private final Readable in;
-  private boolean programStarted; //TODO: need to implement this so new project
-
-  Map<String, Function<Scanner, CollagerCommand>> knownCommands;
+  private boolean programStarted;
+  private final Map<String, Function<Scanner, CollagerCommand>> knownCommands;
 
   public CollagerControllerImpl(ProjectModel model, ProjectView view, Readable in) {
     if (model == null) {
@@ -72,7 +74,7 @@ public class CollagerControllerImpl implements CollagerController {
           try {
             c.execute(model);
           } catch (IOException | InputMismatchException e) {
-            view.renderMessage("Try again: " + e.getMessage() + System.lineSeparator());
+            view.renderMessage("Try again:" + System.lineSeparator());
           }
         }
       }

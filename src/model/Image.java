@@ -4,8 +4,7 @@ import java.util.Scanner;
 
 
 /**
- * This class contains utility methods to read a PPM image from file and simply print its contents.
- * Feel free to change this method as required.
+ * This class represents an Image. Can read in an image file and return a 2D array of pixels.
  */
 public class Image {
 
@@ -14,6 +13,9 @@ public class Image {
    * the image.
    *
    * @param imageFile the image file as a string.
+   * @param projectHeight the height of the project
+   * @param projectWidth the width of the project
+   * @throws IllegalArgumentException if the image file is not in the right format.
    */
   public static PixelInterface[][] readPPM(String imageFile, int projectHeight, int projectWidth) throws IllegalArgumentException {
     int width;
@@ -25,7 +27,7 @@ public class Image {
     String token;
     token = sc.next();
     if (!token.equals("P3")) {
-      System.out.println("Invalid PPM file: plain RAW file should begin with P3");
+      throw new IllegalArgumentException("Not a PPM file");
     }
     width = sc.nextInt();
     height = sc.nextInt();

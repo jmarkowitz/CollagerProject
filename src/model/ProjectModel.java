@@ -1,7 +1,5 @@
 package model;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 
 /**
  * Represents the model for a Project in the Collager project. This interface allows for the user to
@@ -9,10 +7,8 @@ import java.io.IOException;
  * <ul>
  * <li> creating a new project</li>
  * <li> adding layers to the project</li>
+ * <li> adding filters to layers</li>
  * <li> adding images to layers</li>
- * <li> saving images</li>
- * <li> saving projects</li>
- * <li> loading projects from a file</li>
  * </ul>
  */
 public interface ProjectModel extends ProjectModelState {

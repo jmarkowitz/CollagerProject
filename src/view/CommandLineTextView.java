@@ -2,6 +2,9 @@ package view;
 
 import java.io.IOException;
 
+/**
+ * Represents a command line text view of a collager project.
+ */
 public class CommandLineTextView implements ProjectView {
   private final Appendable viewOut;
 

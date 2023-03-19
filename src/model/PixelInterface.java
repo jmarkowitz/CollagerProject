@@ -59,6 +59,12 @@ public interface PixelInterface {
   /**
    * Uses the given red, green, blue, and alpha values to use alpha composition with this
    * {@code Pixel}'s values and creates a new compressed {@code Pixel} and returns it.
+   *
+   * @param red   the red value of the bg pixel
+   * @param green the green value of the bg pixel
+   * @param blue  the blue value of the bg pixel
+   * @param alpha the alpha value of the bg pixel
+   * @return the new compressed {@code Pixel}
    */
   PixelInterface bgPixelConverter(int red, int green, int blue, int alpha);
 
