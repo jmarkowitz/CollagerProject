@@ -49,17 +49,17 @@ public class LayerTest {
   @Test
   public void getPixelGrid() {
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60),
-            new Pixel(70, 70, 70, 70)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200),
-                    new Pixel(255, 255, 255, 255)}};
+        new Pixel(60, 60, 60, 60),
+        new Pixel(70, 70, 70, 70)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200),
+            new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
     PixelInterface[][] newGrid = layer.getPixelGrid();
     String result = "";
     String answer = "";
-    for (int i=0; i < 2; i++){
-      for (int j= 0; j < 3; j++){
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 3; j++) {
         result += pixelGrid[i][j].toString(0);
         answer += newGrid[i][j].toString(0);
       }

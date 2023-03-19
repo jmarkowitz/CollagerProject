@@ -391,6 +391,8 @@ that can be used to read in a file and turn it into a string.
    directory must be in same directory as src***
 7. ````q````
 
+***Note: use the exampleCommands.txt for running all commands or follow above.***
+
 #### 4.3 Example Load Project Workflow
 
 1. ````load-project projects/projectNew.ppm````

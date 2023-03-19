@@ -17,7 +17,8 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Represents the controller for the Image Collage program. Allows the user to control the program by giving commands.
+ * Represents the controller for the Image Collage program. Allows the user to control the program
+ * by giving commands.
  */
 public class CollagerControllerImpl implements CollagerController {
 
@@ -27,6 +28,13 @@ public class CollagerControllerImpl implements CollagerController {
   private boolean programStarted;
   private final Map<String, Function<Scanner, CollagerCommand>> knownCommands;
 
+  /**
+   * Constructs a CollagerControllerImpl object.
+   *
+   * @param model the model for the program
+   * @param view  the view for the program
+   * @param in    the input for the program
+   */
   public CollagerControllerImpl(ProjectModel model, ProjectView view, Readable in) {
     if (model == null) {
       throw new IllegalArgumentException("Cannot give null model. Must be initialized.");
@@ -45,15 +53,16 @@ public class CollagerControllerImpl implements CollagerController {
   private void initCommands() {
     this.knownCommands.put("new-project", (Scanner s) -> new NewProject(s, view));
     this.knownCommands.put("load-project", (Scanner s) -> new LoadProject(s, view));
-    this.knownCommands.put("save-project", (Scanner s) ->  new SaveProject(s, view));
-    this.knownCommands.put("add-layer", (Scanner s) ->  new AddLayer(s, view));
-    this.knownCommands.put("add-image-to-layer", (Scanner s) ->  new AddImage(s, view));
-    this.knownCommands.put("set-filter", (Scanner s) ->  new SetFilter(s, view));
-    this.knownCommands.put("save-image", (Scanner s) ->  new SaveImage(s, view));
+    this.knownCommands.put("save-project", (Scanner s) -> new SaveProject(s, view));
+    this.knownCommands.put("add-layer", (Scanner s) -> new AddLayer(s, view));
+    this.knownCommands.put("add-image-to-layer", (Scanner s) -> new AddImage(s, view));
+    this.knownCommands.put("set-filter", (Scanner s) -> new SetFilter(s, view));
+    this.knownCommands.put("save-image", (Scanner s) -> new SaveImage(s, view));
   }
 
   /**
    * Starts the Image Collage program.
+   *
    * @throws IllegalStateException if the controller cannot successfully read input or output
    */
   @Override
@@ -61,11 +70,12 @@ public class CollagerControllerImpl implements CollagerController {
     try {
       Scanner programScanner = new Scanner(this.in);
       this.initCommands();
-      while(programScanner.hasNext()) {
+      while (programScanner.hasNext()) {
         CollagerCommand c;
         String in = programScanner.next();
-        if (in.equalsIgnoreCase("q") || in.equalsIgnoreCase("quit"))
+        if (in.equalsIgnoreCase("q") || in.equalsIgnoreCase("quit")) {
           return;
+        }
         Function<Scanner, CollagerCommand> cmd = knownCommands.getOrDefault(in, null);
         if (cmd == null) {
           view.renderMessage("Invalid command" + System.lineSeparator());

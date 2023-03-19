@@ -7,7 +7,7 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Represents a command to add a layer to an existing project
+ * Represents a command to add a layer to an existing project.
  */
 public class AddLayer implements CollagerCommand {
 
@@ -15,9 +15,10 @@ public class AddLayer implements CollagerCommand {
   private final ProjectView view;
 
   /**
-   * Constructor for the AddLayer command
+   * Constructor for the AddLayer command.
+   *
    * @param scanner the scanner to read the layer name from
-   * @param view the view to render the message to
+   * @param view    the view to render the message to
    */
   public AddLayer(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
@@ -25,7 +26,7 @@ public class AddLayer implements CollagerCommand {
   }
 
   /**
-   * Executes the command to add a layer to the project
+   * Executes the command to add a layer to the project.
    */
   @Override
   public void execute(ProjectModel model) throws IOException {
