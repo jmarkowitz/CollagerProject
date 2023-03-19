@@ -5,7 +5,7 @@ import model.LayerInterface;
 import model.PixelInterface;
 
 public abstract class AbstractFilter implements FilterInterface {
-  protected final int height;
+   protected final int height;
   protected final int width;
   protected String filterName;
 
