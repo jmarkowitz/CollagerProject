@@ -35,7 +35,7 @@ public interface ProjectModel extends ProjectModelState {
   void addLayer(String layerName) throws IllegalArgumentException, IllegalStateException;
 
   /**
-   * Adds the particular filter name to the given layer name
+   * Adds the particular filter name to the given layer name.
    *
    * @param layerName  the layer name the filter will be added to
    * @param filterName the name of the filter
@@ -63,5 +63,5 @@ public interface ProjectModel extends ProjectModelState {
    *                                  in
    */
   void addImageToLayer(String layerName, PixelInterface[][] imagePixelGrid, int x, int y)
-      throws IllegalArgumentException, IllegalStateException;//TODO: is it fine to pass in 2D array of pixels that is created in controller?
+      throws IllegalArgumentException, IllegalStateException;
 }

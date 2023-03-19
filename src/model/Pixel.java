@@ -211,9 +211,9 @@ public class Pixel implements PixelInterface {
       return String.format("%s %s %s %s", this.getRed(), this.getGreen(), this.getBlue(),
           this.getAlpha());
     } else {
-      PixelInterface RGBPixel = this.convertToRGB();
-      return String.format("%s %s %s", RGBPixel.getRed(), RGBPixel.getGreen(),
-          RGBPixel.getBlue());
+      PixelInterface rgbPixel = this.convertToRGB();
+      return String.format("%s %s %s", rgbPixel.getRed(), rgbPixel.getGreen(),
+          rgbPixel.getBlue());
     }
   }
 }

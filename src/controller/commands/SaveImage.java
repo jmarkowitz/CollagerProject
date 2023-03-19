@@ -14,18 +14,27 @@ import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
+/**
+ * Represents a command that will save the current project as a ppm file.
+ */
 public class SaveImage implements CollagerCommand {
 
   private final Scanner scanner;
   private final ProjectView view;
 
+  /**
+   * Constructor for the save image command.
+   *
+   * @param scanner the scanner that will be used to read the user input
+   * @param view    the view that will be used to display the output
+   */
   public SaveImage(Scanner scanner, ProjectView view) {
     this.scanner = scanner;
     this.view = view;
   }
 
   /**
-   * Method that will execute the command
+   * Method that will execute the command.
    */
   @Override
   public void execute(ProjectModel model) throws IOException {
@@ -77,7 +86,8 @@ public class SaveImage implements CollagerCommand {
         }
       }
       this.imageWrite(imagePath, finalImage);
-      this.view.renderMessage("Image was successfully saved at: " + imagePath + System.lineSeparator());
+      this.view.renderMessage(
+          "Image was successfully saved at: " + imagePath + System.lineSeparator());
       break;
     }
   }

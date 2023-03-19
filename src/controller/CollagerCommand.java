@@ -10,7 +10,7 @@ import model.ProjectModel;
 public interface CollagerCommand {
 
   /**
-   * Method that will execute the command
+   * Method that will execute the command.
    */
   void execute(ProjectModel model) throws IOException;
 

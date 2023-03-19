@@ -7,7 +7,7 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Represents a command that will create a new Collager project
+ * Represents a command that will create a new Collager project.
  */
 public class NewProject implements CollagerCommand {
 

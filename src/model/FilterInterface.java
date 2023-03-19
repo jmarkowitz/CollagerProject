@@ -3,7 +3,8 @@ package model;
 import java.util.function.Function;
 
 /**
- * Represents a filter that can be used on a layer. Allows the user to apply a filter, get the name, and return a valid value.
+ * Represents a filter that can be used on a layer. Allows the user to apply a filter, get the name,
+ * and return a valid value.
  */
 public interface FilterInterface extends Function<LayerInterface, LayerInterface> {
 

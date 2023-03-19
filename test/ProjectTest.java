@@ -1,14 +1,12 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Scanner;
 
 import controller.CollagerCommand;
 import controller.commands.LoadProject;
-import model.Layer;
 import model.Pixel;
 import model.PixelInterface;
 import model.Project;
@@ -16,7 +14,6 @@ import model.ProjectModel;
 import view.CommandLineTextView;
 import view.ProjectView;
 
-import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -64,7 +61,6 @@ public class ProjectTest {
     } catch (IllegalArgumentException e) {
       // do nothing
     }
-    //TODO: make sure layer list has bg layer in in after creating project
 
   }
 
@@ -121,16 +117,16 @@ public class ProjectTest {
   @Test
   public void testAddImageToLayer() {
     PixelInterface[][] imageGrid = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200)}};
+        new Pixel(60, 60, 60, 60)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200)}};
 
     //if the new project hasn't been created
     ProjectModel p1 = new Project();
     try {
       p1.addImageToLayer("layer1", imageGrid, 2, 2);
       fail("exception not be thrown");
-    } catch (IllegalStateException e){
+    } catch (IllegalStateException e) {
       //do nothing
     }
     //if layerLInkedMap doesn't contain the layer name
@@ -138,7 +134,7 @@ public class ProjectTest {
     try {
       p1.addImageToLayer("layer1", imageGrid, 4, 4);
       fail("exception not be thrown");
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       //do nothing
     }
     p1.addLayer("layer1");
@@ -146,23 +142,23 @@ public class ProjectTest {
     try {
       p1.addImageToLayer("layer1", imageGrid, 4, 1);
       fail("exception not be thrown");
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       //do nothing
     }
     //if the height is invalid
     try {
       p1.addImageToLayer("layer1", imageGrid, 1, 4);
       fail("exception not be thrown");
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       //do nothing
     }
     //add image successfully
     p1.addImageToLayer("layer1", imageGrid, 0, 0);
-    PixelInterface[][] resultGrid =  p1.getLayers().get("layer1").getPixelGrid();
+    PixelInterface[][] resultGrid = p1.getLayers().get("layer1").getPixelGrid();
     String result = "";
     String answer = "";
-    for (int i=0; i < 2; i++){
-      for (int j= 0; j < 2; j++){
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
         result += imageGrid[i][j].toString(0);
         answer += resultGrid[i][j].toString(0);
       }
@@ -180,7 +176,7 @@ public class ProjectTest {
     try {
       p1.setFilter("layer1", "blue-filter");
       fail("exception not be thrown");
-    } catch (IllegalStateException e){
+    } catch (IllegalStateException e) {
       //do nothing
     }
     //if layerLInkedMap doesn't contain the layer name
@@ -188,7 +184,7 @@ public class ProjectTest {
     try {
       p1.setFilter("layer1", "blue-filter");
       fail("exception not be thrown");
-    } catch (IllegalArgumentException e){
+    } catch (IllegalArgumentException e) {
       //do nothing
     }
     p1.addLayer("layer1");
@@ -206,13 +202,13 @@ public class ProjectTest {
     try {
       p1.getHeight();
       fail("exception not be thrown");
-    } catch (IllegalStateException e){
+    } catch (IllegalStateException e) {
       //do nothing
     }
     try {
       p1.getWidth();
       fail("exception not be thrown");
-    } catch (IllegalStateException e){
+    } catch (IllegalStateException e) {
       //do nothing
     }
     p1.newProject(1, 1);

@@ -12,12 +12,13 @@ public class Image {
    * Read an image file as a String in the PPM format and return a 2D array of pixels representing
    * the image.
    *
-   * @param imageFile the image file as a string.
+   * @param imageFile     the image file as a string.
    * @param projectHeight the height of the project
-   * @param projectWidth the width of the project
+   * @param projectWidth  the width of the project
    * @throws IllegalArgumentException if the image file is not in the right format.
    */
-  public static PixelInterface[][] readPPM(String imageFile, int projectHeight, int projectWidth) throws IllegalArgumentException {
+  public static PixelInterface[][] readPPM(String imageFile, int projectHeight, int projectWidth)
+      throws IllegalArgumentException {
     int width;
     int height;
     PixelInterface[][] imageLayer;

@@ -64,8 +64,7 @@ public abstract class AbstractFilter implements FilterInterface {
    * set to 0.
    *
    * @param value the value to be checked
-   * @return 0 if it is below 0, 255 if it is above 255, or the original value if it is between 0
-   * and 255
+   * @return 0 if it is below 0, 255 if it is above 255, or the original value if it is 0-255
    */
   protected int produceValidValue(int value) {
     if (value > 255) {

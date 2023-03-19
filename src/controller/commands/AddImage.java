@@ -8,6 +8,9 @@ import model.Image;
 import model.ProjectModel;
 import view.ProjectView;
 
+/**
+ * Represents the command that will add an image to a layer.
+ */
 public class AddImage implements CollagerCommand {
 
   private final Scanner scanner;
@@ -19,7 +22,7 @@ public class AddImage implements CollagerCommand {
   }
 
   /**
-   * Method that will execute the command
+   * Method that will execute the command.
    */
   @Override
   public void execute(ProjectModel model) throws IOException {
