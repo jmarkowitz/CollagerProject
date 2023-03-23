@@ -13,29 +13,28 @@ import view.ProjectView;
  */
 public class AddImage implements CollagerCommand {
 
-  private final Scanner scanner;
-  private final ProjectView view;
+  private final String layerName;
+  private final String imagePath;
+  private final int x;
+  private final int y;
 
-  public AddImage(Scanner scanner, ProjectView view) {
-    this.scanner = scanner;
-    this.view = view;
+  public AddImage(String layerName, String imagePath, int x, int y) {
+    this.layerName = layerName;
+    this.imagePath = imagePath;
+    this.x = x;
+    this.y = y;
   }
 
   /**
    * Method that will execute the command.
    */
   @Override
-  public void execute(ProjectModel model) throws IOException {
-    while (this.scanner.hasNext()) {
-      String layerName = this.scanner.next();
-      String imagePath = this.scanner.next();
-      int x = this.scanner.nextInt();
-      int y = this.scanner.nextInt();
+  public void execute(ProjectModel model, ProjectView view) throws IOException {
       String imageString = null;
       try {
         imageString = FileUtil.readFileAsString(imagePath);
       } catch (Exception e) {
-        this.view.renderMessage(e.getMessage() + System.lineSeparator());
+        view.renderMessage(e.getMessage() + System.lineSeparator());
         throw new IOException();
       }
 
@@ -43,11 +42,9 @@ public class AddImage implements CollagerCommand {
         model.addImageToLayer(layerName, Image.readPPM(imageString, model.getHeight(),
             model.getWidth()), x, y);
         view.renderMessage(imagePath + " added successfully" + System.lineSeparator());
-        break;
       } catch (IllegalArgumentException | IllegalStateException e) {
-        this.view.renderMessage(e.getMessage() + System.lineSeparator());
+        view.renderMessage(e.getMessage() + System.lineSeparator());
         throw new IOException();
       }
-    }
   }
 }

@@ -21,7 +21,7 @@ Model:
   -
 
 View:
-Controller:
+newstuff.Controller:
   - Command design pattern using lambdas
   - look at lab with mocks
 

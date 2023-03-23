@@ -11,36 +11,32 @@ import view.ProjectView;
  */
 public class SetFilter implements CollagerCommand {
 
-  private final Scanner scanner;
+  private final String layerName;
 
-  private final ProjectView view;
+  private final String filterName;
 
   /**
-   * Constructor for the SetFilter command.
-   *
-   * @param scanner the scanner to read the layer name and filter name from
-   * @param view    the view to render the message to
+   * Constructs a set filter command.
+   * @param layerName the name of the layer to apply the filter to
+   * @param filterName the name of the filter to apply
    */
-  public SetFilter(Scanner scanner, ProjectView view) {
-    this.scanner = scanner;
-    this.view = view;
+  public SetFilter(String layerName, String filterName) {
+    this.layerName = layerName;
+    this.filterName = filterName;
   }
+
 
   /**
    * Method that will execute the command.
    */
   @Override
-  public void execute(ProjectModel model) throws IOException {
-    while (this.scanner.hasNext()) {
-      String layer = this.scanner.next();
-      String filterName = this.scanner.next();
+  public void execute(ProjectModel model, ProjectView view) throws IOException {
       try {
-        model.setFilter(layer, filterName);
-        this.view.renderMessage(filterName + " filter was successfully added to " + layer + " layer"
+        model.setFilter(layerName, filterName);
+        view.renderMessage(filterName + " filter was successfully added to " + layerName + " layer"
             + System.lineSeparator());
-        break;
       } catch (IllegalArgumentException | IllegalStateException e) {
-        this.view.renderMessage(e.getMessage() + System.lineSeparator());
+        view.renderMessage(e.getMessage() + System.lineSeparator());
         throw new IOException();
       }
     }

@@ -103,8 +103,8 @@ public class ProjectTest {
     ProjectView view = new CommandLineTextView();
     Readable in = new StringReader("projects/sample1.collage");
     Scanner s = new Scanner(in);
-    CollagerCommand loadProject = new LoadProject(s, view);
-    loadProject.execute(p2);
+    CollagerCommand loadProject = new LoadProject(s.next());
+    loadProject.execute(p2, view);
     assertEquals("layer3", p2.getLayers().get("layer3").getName());
     p2.addLayer("layer-4");
     assertEquals("layer-4", p2.getLayers().get("layer-4").getName());

@@ -64,4 +64,8 @@ public interface ProjectModel extends ProjectModelState {
    */
   void addImageToLayer(String layerName, PixelInterface[][] imagePixelGrid, int x, int y)
       throws IllegalArgumentException, IllegalStateException;
+
+  PixelInterface[][] flatten();
+
+  String exportProject();
 }
