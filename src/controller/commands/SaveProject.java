@@ -15,8 +15,7 @@ import view.ProjectView;
  */
 public class SaveProject implements CollagerCommand {
 
-  private final Scanner scanner;
-  private final ProjectView view;
+  private final String filepath;
 
   /**
    * Constructs a SaveProject object.
@@ -24,9 +23,8 @@ public class SaveProject implements CollagerCommand {
    * @param scanner the scanner to read the file path
    * @param view    the view to render the message
    */
-  public SaveProject(Scanner scanner, ProjectView view) {
-    this.scanner = scanner;
-    this.view = view;
+  public SaveProject(String filepath) {
+    this.filepath = filepath;
   }
 
   /**
@@ -44,9 +42,7 @@ public class SaveProject implements CollagerCommand {
    *                               loaded
    */
   @Override
-  public void execute(ProjectModel model) throws IOException {
-    while (this.scanner.hasNext()) {
-      String filepath = this.scanner.next();
+  public void execute(ProjectModel model, ProjectView view) throws IOException {
       int projectWidth;
       int projectHeight;
       Map<String, LayerInterface> projectLayers;
@@ -55,22 +51,20 @@ public class SaveProject implements CollagerCommand {
         projectHeight = model.getHeight();
         projectLayers = model.getLayers();
       } catch (IllegalStateException | IllegalArgumentException e) {
-        this.view.renderMessage(e.getMessage());
+        view.renderMessage(e.getMessage());
         throw new IOException();
       }
       FileWriter fileWriter = null;
       try {
         fileWriter = new FileWriter(filepath);
         fileWriter.write(this.formatExport(projectWidth, projectHeight, projectLayers));
-        this.view.renderMessage(
+        view.renderMessage(
             "Project was successfully saved at: " + filepath + System.lineSeparator());
         fileWriter.close();
       } catch (IOException ex) {
         view.renderMessage(ex.getMessage() + System.lineSeparator());
         throw new IOException();
       }
-      break;
-    }
   }
 
   private String formatExport(int width, int height, Map<String, LayerInterface> projectLayers) {

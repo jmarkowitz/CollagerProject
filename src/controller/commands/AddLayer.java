@@ -11,36 +11,28 @@ import view.ProjectView;
  */
 public class AddLayer implements CollagerCommand {
 
-  private final Scanner scanner;
-  private final ProjectView view;
+  private final String layerName;
 
   /**
-   * Constructor for the AddLayer command.
+   * Constructs an add layer command
    *
-   * @param scanner the scanner to read the layer name from
-   * @param view    the view to render the message to
+   * @param layerName the name of the layer to add
    */
-  public AddLayer(Scanner scanner, ProjectView view) {
-    this.scanner = scanner;
-    this.view = view;
+  public AddLayer(String layerName) {
+    this.layerName = layerName;
   }
 
   /**
    * Executes the command to add a layer to the project.
    */
   @Override
-  public void execute(ProjectModel model) throws IOException {
-    while (this.scanner.hasNext()) {
-      String layerName = this.scanner.next();
-      try {
-        model.addLayer(layerName);
-        view.renderMessage("New layer " + layerName + " added to project" + System.lineSeparator());
-        break;
-      } catch (IllegalArgumentException | IllegalStateException e) {
-        this.view.renderMessage(e.getMessage() + System.lineSeparator());
-        throw new IOException();
-      }
+  public void execute(ProjectModel model, ProjectView view) throws IOException {
+    try {
+      model.addLayer(layerName);
+      view.renderMessage("New layer " + layerName + " added to project" + System.lineSeparator());
+    } catch (IllegalArgumentException | IllegalStateException e) {
+      view.renderMessage(e.getMessage() + System.lineSeparator());
+      throw new IOException();
     }
-
   }
 }

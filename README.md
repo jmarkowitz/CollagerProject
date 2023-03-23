@@ -267,7 +267,7 @@ user.
 
 ---
 
-### 3 Controller
+### 3 newstuff.Controller
 
 #### 3.1 `CollagerController`
 

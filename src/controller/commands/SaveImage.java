@@ -19,28 +19,22 @@ import view.ProjectView;
  */
 public class SaveImage implements CollagerCommand {
 
-  private final Scanner scanner;
-  private final ProjectView view;
+  private final String imagePath;
 
   /**
-   * Constructor for the save image command.
-   *
-   * @param scanner the scanner that will be used to read the user input
-   * @param view    the view that will be used to display the output
+   * Constructs a save image command.
+   * @param imagePath the path to save the image to
    */
-  public SaveImage(Scanner scanner, ProjectView view) {
-    this.scanner = scanner;
-    this.view = view;
+  public SaveImage(String imagePath) {
+    this.imagePath = imagePath;
   }
 
   /**
    * Method that will execute the command.
    */
   @Override
-  public void execute(ProjectModel model) throws IOException {
-    while (this.scanner.hasNext()) {
+  public void execute(ProjectModel model, ProjectView view) throws IOException {
       // initial ppm file setup
-      String imagePath = this.scanner.next();
       StringBuilder finalImage = new StringBuilder();
       int height = 0;
       int width = 0;
@@ -85,11 +79,9 @@ public class SaveImage implements CollagerCommand {
           finalImage.append(finalPixelGrid[row][col].toString(1)).append(" ");
         }
       }
-      this.imageWrite(imagePath, finalImage);
-      this.view.renderMessage(
+      this.imageWrite(imagePath, finalImage, view);
+      view.renderMessage(
           "Image was successfully saved at: " + imagePath + System.lineSeparator());
-      break;
-    }
   }
 
   private PixelInterface[][] compressLayer(int height, int width, PixelInterface[][] currentGrid,
@@ -107,7 +99,7 @@ public class SaveImage implements CollagerCommand {
     return updatedGrid;
   }
 
-  private void imageWrite(String imagePath, StringBuilder finalImage) throws IOException {
+  private void imageWrite(String imagePath, StringBuilder finalImage, ProjectView view) throws IOException {
     String workingDir = System.getProperty("user.dir");
     String absoluteFilePath = workingDir + File.separator + imagePath;
     FileWriter fileWriter = null;
