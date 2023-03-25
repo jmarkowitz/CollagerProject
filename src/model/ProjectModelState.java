@@ -45,4 +45,18 @@ public interface ProjectModelState {
    */
   Map<String, FilterInterface> getAllFilters() throws IllegalStateException;
 
+  /**
+   * Returns a string representation of the project.
+   * @return the string representation of the project
+   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   */
+  String exportProject() throws IllegalStateException;
+
+  /**
+   * Compresses all the layers into one 2D array of {@code Pixel}s.
+   * @return the 2D array of {@code Pixel}s
+   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   */
+  PixelInterface[][] compressLayers() throws IllegalStateException;
+
 }

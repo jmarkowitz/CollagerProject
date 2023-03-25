@@ -16,11 +16,10 @@ public class GreenFilter extends AbstractFilter {
    */
   public GreenFilter(int height, int width) {
     super(height, width);
-    this.filterName = "green-component";
   }
 
   @Override
-  protected PixelInterface getPixelByType(PixelInterface p) {
-    return new Pixel(0, p.getGreen(), 0, p.getAlpha());
+  protected PixelInterface getPixelByType(PixelInterface curPixel, PixelInterface bgPixel) {
+    return new Pixel(0, curPixel.getGreen(), 0, curPixel.getAlpha());
   }
 }

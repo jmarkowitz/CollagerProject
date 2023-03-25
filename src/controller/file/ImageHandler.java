@@ -11,18 +11,12 @@ import model.ProjectModelState;
 
 public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
 
-  public ImageHandler(ProjectModelState model) {
-    super(model);
+  public ImageHandler(ProjectModelState modelState) {
+    super(modelState);
   }
 
   @Override
   public PixelInterface[][] readFile(String filepath) throws IOException {
-    PixelInterface[][] pixels;
-    pixels = this.readPixelsFromImage(filepath);
-    return this.resizePixelArray(pixels, this.projectHeight, this.projectWidth);
-  }
-
-  private PixelInterface[][] readPixelsFromImage(String filepath) throws IOException {
     BufferedImage img = ImageIO.read(new File(filepath));
     int width = img.getWidth();
     int height = img.getHeight();
@@ -43,21 +37,29 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
   @Override
   public void writeFile(String filepath) throws IOException {
     String extension = this.getFileExtension(filepath);
-    PixelInterface[][] finalImage = this.compressLayers();//TODO should we have a method in project that does this?
+    PixelInterface[][] finalImage = this.modelState.compressLayers();
     this.writePixelsToImage(finalImage, filepath, extension);
   }
 
-  private void writePixelsToImage(PixelInterface[][] compressedImage, String filepath, String extension)
+  private void writePixelsToImage(PixelInterface[][] compressedImage, String filepath,
+      String extension)
       throws IOException {
-    BufferedImage image = new BufferedImage(this.projectWidth, this.projectHeight, BufferedImage.TYPE_INT_ARGB);
-    for (int col = 0; col < this.projectHeight; col++) {
-      for (int row = 0; row < this.projectWidth; row++) {
+    BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getWidth(),
+        BufferedImage.TYPE_INT_ARGB);
+    for (int row = 0; row < this.modelState.getHeight(); row++) {
+      for (int col = 0; col < this.modelState.getWidth(); col++) {
         PixelInterface curPixel = compressedImage[row][col];
-        int argb = (curPixel.getAlpha() << 24) | (curPixel.getRed() << 16) | (curPixel.getGreen() << 8) | curPixel.getBlue();
+        int argb =
+            (curPixel.getAlpha() << 24) | (curPixel.getRed() << 16) | (curPixel.getGreen() << 8)
+                | curPixel.getBlue();
         image.setRGB(col, row, argb);
       }
     }
     File output = new File(filepath);
-    ImageIO.write(image, extension, output);
+    try {
+      ImageIO.write(image, extension, output);
+    } catch (IOException e) {
+      throw new IOException("Unable to write image to file");
+    }
   }
 }

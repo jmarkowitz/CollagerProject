@@ -1,8 +1,8 @@
 package model.filters;
 
+import static model.Project.MAX_VALUE;
+
 import model.FilterInterface;
-import model.Layer;
-import model.LayerInterface;
 import model.PixelInterface;
 
 /**
@@ -14,7 +14,6 @@ public abstract class AbstractFilter implements FilterInterface {
   protected final int height;
 
   protected final int width;
-  protected String filterName;
 
   /**
    * Constructs an AbstractFilter.
@@ -27,35 +26,25 @@ public abstract class AbstractFilter implements FilterInterface {
     this.width = width;
   }
 
-  protected abstract PixelInterface getPixelByType(PixelInterface p);
+  protected abstract PixelInterface getPixelByType(PixelInterface curPixel, PixelInterface bgPixel);
 
   /**
    * Applies the filter to the given layer and returns the layer with the filtered pixels.
    *
-   * @param layer the layer to be filtered
+   * @param curImage the layer to be filtered
+   * @param bgImage the background image used for certain filters
    * @return the filtered layer
    */
   @Override
-  public LayerInterface apply(LayerInterface layer) {
-    PixelInterface[][] grid = layer.getPixelGrid();
+  public PixelInterface[][] apply(PixelInterface[][] curImage, PixelInterface[][] bgImage) {
     PixelInterface[][] newGrid = new PixelInterface[height][width];
 
     for (int row = 0; row < this.height; row++) {
       for (int col = 0; col < this.width; col++) {
-        newGrid[row][col] = getPixelByType(grid[row][col]);
+        curImage[row][col] = getPixelByType(curImage[row][col], bgImage[row][col]);
       }
     }
-    return new Layer(layer.getName(), newGrid);
-  }
-
-  /**
-   * Returns the name of the filter.
-   *
-   * @return the new name of the filter
-   */
-  @Override
-  public String getFilterName() {
-    return this.filterName;
+    return curImage;
   }
 
   /**
@@ -69,10 +58,17 @@ public abstract class AbstractFilter implements FilterInterface {
   protected int produceValidValue(int value) {
     if (value > 255) {
       return 255;
-    } else if (value < 0) {
-      return 0;
-    } else {
-      return value;
-    }
+    } else
+      return Math.max(value, 0);
   }
+
+  /**
+   * Changes the range of the value from 0-255 to 0-1.
+   * @param value the value to be changed
+   * @return the value as a double in the range of 0-1
+   */
+  protected double changeRange(int value) {
+    return value / (double) MAX_VALUE;
+  }
+
 }

@@ -1,26 +1,34 @@
 package controller.file;
 
-import java.io.IOException;
-import java.util.Map;
-import model.FilterInterface;
-import model.LayerInterface;
-import model.Pixel;
-import model.PixelInterface;
+import model.ProjectModel;
 import model.ProjectModelState;
 
 public abstract class AbstractFileHandler<F> implements FileHandler<F> {
 
-   protected final int projectHeight;
-   protected final int projectWidth;
+  private enum FileType {
+    TXT("txt"),
+    COLLAGE("collage"),
+    JSON("json"),
+    JPG("jpg"),
+    JPEG("jpeg"),
+    PNG("png"),
+    PPM("ppm");
 
-  protected final Map<String, LayerInterface> layerMap;
-  protected final Map<String, FilterInterface> filterMap;
+    private final String extension;
+
+    FileType(String extension) {
+      this.extension = extension;
+    }
+
+    public String getExtension() {
+      return this.extension;
+    }
+  }
+
+  protected final ProjectModelState modelState;
 
   public AbstractFileHandler(ProjectModelState modelState) {
-    this.projectHeight = modelState.getHeight();
-    this.projectWidth = modelState.getWidth();
-    this.layerMap = modelState.getLayers();
-    this.filterMap = modelState.getAllFilters();
+    this.modelState = modelState;
   }
 
   protected String getFileExtension(String filepath) {
@@ -34,24 +42,6 @@ public abstract class AbstractFileHandler<F> implements FileHandler<F> {
 
   protected int scalePixel(int pixelValue, int maxValue) {
     return (int) Math.round(pixelValue * (255.0 / maxValue));
-  }
-
-  protected PixelInterface[][] resizePixelArray(PixelInterface[][] inputArray, int projectHeight,
-      int projectWidth) {
-    if (projectHeight == inputArray.length && projectWidth == inputArray[0].length) {
-      return inputArray;
-    }
-    PixelInterface[][] outputArray = new PixelInterface[projectHeight][projectWidth];
-    for (int row = 0; row < projectHeight; row++) {
-      for (int col = 0; col < projectWidth; col++) {
-        if (col <= inputArray[0].length - 1 && row <= inputArray.length - 1) {
-          outputArray[row][col] = inputArray[row][col];
-        } else {
-          outputArray[row][col] = new Pixel(255, 255, 255, 0);
-        }
-      }
-    }
-    return outputArray;
   }
 
 }

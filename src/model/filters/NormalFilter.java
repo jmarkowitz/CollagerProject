@@ -15,11 +15,10 @@ public class NormalFilter extends AbstractFilter {
    */
   public NormalFilter(int height, int width) {
     super(height, width);
-    this.filterName = "normal";
   }
 
   @Override
-  protected PixelInterface getPixelByType(PixelInterface p) {
-    return p;
+  protected PixelInterface getPixelByType(PixelInterface curPixel, PixelInterface bgPixel) {
+    return curPixel;
   }
 }

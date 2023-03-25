@@ -1,5 +1,7 @@
 import controller.CollagerControllerImpl;
-import controller.FileUtil;
+import controller.file.FileUtil;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import model.Project;
@@ -26,7 +28,11 @@ public class Main {
           in = new InputStreamReader(System.in);
           break;
         case "batch":
-          in = new StringReader(FileUtil.readFileAsString("batch_command.txt"));
+          try {
+            in = new StringReader(FileUtil.readFileAsString("batch_command.txt"));
+          } catch (IOException e) {
+            throw new IllegalArgumentException("File not found");
+          }
           break;
         default:
           throw new IllegalArgumentException("Invalid type");

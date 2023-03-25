@@ -5,14 +5,19 @@ import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.Set;
 import model.filters.BlueFilter;
-import model.filters.BrightenIntensity;
-import model.filters.BrightenLuma;
-import model.filters.BrightenValue;
-import model.filters.DarkenIntensity;
-import model.filters.DarkenLuma;
-import model.filters.DarkenValue;
+import model.filters.BrightenIntensityFilter;
+import model.filters.BrightenLumaFilter;
+import model.filters.BrightenValueFilter;
+import model.filters.ScreenFilter;
+import model.filters.DarkenIntensityFilter;
+import model.filters.DarkenLumaFilter;
+import model.filters.DarkenValueFilter;
+import model.filters.MultiplyFilter;
 import model.filters.GreenFilter;
+import model.filters.DifferenceFilter;
 import model.filters.NormalFilter;
 import model.filters.RedFilter;
 
@@ -47,13 +52,16 @@ public class Project implements ProjectModel {
     this.allFilters.put("red-component", new RedFilter(this.height, this.width));
     this.allFilters.put("green-component", new GreenFilter(this.height, this.width));
     this.allFilters.put("blue-component", new BlueFilter(this.height, this.width));
-    this.allFilters.put("brighten-luma", new BrightenLuma(this.height, this.width));
-    this.allFilters.put("darken-luma", new DarkenLuma(this.height, this.width));
-    this.allFilters.put("brighten-intensity", new BrightenIntensity(this.height, this.width));
-    this.allFilters.put("darken-intensity", new DarkenIntensity(this.height, this.width));
-    this.allFilters.put("brighten-value", new BrightenValue(this.height, this.width));
-    this.allFilters.put("darken-value", new DarkenValue(this.height, this.width));
+    this.allFilters.put("brighten-luma", new BrightenLumaFilter(this.height, this.width));
+    this.allFilters.put("darken-luma", new DarkenLumaFilter(this.height, this.width));
+    this.allFilters.put("brighten-intensity", new BrightenIntensityFilter(this.height, this.width));
+    this.allFilters.put("darken-intensity", new DarkenIntensityFilter(this.height, this.width));
+    this.allFilters.put("brighten-value", new BrightenValueFilter(this.height, this.width));
+    this.allFilters.put("darken-value", new DarkenValueFilter(this.height, this.width));
     this.allFilters.put("normal", new NormalFilter(this.height, this.width));
+    this.allFilters.put("difference", new DifferenceFilter(this.height, this.width));
+    this.allFilters.put("multiply", new MultiplyFilter(this.height, this.width));
+    this.allFilters.put("screen", new ScreenFilter(this.height, this.width));
   }
 
   // Options:
@@ -179,13 +187,54 @@ public class Project implements ProjectModel {
 
   private PixelInterface[][] changePixels(PixelInterface[][] layerGrid,
       PixelInterface[][] imageGrid, int x, int y) {
-    for (int row = y; row < this.height; row++) {
-      for (int col = x; col < this.width; col++) {
-        layerGrid[row][col] = imageGrid[row][col];
+    int imageHeight = imageGrid.length;
+    int imageWidth = imageGrid[0].length;
+
+    int xEnd = Math.min(this.width - x, imageWidth);
+    int yEnd = Math.min(this.height - y, imageHeight);
+
+    for (int row = 0; row < yEnd; row++) {
+      for (int col = 0; col < xEnd; col++) {
+        PixelInterface curPixel = layerGrid[row + y][col + x];
+        PixelInterface imagePixel = imageGrid[row][col];
+        PixelInterface updatedPixel = imagePixel.bgPixelConverter(curPixel.getRed(), curPixel.getGreen(), curPixel.getBlue(), curPixel.getAlpha());
+        layerGrid[row + y][col + x] = updatedPixel;
       }
     }
     return layerGrid;
   }
+
+  @Override
+  public PixelInterface[][] compressLayers() throws IllegalStateException {
+    if (!this.inProgress) {
+      throw new IllegalStateException("Cannot compress layers until new project has been created");
+    }
+    PixelInterface[][] bgImage = this.layerLinkedMap.get("bg").getPixelGrid();
+    Set<String> allLayerNames = this.layerLinkedMap.keySet();
+    for (String name : allLayerNames) {
+      LayerInterface curLayer = layerLinkedMap.get(name);
+      PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
+      PixelInterface[][] compressedFilteredGrid = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
+      bgImage = this.changePixels(curLayerGrid, compressedFilteredGrid, 0, 0);
+    }
+    return bgImage;
+  }
+
+//  @Override
+//  public PixelInterface[][] compressLayers() throws IllegalStateException {
+//    if (!this.inProgress) {
+//      throw new IllegalStateException("Cannot compress layers until new project has been created");
+//    }
+//    PixelInterface[][] bgImage = this.layerLinkedMap.get("bg").getPixelGrid();
+//    Set<String> allLayerNames = this.layerLinkedMap.keySet();
+//    for (String name : allLayerNames) {
+//      LayerInterface curLayer = layerLinkedMap.get(name);
+//      PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
+//      PixelInterface[][] compressedFilteredGrid = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
+//      bgImage = this.addImageToLayer(bgImage, compressedFilteredGrid, 0, 0);
+//    }
+//    return bgImage;
+//  }
 
   /**
    * Returns the width as an integer in pixel units representing the width of the canvas.
@@ -245,5 +294,86 @@ public class Project implements ProjectModel {
       throw new IllegalStateException("Cannot get all filters until new project has been created");
     }
     return new HashMap<>(this.allFilters);
+  }
+
+  /**
+   * Returns a string representation of the project.
+   * @return the string representation of the project
+   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   */
+  @Override
+  public String exportProject() throws IllegalStateException {
+    StringBuilder finalString = new StringBuilder();
+    finalString.append("C1").append(System.lineSeparator());
+    finalString.append(width).append(" ").append(height).append(System.lineSeparator());
+    finalString.append("255").append(System.lineSeparator());
+    for (Map.Entry<String, LayerInterface> mapLayer : this.layerLinkedMap.entrySet()) {
+      LayerInterface currentLayer = mapLayer.getValue();
+      String currentLayerName = mapLayer.getKey();
+      finalString.append(currentLayerName).append(" ").append(currentLayer.getFilter())
+          .append(System.lineSeparator());
+      PixelInterface[][] curLayerPixels = currentLayer.getPixelGrid();
+      for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+          finalString.append(curLayerPixels[row][col].toString(0)).append(System.lineSeparator());
+        }
+      }
+    }
+    return finalString.toString();
+  }
+
+  /**
+   * Builds the project based on the given project string.
+   * @param projectString the string representation of the project
+   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   * @throws IllegalArgumentException if the project string is invalid
+   */
+  @Override
+  public void buildProject(String projectString) throws IllegalStateException, IllegalArgumentException {
+    boolean isBGLayer = true;
+    int width;
+    int height;
+    Scanner sc;
+    sc = new Scanner(projectString);
+    String token;
+    token = sc.next();
+    if (!token.equals("C1")) {
+      throw new IllegalArgumentException(
+          "Invalid Project file: plain RAW file should begin with C1");
+    }
+    width = sc.nextInt();
+    height = sc.nextInt();
+      this.newProject(height, width);
+    int maxValue = sc.nextInt();
+    while (sc.hasNext()) {
+      String layerName = sc.next();
+        if (!isBGLayer) {
+          this.addLayer(layerName);
+        }
+      String filterName = sc.next();
+      PixelInterface[][] currentLayer = new PixelInterface[height][width];
+      for (int row = 0; row < height; row++) {
+        for (int col = 0; col < width; col++) {
+          int red = sc.nextInt();
+          int green = sc.nextInt();
+          int blue = sc.nextInt();
+          int alpha = sc.nextInt();
+          currentLayer[row][col] = new Pixel(this.scalePixel(red, maxValue),
+              this.scalePixel(green, maxValue), this.scalePixel(blue, maxValue),
+              this.scalePixel(alpha, maxValue));
+        }
+      }
+        if (!isBGLayer) {
+          this.addImageToLayer(layerName, currentLayer, 0, 0);
+        }
+        if (!isBGLayer) {
+          this.setFilter(layerName, filterName);
+        }
+      isBGLayer = false;
+    }
+  }
+
+  private int scalePixel(int pixelValue, int maxValue) {
+    return (int) Math.round(pixelValue * (255.0 / maxValue));
   }
 }

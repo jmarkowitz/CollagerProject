@@ -1,26 +1,22 @@
 package model;
 
-import java.util.function.Function;
+import java.util.function.BiFunction;
 
 /**
  * Represents a filter that can be used on a layer. Allows the user to apply a filter, get the name,
  * and return a valid value.
  */
-public interface FilterInterface extends Function<LayerInterface, LayerInterface> {
+@FunctionalInterface
+public interface FilterInterface extends
+    BiFunction<PixelInterface[][], PixelInterface[][], PixelInterface[][]> {
 
   /**
    * Applies the filter to the given layer and returns the layer with the filtered pixels.
    *
-   * @param layer the layer to be filtered
+   * @param curImage the layer to be filtered
+   * @param bgImage the background image for certain filters
    * @return the filtered layer
    */
   @Override
-  LayerInterface apply(LayerInterface layer);
-
-  /**
-   * Returns the name of the filter.
-   *
-   * @return the new name of the filter
-   */
-  String getFilterName();
+  PixelInterface[][] apply(PixelInterface[][] curImage, PixelInterface[][] bgImage);
 }
