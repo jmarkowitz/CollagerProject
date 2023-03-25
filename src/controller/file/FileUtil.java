@@ -1,8 +1,9 @@
-package controller;
+package controller.file;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 /**
@@ -16,14 +17,12 @@ public class FileUtil {
    * @param filename the name of the file to be read
    * @return the file as a string
    */
-  public static String readFileAsString(String filename) {
-    String workingDir = System.getProperty("user.dir");
-    String fullPath = workingDir + File.separator + filename;
+  public static String readFileAsString(String filename) throws IOException {
     Scanner sc;
     try {
-      sc = new Scanner(new FileInputStream(fullPath));
+      sc = new Scanner(new FileInputStream(filename));
     } catch (FileNotFoundException e) {
-      throw new IllegalArgumentException("File " + fullPath + " not found!");
+      throw new IOException("File " + filename + " not found!");
     }
     StringBuilder builder = new StringBuilder();
     //read the file line by line, and populate a string. This will throw away any comment lines
@@ -34,6 +33,15 @@ public class FileUtil {
       }
     }
     return builder.toString();
+  }
+
+  public static String getFileExtension(String filepath) {
+    int dotIndex = filepath.lastIndexOf('.');
+    if (dotIndex == -1 || dotIndex == filepath.length() - 1) {
+      return "";
+    } else {
+      return filepath.substring(dotIndex + 1).toLowerCase();
+    }
   }
 
 }

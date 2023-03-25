@@ -5,6 +5,7 @@ import controller.commands.AddLayer;
 import controller.commands.LoadProject;
 import controller.commands.NewProject;
 import controller.commands.SaveImage;
+import controller.commands.SaveImageOld;
 import controller.commands.SaveProject;
 import controller.commands.SetFilter;
 import java.io.IOException;
@@ -84,7 +85,7 @@ public class CollagerControllerImpl implements CollagerController {
           try {
             c.execute(model, view);
           } catch (IOException | InputMismatchException e) {
-            view.renderMessage("Try again:" + System.lineSeparator());
+            view.renderMessage(e.getMessage() + System.lineSeparator());
           }
         }
       }

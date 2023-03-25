@@ -6,12 +6,12 @@ import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 import model.filters.BlueFilter;
-import model.filters.BrightenIntensity;
-import model.filters.BrightenLuma;
-import model.filters.BrightenValue;
-import model.filters.DarkenIntensity;
-import model.filters.DarkenLuma;
-import model.filters.DarkenValue;
+import model.filters.BrightenIntensityFilter;
+import model.filters.BrightenLumaFilter;
+import model.filters.BrightenValueFilter;
+import model.filters.DarkenIntensityFilter;
+import model.filters.DarkenLumaFilter;
+import model.filters.DarkenValueFilter;
 import model.filters.GreenFilter;
 import model.filters.NormalFilter;
 import model.filters.RedFilter;
@@ -37,7 +37,7 @@ public class FilterTest {
             new Pixel(200, 200, 200, 200),
             new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = blueFilter.apply(layer);
+    layer = blueFilter.apply(layer, );
     PixelInterface[][] blueGrid = {{new Pixel(0, 0, 50, 50),
         new Pixel(0, 0, 60, 60),
         new Pixel(0, 0, 70, 70)},
@@ -69,7 +69,7 @@ public class FilterTest {
             new Pixel(200, 200, 200, 200),
             new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = greenFilter.apply(layer);
+    layer = greenFilter.apply(layer, );
     PixelInterface[][] greenGrid = {{new Pixel(0, 50, 0, 50),
         new Pixel(0, 60, 0, 60),
         new Pixel(0, 70, 0, 70)},
@@ -101,7 +101,7 @@ public class FilterTest {
             new Pixel(200, 200, 200, 200),
             new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = redFilter.apply(layer);
+    layer = redFilter.apply(layer, );
     PixelInterface[][] redGrid = {{new Pixel(50, 0, 0, 50),
         new Pixel(60, 0, 0, 60),
         new Pixel(70, 0, 0, 70)},
@@ -125,13 +125,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForBrightenIntensityFilter() {
-    FilterInterface briIntensityFilter = new BrightenIntensity(2, 2);
+    FilterInterface briIntensityFilter = new BrightenIntensityFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = briIntensityFilter.apply(layer);
+    layer = briIntensityFilter.apply(layer, );
     PixelInterface[][] biGrid = {{new Pixel(100, 100, 100, 100),
         new Pixel(120, 120, 120, 120)},
         {new Pixel(200, 200, 200, 200),
@@ -153,13 +153,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForDarkenIntensityFilter() {
-    FilterInterface darkIntensityFilter = new DarkenIntensity(2, 2);
+    FilterInterface darkIntensityFilter = new DarkenIntensityFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = darkIntensityFilter.apply(layer);
+    layer = darkIntensityFilter.apply(layer, );
     PixelInterface[][] diGrid = {{new Pixel(0, 0, 0, 0),
         new Pixel(0, 0, 0, 0)},
         {new Pixel(0, 0, 0, 0),
@@ -181,13 +181,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForBrightenLumaFilter() {
-    FilterInterface briLumaFilter = new BrightenLuma(2, 2);
+    FilterInterface briLumaFilter = new BrightenLumaFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = briLumaFilter.apply(layer);
+    layer = briLumaFilter.apply(layer, );
     PixelInterface[][] blGrid = {{new Pixel(100, 100, 100, 100),
         new Pixel(120, 120, 120, 120)},
         {new Pixel(200, 200, 200, 200),
@@ -209,13 +209,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForDarkenLumaFilter() {
-    FilterInterface darkLumaFilter = new DarkenLuma(2, 2);
+    FilterInterface darkLumaFilter = new DarkenLumaFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = darkLumaFilter.apply(layer);
+    layer = darkLumaFilter.apply(layer, );
     PixelInterface[][] dkGrid = {{new Pixel(0, 0, 0, 0),
         new Pixel(0, 0, 0, 0)},
         {new Pixel(0, 0, 0, 0),
@@ -237,13 +237,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForBrightenValueFilter() {
-    FilterInterface briValueFilter = new BrightenValue(2, 2);
+    FilterInterface briValueFilter = new BrightenValueFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = briValueFilter.apply(layer);
+    layer = briValueFilter.apply(layer, );
     PixelInterface[][] bvGrid = {{new Pixel(100, 100, 100, 100),
         new Pixel(120, 120, 120, 120)},
         {new Pixel(200, 200, 200, 200),
@@ -265,13 +265,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForDarkenValueFilter() {
-    FilterInterface darkValueFilter = new DarkenValue(2, 2);
+    FilterInterface darkValueFilter = new DarkenValueFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 50, 50),
         new Pixel(60, 60, 60, 60)},
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = darkValueFilter.apply(layer);
+    layer = darkValueFilter.apply(layer, );
     PixelInterface[][] dvGrid = {{new Pixel(0, 0, 0, 0),
         new Pixel(0, 0, 0, 0)},
         {new Pixel(0, 0, 0, 0),
@@ -299,7 +299,7 @@ public class FilterTest {
         {new Pixel(100, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = normalFilter.apply(layer);
+    layer = normalFilter.apply(layer, );
     String result = "";
     String answer = "";
     PixelInterface[][] finalGrid = layer.getPixelGrid();
@@ -317,13 +317,13 @@ public class FilterTest {
    */
   @Test
   public void testApplyForDarkenValueFilterButValueIsLessThan0() {
-    FilterInterface darkValueFilter = new DarkenValue(2, 2);
+    FilterInterface darkValueFilter = new DarkenValueFilter(2, 2);
     PixelInterface[][] pixelGrid = {{new Pixel(50, 50, 60, 50),
         new Pixel(60, 100, 60, 60)},
         {new Pixel(200, 100, 100, 100),
             new Pixel(200, 200, 200, 200)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = darkValueFilter.apply(layer);
+    layer = darkValueFilter.apply(layer, );
     PixelInterface[][] dvGrid = {{new Pixel(0, 0, 0, 0),
         new Pixel(0, 0, 0, 0)},
         {new Pixel(0, 0, 0, 0),
@@ -345,7 +345,7 @@ public class FilterTest {
    */
   @Test
   public void testForGetFilterName() {
-    FilterInterface darkValueFilter = new DarkenValue(2, 2);
+    FilterInterface darkValueFilter = new DarkenValueFilter(2, 2);
     String result1 = darkValueFilter.getFilterName();
     assertEquals("darken-value", result1);
 
@@ -361,23 +361,23 @@ public class FilterTest {
     String result4 = redValueFilter.getFilterName();
     assertEquals("red-component", result4);
 
-    FilterInterface brightenValueFilter = new BrightenValue(2, 2);
+    FilterInterface brightenValueFilter = new BrightenValueFilter(2, 2);
     String result5 = brightenValueFilter.getFilterName();
     assertEquals("brighten-value", result5);
 
-    FilterInterface brightenIntensityFilter = new BrightenIntensity(2, 2);
+    FilterInterface brightenIntensityFilter = new BrightenIntensityFilter(2, 2);
     String result6 = brightenIntensityFilter.getFilterName();
     assertEquals("brighten-intensity", result6);
 
-    FilterInterface darkenIntensityFilter = new DarkenIntensity(2, 2);
+    FilterInterface darkenIntensityFilter = new DarkenIntensityFilter(2, 2);
     String result7 = darkenIntensityFilter.getFilterName();
     assertEquals("darken-intensity", result7);
 
-    FilterInterface brightenLumaFilter = new BrightenLuma(2, 2);
+    FilterInterface brightenLumaFilter = new BrightenLumaFilter(2, 2);
     String result8 = brightenLumaFilter.getFilterName();
     assertEquals("brighten-luma", result8);
 
-    FilterInterface darkenLumaFilter = new DarkenLuma(2, 2);
+    FilterInterface darkenLumaFilter = new DarkenLumaFilter(2, 2);
     String result9 = darkenLumaFilter.getFilterName();
     assertEquals("darken-luma", result9);
   }

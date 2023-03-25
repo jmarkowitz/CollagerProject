@@ -1,10 +1,14 @@
 package controller.commands;
 
 import controller.CollagerCommand;
-import controller.FileUtil;
+import controller.file.FileHandler;
+import controller.file.FileUtil;
+import controller.file.ImageHandler;
+import controller.file.PPMHandler;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Scanner;
 import model.Image;
+import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -30,21 +34,32 @@ public class AddImage implements CollagerCommand {
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {
-      String imageString = null;
-      try {
-        imageString = FileUtil.readFileAsString(imagePath);
-      } catch (Exception e) {
-        view.renderMessage(e.getMessage() + System.lineSeparator());
-        throw new IOException();
-      }
-
-      try {
-        model.addImageToLayer(layerName, Image.readPPM(imageString, model.getHeight(),
-            model.getWidth()), x, y);
-        view.renderMessage(imagePath + " added successfully" + System.lineSeparator());
-      } catch (IllegalArgumentException | IllegalStateException e) {
-        view.renderMessage(e.getMessage() + System.lineSeparator());
-        throw new IOException();
-      }
+    FileHandler<PixelInterface[][]> imageHandler;
+    String fileExt = FileUtil.getFileExtension(imagePath);
+    switch (fileExt) {
+      case "ppm":
+        imageHandler = new PPMHandler(model);
+        break;
+      case "jpg":
+      case "jpeg":
+      case "png":
+        imageHandler = new ImageHandler(model);
+        break;
+      default:
+        view.renderMessage("Invalid file extension" + System.lineSeparator());
+        throw new IOException("Invalid file extension" + System.lineSeparator());
+    }
+    PixelInterface[][] image = null;
+    try {
+      image = imageHandler.readFile(imagePath);
+      view.renderMessage("Image loaded successfully" + System.lineSeparator());
+    } catch (FileNotFoundException e) {
+      view.renderMessage(e.getMessage() + System.lineSeparator());
+    }
+    try {
+      model.addImageToLayer(layerName, image, x, y);
+    } catch (IllegalArgumentException | IllegalStateException e) {
+      view.renderMessage(e.getMessage() + System.lineSeparator());
+    }
   }
 }
