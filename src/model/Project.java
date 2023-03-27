@@ -185,23 +185,23 @@ public class Project implements ProjectModel {
     this.layerLinkedMap.replace(layerName, updatedLayer);
   }
 
-  private PixelInterface[][] changePixels(PixelInterface[][] layerGrid,
-      PixelInterface[][] imageGrid, int x, int y) {
-    int imageHeight = imageGrid.length;
-    int imageWidth = imageGrid[0].length;
+  private PixelInterface[][] changePixels(PixelInterface[][] bottomImageGrid,
+      PixelInterface[][] topImageGrid, int x, int y) {
+    int imageHeight = topImageGrid.length;
+    int imageWidth = topImageGrid[0].length;
 
     int xEnd = Math.min(this.width - x, imageWidth);
     int yEnd = Math.min(this.height - y, imageHeight);
 
     for (int row = 0; row < yEnd; row++) {
       for (int col = 0; col < xEnd; col++) {
-        PixelInterface curPixel = layerGrid[row + y][col + x];
-        PixelInterface imagePixel = imageGrid[row][col];
-        PixelInterface updatedPixel = imagePixel.bgPixelConverter(curPixel.getRed(), curPixel.getGreen(), curPixel.getBlue(), curPixel.getAlpha());
-        layerGrid[row + y][col + x] = updatedPixel;
+        PixelInterface bottomPixelGrid = bottomImageGrid[row + y][col + x];
+        PixelInterface topPixelGrid = topImageGrid[row][col];
+        PixelInterface updatedPixel = topPixelGrid.bgPixelConverter(bottomPixelGrid.getRed(), bottomPixelGrid.getGreen(), bottomPixelGrid.getBlue(), bottomPixelGrid.getAlpha());
+        bottomImageGrid[row + y][col + x] = updatedPixel;
       }
     }
-    return layerGrid;
+    return bottomImageGrid;
   }
 
   @Override
@@ -214,27 +214,11 @@ public class Project implements ProjectModel {
     for (String name : allLayerNames) {
       LayerInterface curLayer = layerLinkedMap.get(name);
       PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
-      PixelInterface[][] compressedFilteredGrid = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
-      bgImage = this.changePixels(curLayerGrid, compressedFilteredGrid, 0, 0);
+      PixelInterface[][] curLayerFiltered = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
+      this.changePixels(bgImage, curLayerFiltered, 0, 0);
     }
     return bgImage;
   }
-
-//  @Override
-//  public PixelInterface[][] compressLayers() throws IllegalStateException {
-//    if (!this.inProgress) {
-//      throw new IllegalStateException("Cannot compress layers until new project has been created");
-//    }
-//    PixelInterface[][] bgImage = this.layerLinkedMap.get("bg").getPixelGrid();
-//    Set<String> allLayerNames = this.layerLinkedMap.keySet();
-//    for (String name : allLayerNames) {
-//      LayerInterface curLayer = layerLinkedMap.get(name);
-//      PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
-//      PixelInterface[][] compressedFilteredGrid = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
-//      bgImage = this.addImageToLayer(bgImage, compressedFilteredGrid, 0, 0);
-//    }
-//    return bgImage;
-//  }
 
   /**
    * Returns the width as an integer in pixel units representing the width of the canvas.

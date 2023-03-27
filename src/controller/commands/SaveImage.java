@@ -44,9 +44,9 @@ public class SaveImage implements CollagerCommand {
       case "ppm":
         imageHandler = new PPMHandler(model);
         break;
-      case "jpg":
-      case "jpeg":
       case "png":
+      case "jpeg":
+      case "jpg":
         imageHandler = new ImageHandler(model);
         break;
       default:

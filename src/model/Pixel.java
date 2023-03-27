@@ -158,28 +158,27 @@ public class Pixel implements PixelInterface {
    */
   @Override
   public PixelInterface bgPixelConverter(int red, int green, int blue, int alpha) {
-    double redD = red;
-    double greenD = green;
-    double blueD = blue;
-    double alphaD = alpha;
+    double bgRed = red;
+    double bgGreen = green;
+    double bgBlue = blue;
+    double bgAlpha = alpha;
     double thisRedD = this.redVal;
     double thisGreenD = this.greenVal;
     double thisBlueD = this.blueVal;
     double thisAlphaD = this.alphaVal;
 
-    double aPrev = alphaD;
-    double a0 = (thisAlphaD / MAX_VALUE + alphaD / MAX_VALUE * (1 - thisAlphaD / MAX_VALUE));
-    alphaD = a0 * MAX_VALUE;  //calculated a
-    redD = (thisAlphaD / MAX_VALUE * thisRedD + redD * (aPrev / MAX_VALUE) * (1
+    double a0 = (thisAlphaD / MAX_VALUE + (bgAlpha / MAX_VALUE * (1 - thisAlphaD / MAX_VALUE)));
+    double aPrime = a0 * MAX_VALUE;  //calculated a
+    double redPrime = (thisAlphaD / MAX_VALUE * thisRedD + bgRed * (bgAlpha / MAX_VALUE) * (1
         - thisAlphaD / MAX_VALUE)) * (1 / a0);
-    greenD = (thisAlphaD / MAX_VALUE * thisGreenD + greenD * (aPrev / MAX_VALUE) * (1
+    double greenPrime = (thisAlphaD / MAX_VALUE * thisGreenD + bgGreen * (bgAlpha / MAX_VALUE) * (1
         - thisAlphaD / MAX_VALUE)) * (1 / a0);
-    blueD = (thisAlphaD / MAX_VALUE * thisBlueD + blueD * (aPrev / MAX_VALUE) * (1
+    double bluePrime = (thisAlphaD / MAX_VALUE * thisBlueD + bgBlue * (bgAlpha / MAX_VALUE) * (1
         - thisAlphaD / MAX_VALUE)) * (1 / a0);
-    int finalRed = (int) Math.round(redD);
-    int finalGreen = (int) Math.round(greenD);
-    int finalBlue = (int) Math.round(blueD);
-    int finalAlpha = (int) Math.round(alphaD);
+    int finalRed = (int) Math.round(redPrime);
+    int finalGreen = (int) Math.round(greenPrime);
+    int finalBlue = (int) Math.round(bluePrime);
+    int finalAlpha = (int) Math.round(aPrime);
     return new Pixel(finalRed, finalGreen, finalBlue, finalAlpha);
   }
 

@@ -44,7 +44,7 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
   private void writePixelsToImage(PixelInterface[][] compressedImage, String filepath,
       String extension)
       throws IOException {
-    BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getWidth(),
+    BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getHeight(),
         BufferedImage.TYPE_INT_ARGB);
     for (int row = 0; row < this.modelState.getHeight(); row++) {
       for (int col = 0; col < this.modelState.getWidth(); col++) {

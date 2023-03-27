@@ -50,6 +50,7 @@ public class SaveProject implements CollagerCommand {
     FileHandler projectHandler = new TextProjectHandler(model);
     try {
       projectHandler.writeFile(filepath);
+      view.renderMessage("Project saved successfully" + System.lineSeparator());
     } catch (IOException e) {
       view.renderMessage(e.getMessage() + System.lineSeparator());
     }

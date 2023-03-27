@@ -47,6 +47,7 @@ public class LoadProject implements CollagerCommand {
     }
     try {
       model.buildProject(projectString);
+      view.renderMessage("Project loaded successfully" + System.lineSeparator());
     } catch (IllegalStateException | IllegalArgumentException e) {
       view.renderMessage(e.getMessage() + System.lineSeparator());
     }
