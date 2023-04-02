@@ -37,7 +37,7 @@ public class FilterTest {
             new Pixel(200, 200, 200, 200),
             new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
-    layer = blueFilter.apply(layer, );
+    layer = blueFilter.apply(layer.getPixelGrid(), layer.getPixelGrid());
     PixelInterface[][] blueGrid = {{new Pixel(0, 0, 50, 50),
         new Pixel(0, 0, 60, 60),
         new Pixel(0, 0, 70, 70)},
