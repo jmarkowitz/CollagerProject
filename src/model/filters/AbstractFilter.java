@@ -41,10 +41,10 @@ public abstract class AbstractFilter implements FilterInterface {
 
     for (int row = 0; row < this.height; row++) {
       for (int col = 0; col < this.width; col++) {
-        curImage[row][col] = getPixelByType(curImage[row][col], bgImage[row][col]);
+        newGrid[row][col] = getPixelByType(curImage[row][col], bgImage[row][col]);
       }
     }
-    return curImage;
+    return newGrid;
   }
 
   /**

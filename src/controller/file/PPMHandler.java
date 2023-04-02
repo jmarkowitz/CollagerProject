@@ -43,7 +43,7 @@ public class PPMHandler extends AbstractFileHandler<PixelInterface[][]> {
               255);
       }
     }
-    return imageLayer;
+    return imageLayer.clone();
   }
 
   @Override

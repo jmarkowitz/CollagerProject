@@ -14,4 +14,6 @@ public interface GUIProjectView {
 
   void renderMessage(String message);
 
+  void activateButtons();
+
 }

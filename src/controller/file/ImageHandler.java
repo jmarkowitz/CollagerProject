@@ -31,7 +31,7 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
         pixels[row][col] = new Pixel(red, green, blue, alpha);
       }
     }
-    return pixels;
+    return pixels.clone();
   }
 
   @Override

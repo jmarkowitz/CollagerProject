@@ -5,7 +5,6 @@ import controller.file.FileUtil;
 import controller.file.ImageHandler;
 import controller.file.PPMHandler;
 import controller.file.TextProjectHandler;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -15,18 +14,18 @@ import model.ProjectModel;
 /**
  * Represents the controller for the GUI. This class will handle all of the user input, and update the view accordingly.
  */
-public class Controller implements Features {
+public class FeatureController implements Features {
 
   private ProjectModel model;
   private GUIProjectView view;
-  private boolean isProjectActive;
+  public boolean isProjectActive;
 
   /**
    * Constructs a Controller object.
    * @param model the model for the program
    * @param view the view for the program
    */
-  public Controller(ProjectModel model, GUIProjectView view) {
+  public FeatureController(ProjectModel model, GUIProjectView view) {
     this.model = model;
     this.view = view;
     this.view.addFeatures(this);
@@ -39,6 +38,7 @@ public class Controller implements Features {
         this.model.newProject(height, width);
         this.getFilters();
         view.renderImage(model.compressLayers());
+        view.activateButtons();
         this.isProjectActive = true;
       } catch (IllegalArgumentException e) {
         this.view.renderMessage(e.getMessage() + System.lineSeparator());
@@ -83,6 +83,7 @@ public class Controller implements Features {
     }
     try {
       imageHandler.writeFile(filepath);
+      view.renderMessage("Image successfully saved to " + filepath);
     } catch (IOException e) {
       view.renderMessage(e.getMessage());
     }

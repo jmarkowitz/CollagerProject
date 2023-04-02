@@ -201,7 +201,7 @@ public class Project implements ProjectModel {
         bottomImageGrid[row + y][col + x] = updatedPixel;
       }
     }
-    return bottomImageGrid;
+    return bottomImageGrid.clone();
   }
 
   @Override

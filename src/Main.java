@@ -1,10 +1,9 @@
 import controller.CollagerControllerImpl;
 import controller.file.FileUtil;
-import gui.Controller;
+import gui.FeatureController;
 import gui.Features;
 import gui.GUIProjectView;
 import gui.GUIProjectViewImpl;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -46,7 +45,7 @@ public class Main {
           break;
         case "gui":
           GUIProjectView view = new GUIProjectViewImpl("Collager");
-          Features controller = new Controller(projectModel, view);
+          Features controller = new FeatureController(projectModel, view);
           break;
         default:
           throw new IllegalArgumentException("Invalid type");
