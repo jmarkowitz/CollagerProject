@@ -95,10 +95,6 @@ public class Project implements ProjectModel {
       throw new IllegalArgumentException("Invalid width provided");
     } else if (width <= 0) {
       throw new IllegalArgumentException("Invalid height provided");
-    } else if (height > this.screenWidth) {
-      throw new IllegalArgumentException("Invalid width provided for screen size");
-    } else if (width > this.screenHeight) {
-      throw new IllegalArgumentException("Invalid height provided for screen size");
     }
     this.height = height;
     this.width = width;
@@ -187,6 +183,14 @@ public class Project implements ProjectModel {
 
   private PixelInterface[][] changePixels(PixelInterface[][] bottomImageGrid,
       PixelInterface[][] topImageGrid, int x, int y) {
+
+    PixelInterface[][] bottomImageGridCopy = new PixelInterface[this.height][this.width];
+    for (int row = 0; row < this.height; row++) {
+      for (int col = 0; col < this.width; col++) {
+        bottomImageGridCopy[row][col] = bottomImageGrid[row][col];
+      }
+    }
+
     int imageHeight = topImageGrid.length;
     int imageWidth = topImageGrid[0].length;
 
@@ -195,13 +199,13 @@ public class Project implements ProjectModel {
 
     for (int row = 0; row < yEnd; row++) {
       for (int col = 0; col < xEnd; col++) {
-        PixelInterface bottomPixelGrid = bottomImageGrid[row + y][col + x];
+        PixelInterface bottomPixelGrid = bottomImageGridCopy[row + y][col + x];
         PixelInterface topPixelGrid = topImageGrid[row][col];
         PixelInterface updatedPixel = topPixelGrid.bgPixelConverter(bottomPixelGrid.getRed(), bottomPixelGrid.getGreen(), bottomPixelGrid.getBlue(), bottomPixelGrid.getAlpha());
-        bottomImageGrid[row + y][col + x] = updatedPixel;
+        bottomImageGridCopy[row + y][col + x] = updatedPixel;
       }
     }
-    return bottomImageGrid.clone();
+    return bottomImageGridCopy;
   }
 
   @Override
@@ -215,7 +219,7 @@ public class Project implements ProjectModel {
       LayerInterface curLayer = layerLinkedMap.get(name);
       PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
       PixelInterface[][] curLayerFiltered = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
-      this.changePixels(bgImage, curLayerFiltered, 0, 0);
+      bgImage = this.changePixels(bgImage, curLayerFiltered, 0, 0);
     }
     return bgImage;
   }

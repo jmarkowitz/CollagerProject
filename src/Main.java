@@ -1,9 +1,9 @@
 import controller.CollagerControllerImpl;
 import controller.file.FileUtil;
-import gui.FeatureController;
-import gui.Features;
-import gui.GUIProjectView;
-import gui.GUIProjectViewImpl;
+import gui.controller.FeatureController;
+import gui.controller.Features;
+import gui.view.GUIProjectView;
+import gui.view.GUIProjectViewImpl;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -25,16 +25,16 @@ public class Main {
   public static void main(String[] args) {
 
     ProjectModel projectModel = new Project();
-    ProjectView projectView = null;
-    Readable in = null;
+    ProjectView projectView;
+    Readable in;
     for (String arg : args) {
       switch (arg) {
-        case "cmdLine":
+        case "-text":
           in = new InputStreamReader(System.in);
           projectView = new CommandLineTextView();
           new CollagerControllerImpl(projectModel, projectView, in).startProgram();
           break;
-        case "batch":
+        case "-file":
           try {
             in = new StringReader(FileUtil.readFileAsString(args[args.length - 1]));
             projectView = new CommandLineTextView();
@@ -43,13 +43,14 @@ public class Main {
             throw new IllegalArgumentException("File not found");
           }
           break;
-        case "gui":
-          GUIProjectView view = new GUIProjectViewImpl("Collager");
-          Features controller = new FeatureController(projectModel, view);
-          break;
         default:
           throw new IllegalArgumentException("Invalid type");
       }
+    }
+
+    if (args.length == 0) {
+      GUIProjectView view = new GUIProjectViewImpl("Collager");
+      Features controller = new FeatureController(projectModel, view);
     }
   }
 }

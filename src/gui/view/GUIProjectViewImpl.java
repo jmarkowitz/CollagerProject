@@ -1,5 +1,7 @@
-package gui;
+package gui.view;
 
+import gui.controller.Features;
+import gui.view.GUIProjectViewImpl.CustomInputDialog.FieldValues;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -27,46 +29,56 @@ import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import model.PixelInterface;
 
+/**
+ * Represents the view for the GUI. This class allows for the controller to interact with the view,
+ * and update any implementation to allow the user to visibly see how the program will change
+ * according to their input.
+ */
 public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
-  private int programWidth;
-  private int programHeight;
+  private final int programWidth;
+  private final int programHeight;
 
   // menu stuff
-  private JMenuBar menuBar;
-  private JMenu fileMenu;
-  private JMenuItem newMenuItem;
-  private JMenuItem openProjectMenuItem;
-  private JMenuItem saveProjectMenuItem;
-  private JMenuItem exportMenuItem;
-  private JMenuItem quitMenuItem;
-  private JMenu projectMenu;
-  private JMenuItem addImageMenuItem;
+  private final JMenuBar menuBar;
+  private final JMenu fileMenu;
+  private final JMenuItem newMenuItem;
+  private final JMenuItem openProjectMenuItem;
+  private final JMenuItem saveProjectMenuItem;
+  private final JMenuItem exportMenuItem;
+  private final JMenuItem quitMenuItem;
+  private final JMenu projectMenu;
+  private final JMenuItem addImageMenuItem;
 
-  private int sideBarWidth;
+  private static final int SIDE_BAR_WIDTH = 300;
+  private static final int FRAME_MIN_SIZE = 400;
+  private static final Color SIDE_BAR_COLOR = new Color(42, 37, 39);
+  private static final String WORKING_DIRECTORY_PATH = System.getProperty("user.dir");
   private boolean isProjectActive;
 
   // layer stuff
-  private JButton addLayerButton;
-  private JPanel layerPanel;
-  private JLabel layerLabel;
-  private JPanel topLayerPanel;
-  private JList<String> layerList;
-  private DefaultListModel<String> layerListModel;
+  private final JButton addLayerButton;
+  private final JPanel layerPanel;
+  private final JLabel layerLabel;
+  private final JPanel topLayerPanel;
+  private final JList<String> layerList;
+  private final DefaultListModel<String> layerListModel;
 
   // workspace stuff
-  private JPanel workspacePanel, imagePanel;
+  private final JPanel workspacePanel, imagePanel;
   private JLabel imageLabel;
   private JScrollPane workspaceScroll;
+  private final int imagePanelDefaultWidth;
+  private final int imagePanelDefaultHeight;
 
   // tool stuff
-  private JButton applyFilterButton;
-  private JPanel toolPanel;
-  private JPanel topToolPanel;
-  private JLabel toolLabel;
-  private JList<String> filterList;
-  private DefaultListModel<String> filterListModel;
-  private JScrollPane filterListScrollPane;
+  private final JButton applyFilterButton;
+  private final JPanel toolPanel;
+  private final JPanel topToolPanel;
+  private final JLabel toolLabel;
+  private final JList<String> filterList;
+  private final DefaultListModel<String> filterListModel;
+  private final JScrollPane filterListScrollPane;
 
   public GUIProjectViewImpl(String caption) {
     super(caption);
@@ -91,7 +103,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     this.exportMenuItem.setEnabled(false);
     this.saveProjectMenuItem.setEnabled(false);
 
-    // create edit menu
+    // create Project menu
     projectMenu = new JMenu("Project");
     addImageMenuItem = new JMenuItem("Add Image To Selected Layer");
     this.addImageMenuItem.setEnabled(false);
@@ -120,22 +132,19 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
       this.setJMenuBar(menuBar);
     }
 
-    // constants
-    sideBarWidth = 300;
-    Color sideBarColor = new Color(42, 37, 39);
-
     // --------------------------MAIN LAYER PANEL----------------------------------
 
     // layer panel for displaying all layers and adding new ones
     layerPanel = new JPanel();
-    layerPanel.setBackground(sideBarColor);
-    layerPanel.setPreferredSize(new Dimension(sideBarWidth, programHeight));
-    this.setMinimumSize(new Dimension(programWidth - 400, programHeight - 400));
+    layerPanel.setBackground(SIDE_BAR_COLOR);
+    layerPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, programHeight));
+    this.setMinimumSize(
+        new Dimension(programWidth - FRAME_MIN_SIZE, programHeight - FRAME_MIN_SIZE));
 
     // top layer panel for displaying the layer options
     topLayerPanel = new JPanel();
     topLayerPanel.setBackground(new Color(100, 100, 100));
-    topLayerPanel.setPreferredSize(new Dimension(sideBarWidth, 50));
+    topLayerPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, 50));
 
     layerLabel = new JLabel();
     layerLabel.setText("Layers");
@@ -156,7 +165,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     layerList.setBackground(Color.BLACK);
     layerList.setForeground(Color.WHITE);
     layerList.setFont(new Font("Helvetica", Font.BOLD, 18));
-    layerList.setFixedCellWidth(sideBarWidth);
+    layerList.setFixedCellWidth(SIDE_BAR_WIDTH);
     layerList.setFixedCellHeight(50);
     layerList.setBorder(new EmptyBorder(10, 10, 10, 10));
     layerList.setLayout(new BorderLayout());
@@ -173,31 +182,29 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     // workspace panel for displaying the image
     workspacePanel = new JPanel();
     workspacePanel.setBackground(new Color(30, 30, 30));
-    workspacePanel.setPreferredSize(new Dimension(programWidth - sideBarWidth * 2, programHeight));
+    workspacePanel.setPreferredSize(
+        new Dimension(programWidth - SIDE_BAR_WIDTH * 2, programHeight));
 
     imagePanel = new JPanel(new BorderLayout());
-    imagePanel.setPreferredSize(new Dimension(500, 500)); //TODO: adjust these values to scale with screen
-
-    workspaceScroll = new JScrollPane(imageLabel,
-        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    imagePanel.setForeground(Color.BLACK);
+    imagePanelDefaultWidth = programWidth / 2;
+    imagePanelDefaultHeight = programHeight - SIDE_BAR_WIDTH;
 
     // add statements
     workspacePanel.add(imagePanel, BorderLayout.CENTER);
-    imagePanel.add(workspaceScroll, BorderLayout.CENTER);
     imagePanel.setVisible(false);
     this.add(workspacePanel, BorderLayout.CENTER);
 
     // --------------------------MAIN TOOL PANEL----------------------------------
     // tool panel for displaying all tools
     toolPanel = new JPanel();
-    toolPanel.setBackground(sideBarColor);
-    toolPanel.setPreferredSize(new Dimension(sideBarWidth, programHeight));
+    toolPanel.setBackground(SIDE_BAR_COLOR);
+    toolPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, programHeight));
 
     // top tool panel for displaying the tools
     topToolPanel = new JPanel();
     topToolPanel.setBackground(new Color(100, 100, 100));
-    topToolPanel.setPreferredSize(new Dimension(sideBarWidth, 50));
+    topToolPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, 50));
 
     toolLabel = new JLabel();
     toolLabel.setText("Filters");
@@ -218,7 +225,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     filterList.setBackground(Color.BLACK);
     filterList.setForeground(Color.WHITE);
     filterList.setFont(new Font("Helvetica", Font.BOLD, 18));
-    filterList.setFixedCellWidth(sideBarWidth);
+    filterList.setFixedCellWidth(SIDE_BAR_WIDTH);
     filterList.setFixedCellHeight(50);
     filterList.setBorder(new EmptyBorder(10, 10, 10, 10));
     filterList.setLayout(new BorderLayout());
@@ -232,29 +239,40 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     toolPanel.add(topToolPanel, BorderLayout.NORTH);
     toolPanel.add(filterList, BorderLayout.CENTER);
     this.add(toolPanel, BorderLayout.EAST);
+    this.renderMessage("To Create/Open a project, select File.");
   }
 
-  private static class CustomInputDialog {
+  /**
+   * Represents a class that creates a custom input dialog box to solve the issue of handling
+   * multiple input fields.
+   */
+  static class CustomInputDialog {
 
-    private JPanel panel = new JPanel();
-    private JLabel label1;
-    private JLabel label2;
-    private String title;
-    private JTextField label1Field = new JTextField(10);
-    private JTextField label2Field = new JTextField(10);
+    private final JPanel panel;
+    private final JLabel label1;
+    private final JLabel label2;
+    private final String title;
+    private final JTextField label1Field;
+    private final JTextField label2Field;
 
+    /**
+     * Constructs a custom input dialog box.
+     *
+     * @param title  the title of the dialog box
+     * @param label1 the first label name
+     * @param label2 the second label name
+     */
     public CustomInputDialog(String title, String label1, String label2) {
+      panel = new JPanel();
+      label1Field = new JTextField(10);
+      label2Field = new JTextField(10);
       this.label1 = new JLabel(label1);
       this.label2 = new JLabel(label2);
       this.title = title;
     }
 
-    public CustomInputDialog(String title, String label1) {
-      this.label1 = new JLabel(label1);
-      this.title = title;
-    }
-
-    private Integer[] getValues() {
+    // gets the values from the input fields
+    private FieldValues getValues() {
       panel.add(label1);
       panel.add(label1Field);
       panel.add(label2);
@@ -267,51 +285,65 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
       if (result == JOptionPane.OK_OPTION) {
         int val1 = Integer.parseInt(label1Field.getText());
         int val2 = Integer.parseInt(label2Field.getText());
-        return new Integer[]{val1, val2};
-
+        return new FieldValues(val1, val2);
       }
       return null;
     }
 
-    private String getImageNameExt() {
-      panel.add(label1);
-      panel.add(label1Field);
+    /**
+     * Represents a class that holds two values from the input fields.
+     */
+    static class FieldValues {
 
-      int result = JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE);
+      private final int val1;
+      private final int val2;
 
-      if (result == JOptionPane.OK_OPTION) {
-        String val1 = label1Field.getText();
+      /**
+       * Constructs a FieldValues object.
+       *
+       * @param val1 the first value
+       * @param val2 the second value
+       */
+      public FieldValues(int val1, int val2) {
+        this.val1 = val1;
+        this.val2 = val2;
+      }
+
+      // getter for val1
+      private int getVal1() {
         return val1;
       }
-      return null;
+
+      // getter for val2
+      private int getVal2() {
+        return val2;
+      }
     }
   }
 
-
+  /**
+   * Adds the given features of the controller to the view. This allows the view to interact with
+   * the controller and tell it when the user has done something related to an action listener.
+   *
+   * @param features the features of the controller
+   */
   @Override
   public void addFeatures(Features features) {
     addLayerButton.addActionListener(evt -> {
       String layerName = JOptionPane.showInputDialog("Enter layer name:");
       features.addLayer(layerName);
-      this.repaint();
-      this.revalidate();
     });
     applyFilterButton.addActionListener(evt -> {
       String filterName = filterList.getSelectedValue();
       String layerName = layerList.getSelectedValue();
       features.setFilter(layerName, filterName);
-      this.repaint();
-      this.revalidate();
     });
     newMenuItem.addActionListener(evt -> {
       if (!isProjectActive) {
         CustomInputDialog heightWidthInput = new CustomInputDialog("New Project", "Enter height:",
             "Enter width:");
-        Integer[] valuesHW = heightWidthInput.getValues();
-        features.newProject(valuesHW[0], valuesHW[1]);
-        this.repaint();
-        this.revalidate();
+        FieldValues valuesHW = heightWidthInput.getValues();
+        features.newProject(valuesHW.getVal1(), valuesHW.getVal2());
       } else {
         this.renderMessage("Project already being worked on.");
       }
@@ -320,14 +352,13 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
       if (!isProjectActive) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Open Project");
+        fileChooser.setCurrentDirectory(new File(WORKING_DIRECTORY_PATH));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelection = fileChooser.showOpenDialog(this);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
           File fileToOpen = fileChooser.getSelectedFile();
           String filepath = fileToOpen.getAbsolutePath();
           features.loadProject(filepath);
-          this.repaint();
-          this.revalidate();
         }
       } else {
         this.renderMessage("Project already being worked on.");
@@ -338,6 +369,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
       if (isProjectActive) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Open Image");
+        fileChooser.setCurrentDirectory(new File(WORKING_DIRECTORY_PATH));
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         int userSelection = fileChooser.showOpenDialog(this);
         if (userSelection == JFileChooser.APPROVE_OPTION) {
@@ -346,10 +378,8 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
           String layerName = layerList.getSelectedValue();
           CustomInputDialog heightWidthInput = new CustomInputDialog(
               "Add Image to Layer: " + layerName, "Enter x position:", "Enter y position:");
-          Integer[] valuesXY = heightWidthInput.getValues();
-          features.addImageToLayer(layerName, filepath, valuesXY[0], valuesXY[1]);
-          this.repaint();
-          this.revalidate();
+          FieldValues valuesXY = heightWidthInput.getValues();
+          features.addImageToLayer(layerName, filepath, valuesXY.getVal1(), valuesXY.getVal2());
         }
       } else {
         this.renderMessage("Start a new project or load in existing project to add image.");
@@ -359,6 +389,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
       if (isProjectActive) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Choose Directory to Save Image");
+        fileChooser.setCurrentDirectory(new File(WORKING_DIRECTORY_PATH));
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         int result = fileChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
@@ -370,36 +401,62 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
         this.renderMessage("Start a new project or load in existing project to export image.");
       }
     });
+    saveProjectMenuItem.addActionListener(evt -> {
+      if (isProjectActive) {
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Choose Directory to save Project to");
+        fileChooser.setCurrentDirectory(new File(WORKING_DIRECTORY_PATH));
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int result = fileChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+          File selectedFolder = fileChooser.getSelectedFile();
+          String filepath = selectedFolder.getAbsolutePath();
+          features.saveProject(filepath);
+        }
+      } else {
+        this.renderMessage("Start a new project or load in existing project to save.");
+      }
+    });
 
 
   }
 
+  /**
+   * Adds a new layer to the view's layer list with the given layer name.
+   *
+   * @param layerName the name of the layer
+   */
   @Override
   public void addLayer(String layerName) {
     if (layerName != null && !layerName.equals("")) {
       layerListModel.addElement(layerName);
       layerList.setSelectedIndex(layerListModel.size() - 1);
-      layerList.revalidate();
-      layerList.repaint();
-      layerPanel.revalidate();
-      layerPanel.repaint();
     }
     if (layerListModel.size() >= 1) {
       this.addImageMenuItem.setEnabled(true);
+      this.applyFilterButton.setEnabled(true);
     }
   }
 
+  /**
+   * Adds the given filters to the view's filter list so the user can see all available filters.
+   *
+   * @param filters the list of filter names
+   */
   @Override
   public void addFilters(List<String> filters) {
     for (String filterName : filters) {
       filterListModel.addElement(filterName);
     }
-    filterList.revalidate();
-    filterList.repaint();
-    toolPanel.revalidate();
-    toolPanel.repaint();
   }
 
+  /**
+   * Takes in a 2D array of pixels and turns it into a {@code BufferedImage} that the view with then
+   * render to the user. This method will replace the existing image with the updated image if
+   * called more than once.
+   *
+   * @param image the 2D array of pixels
+   */
   @Override
   public void renderImage(PixelInterface[][] image) {
     int height = image.length;
@@ -414,26 +471,47 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
         bufferedImage.setRGB(col, row, argb);
       }
     }
+
+    imagePanel.setPreferredSize(new Dimension(Math.min(width, imagePanelDefaultWidth),
+        Math.min(height, imagePanelDefaultHeight)));
     imageLabel = new JLabel(new ImageIcon(bufferedImage));
-    imageLabel.setHorizontalAlignment(JLabel.CENTER);
+    workspaceScroll = new JScrollPane(imageLabel,
+        JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+        JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     imagePanel.removeAll();
-    imagePanel.add(imageLabel);
-    imagePanel.revalidate();
-    imagePanel.repaint();
+    imagePanel.add(workspaceScroll, BorderLayout.CENTER);
   }
 
+  /**
+   * Given the String passed in, it will render a popup window with the message to the user.
+   *
+   * @param message the message to be displayed
+   */
   @Override
   public void renderMessage(String message) {
     JOptionPane.showMessageDialog(this, message);
   }
 
+  /**
+   * Activates all the buttons in the view once a project has been loaded in or created. This
+   * prevents the user trying to add layers, filter layers, or adding images to layers without the
+   * program being started.
+   */
   @Override
   public void activateButtons() {
     this.addLayerButton.setEnabled(true);
-    this.applyFilterButton.setEnabled(true);
     this.saveProjectMenuItem.setEnabled(true);
     this.exportMenuItem.setEnabled(true);
     this.isProjectActive = true;
     imagePanel.setVisible(true);
+  }
+
+  /**
+   * Refreshes the entire view and repaints all the components.
+   */
+  @Override
+  public void refresh() {
+    this.repaint();
+    this.revalidate();
   }
 }

@@ -3,10 +3,14 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import controller.CollagerCommand;
 import controller.commands.LoadProject;
+import model.Layer;
+import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 import model.Project;
@@ -31,7 +35,7 @@ public class ProjectTest {
     ProjectModel projectInvalid1 = new Project();
     ProjectModel projectInvalid2 = new Project();
     ProjectModel projectInvalid3 = new Project();
-    ProjectModel projectInvalidScreenSize = new Project();
+    ProjectModel projectValid = new Project();
 
     project1.newProject(500, 500);
     assertEquals(500, project1.getHeight());
@@ -55,13 +59,10 @@ public class ProjectTest {
     } catch (IllegalArgumentException e) {
       // do nothing
     }
-    try { // invalid width and height for computer screen
-      projectInvalid3.newProject(10000000, 10000000);
-      fail("Exception not thrown");
-    } catch (IllegalArgumentException e) {
-      // do nothing
-    }
-
+    // Valid width and height for computer screen
+    projectValid.newProject(1000, 1000);
+    assertEquals(1000, projectValid.getHeight());
+    assertEquals(1000, projectValid.getWidth());
   }
 
   /**
@@ -83,7 +84,6 @@ public class ProjectTest {
       // do nothing
     }
 
-    //TODO: add test for ensuring exception is thrown for trying to add a layer that already exists
     p2.newProject(500, 500);
     p2.addLayer("layer-1");
     try {
@@ -93,17 +93,13 @@ public class ProjectTest {
       // do nothing
     }
 
-    //TODO: add test for valid layer adding
     assertEquals("layer-1", p2.getLayers().get("layer-1").getName());
     p2.addLayer("layer-2");
     assertEquals("layer-2", p2.getLayers().get("layer-2").getName());
 
-    //TODO: add test for valid layer adding after loading in project
-
+    String filepath = "projects/sample1.collage";
     ProjectView view = new CommandLineTextView();
-    Readable in = new StringReader("projects/sample1.collage");
-    Scanner s = new Scanner(in);
-    CollagerCommand loadProject = new LoadProject(s.next());
+    CollagerCommand loadProject = new LoadProject(filepath);
     loadProject.execute(p2, view);
     assertEquals("layer3", p2.getLayers().get("layer3").getName());
     p2.addLayer("layer-4");
@@ -155,15 +151,15 @@ public class ProjectTest {
     //add image successfully
     p1.addImageToLayer("layer1", imageGrid, 0, 0);
     PixelInterface[][] resultGrid = p1.getLayers().get("layer1").getPixelGrid();
-    String result = "";
-    String answer = "";
+    StringBuilder result = new StringBuilder();
+    StringBuilder answer = new StringBuilder();
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 2; j++) {
-        result += imageGrid[i][j].toString(0);
-        answer += resultGrid[i][j].toString(0);
+        result.append(imageGrid[i][j].toString(0));
+        answer.append(resultGrid[i][j].toString(0));
       }
     }
-    assertEquals(result, answer);
+    assertEquals(result.toString(), answer.toString());
   }
 
   /**
@@ -214,5 +210,183 @@ public class ProjectTest {
     p1.newProject(1, 1);
     assertEquals(1, p1.getWidth());
     assertEquals(1, p1.getHeight());
+  }
+
+  /**
+   * Test for compressLayers() method.
+   */
+  @Test
+  public void testForCompressLayers() {
+    //The image grid for layer 1
+    PixelInterface[][] imageGrid1 = {{new Pixel(50, 50, 50, 50),
+            new Pixel(60, 60, 60, 60)},
+            {new Pixel(100, 100, 100, 100),
+                    new Pixel(200, 200, 200, 200)}};
+
+    //The image grid for layer 2
+    PixelInterface[][] imageGrid2 = {{new Pixel(50, 50, 50, 50),
+            new Pixel(60, 60, 60, 60)},
+            {new Pixel(100, 100, 100, 100),
+                    new Pixel(200, 200, 200, 200)}};
+
+    ProjectModel p1 = new Project();
+    //test whether the compressLayers() method can be used when haven't created
+    //new project.
+    try {
+      p1.compressLayers();
+      fail("exception not be thrown");
+    } catch (IllegalStateException e) {
+      //do nothing
+    }
+
+    p1.newProject(100, 100);
+    p1.addLayer("L1");
+    p1.addImageToLayer("L1", imageGrid1, 0, 0);
+
+    p1.addLayer("L2");
+    p1.addImageToLayer("L2", imageGrid2, 1, 1);
+
+    //The image grid for answer
+    PixelInterface[][] resultGrid = {{new Pixel(215, 215, 215, 255),
+            new Pixel(209, 209, 209, 255)},
+            {new Pixel(194, 194, 194, 255),
+                    new Pixel(180, 180, 180, 255)}};
+
+    PixelInterface[][] compressedLayer = p1.compressLayers();
+    String result = "";
+    String answer = "";
+    for (int i = 0; i < 2; i++) {
+      for (int j = 0; j < 2; j++) {
+        result += compressedLayer[i][j].toString(0);
+        answer += resultGrid[i][j].toString(0);
+      }
+    }
+    assertEquals(result, answer);
+  }
+
+  @Test
+  public void testForGetLayers() {
+    ProjectModel p1 = new Project();
+    //test whether the getLayers() method can be used when haven't created
+    //new project.
+    try {
+      p1.getLayers();
+      fail("exception not be thrown");
+    } catch (IllegalStateException e) {
+      //do nothing
+    }
+
+    PixelInterface[][] bg = {{new Pixel(255, 255, 255, 50),
+            new Pixel(255, 255, 255, 60)},
+            {new Pixel(255, 255, 255, 100),
+                    new Pixel(255, 255, 255, 200)}};
+
+    p1.newProject(2, 2);
+    p1.addLayer("L1");
+    p1.addLayer("L2");
+    p1.addLayer("L3");
+    Map<String, LayerInterface> layerList = new LinkedHashMap<>();
+    layerList.put("L1",
+            new Layer("L1", bg));
+    layerList.put("L2",
+            new Layer("L2", bg));
+    layerList.put("L3",
+            new Layer("L3", bg));
+
+
+    assertEquals(layerList.get(0), p1.getLayers().get(0));
+    assertEquals(layerList.get(1), p1.getLayers().get(1));
+    assertEquals(layerList.get(2), p1.getLayers().get(2));
+  }
+
+  @Test
+  public void testForExportProject() {
+    ProjectModel p1 = new Project();
+    p1.newProject(2, 2);
+    assertEquals("C1\n" +
+            "2 2\n" +
+            "255\n" +
+            "bg normal\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n", p1.exportProject());
+
+    PixelInterface[][] imageGrid1 = {{new Pixel(50, 50, 50, 50),
+            new Pixel(60, 60, 60, 60)},
+            {new Pixel(100, 100, 100, 100),
+                    new Pixel(200, 200, 200, 200)}};
+
+    //The image grid for layer 2
+    PixelInterface[][] imageGrid2 = {{new Pixel(50, 50, 50, 50),
+            new Pixel(60, 60, 60, 60)},
+            {new Pixel(100, 100, 100, 100),
+                    new Pixel(200, 200, 200, 200)}};
+
+
+    p1.addLayer("L1");
+    p1.addImageToLayer("L1", imageGrid1, 0, 0);
+
+    p1.addLayer("L2");
+    p1.addImageToLayer("L2", imageGrid2, 1, 1);
+
+    assertEquals("C1\n" +
+            "2 2\n" +
+            "255\n" +
+            "bg normal\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "L1 normal\n" +
+            "50 50 50 50\n" +
+            "60 60 60 60\n" +
+            "100 100 100 100\n" +
+            "200 200 200 200\n" +
+            "L2 normal\n" +
+            "255 255 255 0\n" +
+            "255 255 255 0\n" +
+            "255 255 255 0\n" +
+            "50 50 50 50\n", p1.exportProject());
+  }
+
+  @Test
+  public void testForBuildProject() {
+    ProjectModel p1 = new Project();
+    p1.buildProject("C1\n" +
+            "2 2\n" +
+            "255\n" +
+            "bg normal\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "255 255 255 255\n" +
+            "L1 normal\n" +
+            "50 50 50 50\n" +
+            "60 60 60 60\n" +
+            "100 100 100 100\n" +
+            "200 200 200 200\n" +
+            "L2 normal\n" +
+            "255 255 255 0\n" +
+            "255 255 255 0\n" +
+            "255 255 255 0\n" +
+            "50 50 50 50\n");
+    Map<String, LayerInterface> layerList = new LinkedHashMap<>();
+    PixelInterface[][] bg = {{new Pixel(255, 255, 255, 50),
+            new Pixel(255, 255, 255, 60)},
+            {new Pixel(255, 255, 255, 100),
+                    new Pixel(255, 255, 255, 200)}};
+    layerList.put("bg",
+            new Layer("bg", bg));
+    layerList.put("L1",
+            new Layer("L1", bg));
+    layerList.put("L2",
+            new Layer("L2", bg));
+    assertEquals(layerList.get("bg").getName(), p1.getLayers().get("bg").getName());
+    assertEquals(layerList.get("L1").getName(), p1.getLayers().get("L1").getName());
+    assertEquals(layerList.get("L2").getName(), p1.getLayers().get("L2").getName());
+
+    assertEquals(2, p1.getHeight());
+    assertEquals(2, p1.getWidth());
   }
 }

@@ -7,7 +7,6 @@ import controller.file.ImageHandler;
 import controller.file.PPMHandler;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import model.Image;
 import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;

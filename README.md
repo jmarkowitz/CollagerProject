@@ -1,5 +1,30 @@
 # CollagerProject: Layered and Image Creation
 
+---
+
+## Recent Implementations/Changes
+
+* Added `compressLayers()` method to `ProjectModelState` interface to allow for the user to
+  compress all the layers into one image [Click Me!](#141-projectModelState)
+* Added `exportProject()` method to `ProjectModelState` interface to allow for the user to
+  export the project as a string [Click Me!](#141-projectmodelstate)
+* Added `buildProject()` method to `ProjectModel` interface to allow for the user to build a
+  project from a string [Click Me!](#142-projectmodel)
+* Added `FileHandler` interface and respective classes to handle file
+  input/output [Click Me!](#311-filehandler)
+* Changed Filter design to use `BiFunction` instead of `Function` interface to allow for
+  background layer to be passed in as well [Click Me!](#131-filterinterface)
+* Added `DifferenceFilter`, `MultiplyFilter`, and `ScreenFilter` to the filter options [Click Me!](#1313-differencefilter)
+* Added `HSLUtil` class to handle conversion between RGB and HSL and back (to help with
+  `MultiplyFilter` and `ScreenFilter`) [Click Me!](#1316-hslutil)
+* Added `Feature` interface and `FeatureController` class to handle user input for an asynchronous
+  controller [Click Me!](#41-features)
+* Added `GUIProjectView` interface and `GUIProjectViewImpl` class to handle user specific inputs and
+  visualizations [Click Me!](#43-guiprojectview)
+* Added a USEME.md file to help understand how the GUI should be used and interacted with [Click Me!](/USEME.md)
+
+---
+
 ## Introduction
 
 Welcome! The information below will first describe the design of the program and how everything is
@@ -32,15 +57,6 @@ methods included in the `PixelInterface` are as follows:
 #### 1.1.2 `Pixel`
 
 The `Pixel` class implements the `PixelInterface` and represents a single pixel in an image.
-The `Pixel` class has the following fields:
-
-* `redVal`
-* `greenVal`
-* `blueVal`
-* `alphaVal`
-* `value`
-* `intensity`
-* `luma`
 
 Since the value, intensity, and luma are created when a new pixel is constructed, it is easy to
 later get each field and use it for other purposes, such as filters.
@@ -63,11 +79,6 @@ the `LayerInterface` are as follows:
 #### 1.2.2 `Layer`
 
 The `Layer` class implements the `LayerInterface` and represents a single layer in a collage.
-The `Layer` class has the following fields:
-
-* `layerName`
-* `filter`
-* `grid`
 
 It is important to note that when every layer is created, its default filter is set to "normal".
 This ensures that every layer will always have essentially no filter effect on it until the user
@@ -82,21 +93,16 @@ to change the filter of a layer at any time.
 
 The `FilterInterface` represents any functionality and observations to be made specific to
 a `AbstractFilter`. For this design, it was chosen that the `FilterInterface` would
-extend `Function<LayerInterface, LayerInterface>` and use implement the `apply()` method. This
+extend `BiFunction` and use implement the `apply()` method. This
 allows for the `FilterInterface` to be used as a lambda expression if needed. The methods included
 in the `FilterInterface` are as follows:
 
-* `apply(LayerInterface layer)`
-* `getFilterName()`
+* `apply(PixelInterface[][] curLayer, PixelInterface[][] bgLayer)`
 
 #### 1.3.2 `AbstractFilter`
 
 The `AbstractFilter` class implements the `FilterInterface` and represents a single filter that can
-be applied to a layer. The `AbstractFilter` class has the following fields:
-
-* `height`
-* `width`
-* `filterName`
+be applied to a layer.
 
 The height and width are included so the filter can iterate through all the pixels in the layer and
 apply the filter to each one. The filter name is included so the user can see what filter is being
@@ -105,144 +111,106 @@ brightening or darkening filters, that the value cannot exceed 255 or go below 0
 
 #### 1.3.3 `NormalFilter`
 
-The `NormalFilter` class extends the `AbstractFilter` class and represents a filter that will not
-affect any pixels in the layer.
+* will not affect any pixels in the layer or change back to no effect.
 
 #### 1.3.4 `RedFilter`
 
-The `RedFilter` class extends the `AbstractFilter` class and represents a filter that will make the
-layer red.
+* will make the layer red.
 
 #### 1.3.5 `GreenFilter`
 
-The `GreenFilter` class extends the `AbstractFilter` class and represents a filter that will make
-the layer green.
+* will make the layer green.
 
 #### 1.3.6 `BlueFilter`
 
-The `BlueFilter` class extends the `AbstractFilter` class and represents a filter that will make the
-layer blue.
+* will make the layer blue.
 
-#### 1.3.7 `BrightenIntensity`
+#### 1.3.7 `BrightenIntensityFilter`
 
-The `BrightenIntensity` class extends the `AbstractFilter` class and represents a filter that will
-brighten the layer based on the intensity of the pixels.
+* will brighten the layer based on the intensity of the pixels.
 
-#### 1.3.8 `DarkenIntensity`
+#### 1.3.8 `DarkenIntensityFilter`
 
-The `DarkenIntensity` class extends the `AbstractFilter` class and represents a filter that will
-darken the layer based on the intensity of the pixels.
+* will darken the layer based on the intensity of the pixels.
 
-#### 1.3.9 `BrightenLuma`
+#### 1.3.9 `BrightenLumaFilter`
 
-The `BrightenLuma` class extends the `AbstractFilter` class and represents a filter that will
-brighten the layer based on the luma of the pixels.
+* will brighten the layer based on the luma of the pixels.
 
-#### 1.3.10 `DarkenLuma`
+#### 1.3.10 `DarkenLumaFilter`
 
-The `DarkenLuma` class extends the `AbstractFilter` class and represents a filter that will darken
-the layer based on the luma of the pixels.
+* will darken the layer based on the luma of the pixels.
 
-#### 1.3.11 `BrightenValue`
+#### 1.3.11 `BrightenValueFilter`
 
-The `BrightenValue` class extends the `AbstractFilter` class and represents a filter that will
-brighten the layer based on the value of the pixels.
+* will brighten the layer based on the value of the pixels.
 
-#### 1.3.12 `DarkenValue`
+#### 1.3.12 `DarkenValueFilter`
 
-The `DarkenValue` class extends the `AbstractFilter` class and represents a filter that will darken
-the layer based on the value of the pixels.
+* will darken the layer based on the value of the pixels.
 
----
+#### 1.3.13 `DifferenceFilter`
 
-### 1.4 Image Representation
+* will subtract the image's pixels behind the current image's pixels and blend them together
 
-#### 1.4.1 `Image`
+#### 1.3.14 `MultiplyFilter`
 
-The `Image` class represents an image that can be used in a collage. It contains
-the `readPPM(String imageFile, int projectHeight, int projectWidth)` method that will take in an
-entire ppm file as a string and create a 2D array of pixels with the correct dimensions. It will
-throw an `IllegalArgumentException` if the file is not a valid ppm file. Can be changed in future to
-handle more image file types. It can also scale the pixel values based on the max value of the file
-to ensure any pixel representation can be handled.
+* will convert the pixel values to HSL and then multiply the lightness value of the background
+  image's pixels by the current image's pixels
+
+#### 1.3.15 `ScreenFilter`
+
+* will convert the pixel values into HSL and then brighten and blend the current image's pixels with
+  the background image's pixels
+
+#### 1.3.16 `HSLUtil`
+
+* will convert the pixel values to HSL and back to RGB used for the MultiplyFilter and ScreenFilter
 
 ---
 
-### 1.5 Project Representation
+### 1.4 Project Representation
 
-#### 1.5.1 `ProjectModelState`
+#### 1.4.1 `ProjectModelState`
 
 The `ProjectModelState` interface represents the running state of a Collager project. This interface
 allows for observation of the model's width, height, an ordered map of layers, and a map of all the
-filters. This does not allow for any mutation of the width, height, layers, or filters. It includes
-the following methods:
+filters, the current image the model contains, and the current string that represents the project.
+This does not allow for any mutation of the width, height, layers, or filters. It includes the
+following methods:
 
 * `getWidth() throws IllegalStateException`
-    * This method will return the width of the project and throw an `IllegalStateException` if the
-      method is called before a project has been created or loaded in.
 * `getHeight() throws IllegalStateException`
-    * This method will return the height of the project and throw an `IllegalStateException` if the
-      method is called before a project has been created or loaded in.
 * `getLayers() throws IllegalStateException`
-    * This method will return an ordered map of the layers in the project and throw an
-      `IllegalStateException` if the method is called before a project has been created or loaded
-      in.
 * `getFilters() throws IllegalStateException`
-    * This method will return a map of all the filters in the project and throw an
-      `IllegalStateException` if the method is called before a project has been created or loaded
-      in.
+* `exportProject() throws IllegalStateException`
+* `compressLayers() throws IllegalStateException`
 
-#### 1.5.2 `ProjectModel`
+#### 1.4.2 `ProjectModel`
 
 The `ProjectModel` interface extends the `ProjectModelState` interface and represents a project that
 can be used in the collager program. The interface allows for the user to create a collage and
 includes the following.
 
 * creating a new project
+* building a project from a string (represents the project)
 * adding layers to the project
 * adding images to layers
 * adding filters to layers
 
-This interface include the following methods:
+This interface includes the following methods:
 
-* `newProject(int height, int width) throws IllegalArgumentException`
-    * This method will create a new project and throw an `IllegalArgumentException` if the height or
-      width is to large for the user's computer screen or the height and width provided is negative.
-* `addLayer(String layerName)`
-    * This method will add a new layer to the project and throw an `IllegalArgumentException` if
-      the layer name already exists. This will also throw an `IllegalStateException` if the method
-      is called before a project has been created or loaded in.
-* `setFilter(String layerName, String filterName) throws IllegalArgumentException, IllegalStateException`
-    * This method will set the filter of a layer to the filter name provided and throw an
-      `IllegalArgumentException` if the layer name or filter name does not exist. This will also
-      throw an `IllegalStateException` if the method is called before a project has been created or
-      loaded in.
-* `addImageToLayer(String layerName, PixelInterface[][] imagePixelGrid, int x, int y) throws IllegalArgumentException, IllegalStateException`
-    * This method will add an image to a layer at the x and y coordinates provided and throw an
-      `IllegalArgumentException` if the layer name does not exist or the x and y coordinates are
-      outside the bounds of the layer. This will also throw an `IllegalStateException` if the method
-      is called before a project has been created or loaded in.
+* `newProject()`
+* `addLayer()`
+* `setFilter()`
+* `addImageToLayer()`
+* `buildProject()`
 
-#### 1.5.3 `Project`
+#### 1.4.3 `Project`
 
 The `Project` class implements the `ProjectModel` interface and represents a project that can be
-created and edited. It allows the user to create a new project, add layers and images, and set
-filters. It contains the following fields:
-
-* `MAX_VALUE = 255`
-* `screenWidth`
-* `screenHeight`
-* `height`
-* `width`
-* `layerLinkedMap`
-* `allFilters`
-* `inProgress`
-
-The `MAX_VALUE` field represents the maximum value a pixel can have. The `screenWidth`
-and `screenHeight` are the width and height of the user's screen. The `height` and `width` are the
-height and width of the project. The `layerLinkedMap` is an ordered map of the layers in the
-project. The `allFilters` is a map of all the filters in the project. The `inProgress` field is a
-boolean that represents if a project is in progress or not.
+created and edited. It allows the user to create/load a project, add layers and images, and set
+filters.
 
 ---
 
@@ -258,16 +226,11 @@ will throw an `IOException` if the transmission of the message to the data outpu
 
 The `CommandLineTextView` class implements the `ProjectView` interface and represents a view that is
 specifically for using in the command line. It's default constructor uses `System.out` but contains
-another constructor that takes in an `Appendable` object. This class contains the following fields:
-
-* `viewOut`
-
-The `viewOut` field represents the output stream that the view will use to render messages to the
-user.
+another constructor that takes in an `Appendable` object.
 
 ---
 
-### 3 newstuff.Controller
+### 3 Controller
 
 #### 3.1 `CollagerController`
 
@@ -280,19 +243,7 @@ model and view have been set.
 
 The `CollagerControllerImpl` class implements the `CollagerController` interface and represents the
 controller for the Image Collage program. It allows the user to control the program by giving
-commands. It contains the following fields:
-
-* `model`
-* `view`
-* `in`
-* `programStarted`
-* `knownCommands`
-
-The `model` field represents the model of the program. The `view` field represents the view of the
-program. The `in` is how the user can input commands. The `programStarted` field is a boolean that
-represents if the program has started or not. This is used so the user cannot try to start a new
-project or load a new project while in the middle of working with one. The `knownCommands` field is
-a map of all the known commands and their corresponding command function objects.
+commands.
 
 #### 3.3 `CollagerCommand`
 
@@ -339,16 +290,84 @@ The `SaveImage` class implements the `CollagerCommand` interface and represents 
 allows the user to save an image to a filepath. This command will compress all layers and their
 respective filters into one image file.
 
-#### 3.11 `FileUtil`
+#### 3.11 `FileHandler`
 
-The `FileUtil` class represents a utility class that contains method the `readFileAsString` method
-that can be used to read in a file and turn it into a string.
+* interface represents a class that can be used to handle files. This interface contains the
+  following methods:
+    * `readFile()`
+    * `writeFile()`
+
+Any class that implements this interface will be able to read and write files based on their
+implementation. This interface allows for extensibility in the future to handle different kinds of
+image files or project files.
+
+#### 3.12 `AbstractFileHandler`
+
+* represents a class that can be used to handle generic files.
+
+#### 3.13 `ImageHandler`
+
+* represents a class that can be used to handle image files such as .png and .jpg.
+
+#### 3.14 `PPMHanlder`
+
+* represents a class that can be used to handle .ppm image files.
+
+#### 3.15 `TextProjectHandler`
+
+* represents a class that can be used to handle .collage project files.
+
+#### 3.16 `FileUtil`
+
+* represents a utility class that can be used to read a file as a string.
 
 ---
 
-### 4 Running The Program
+### 4 Graphical User Interface (GUI)
 
-#### 4.1 Commands
+#### 4.1 `Features`
+
+* interface represents a class that exposes all features that can be used to handle user inputs and
+  update the view accordingly. This interface contains the following methods:
+    * `newProject()`
+    * `loadProject()`
+    * `saveProject()`
+    * `saveImageAs()`
+    * `addLayer()`
+    * `addImageToLayer()`
+    * `setFilter()`
+    * `getFilters()`
+    * `quit()`
+
+#### 4.2 `FeatureController`
+
+* class implements the `Features` interface and implements all the features that can be used to
+  handle user inputs and update the view accordingly.
+
+#### 4.3 `GUIProjectView`
+
+* Represents the view for the GUI. This interface allows for the controller to interact with the
+  view, and update any implementation to allow the user to visibly see how the program will change
+  according to their input. This interface contains the following methods:
+    * `addFeatures()`
+    * `addLayer()`
+    * `addFilters()`
+    * `renderImage()`
+    * `renderMessage()`
+    * `activateButtons()`
+    * `refresh()`
+
+#### 4.4 `GUIProjectViewImpl`
+
+* class implements the `GUIProjectView` interface and represents the view for the GUI. This class
+  allows for the controller to interact with the view, and update any implementation to allow the
+  user to visibly see how the program will change according to their input.
+
+---
+
+### 5 Running The Program
+
+#### 5.1 Commands
 
 * ````new-project height width````
     * This command will create a new project with the height and width provided.
@@ -372,28 +391,27 @@ that can be used to read in a file and turn it into a string.
         * ````darken-intensity````
         * ````brighten-luma````
         * ````darken-luma````
+        * ````differnce````
+        * ````multiply````
+        * ````screen````
 * ````save-image filepath````
     * This command will save the image to the filepath provided.
 * ````q```` or ````quit````
     * This command will exit the program and will **NOT** save the project or image.
 
-#### 4.2 Example New Project Workflow
+#### 5.2 Example New Project Workflow
 
 1. ````new-project 100 100````
 2. ````add-layer layer1````
 3. ````add-image-to-layer layer1 images/image1.ppm 0 0````
-   ***Note: The FileUtil gets the directory of where the src directory is stored, so images
-   directory must be in same directory as src***
 4. ````set-filter layer1 brighten-intensity````
 5. ````save-image images/imageNew.ppm````
 6. ````save-project projects/projectNew.ppm````
-   ***Note: The FileUtil gets the directory of where the src directory is stored, so projects
-   directory must be in same directory as src***
 7. ````q````
 
-***Note: use the exampleCommands.txt for running all commands or follow above.***
+***Note: use the batch_commands.txt for running all commands or follow above.***
 
-#### 4.3 Example Load Project Workflow
+#### 5.3 Example Load Project Workflow
 
 1. ````load-project projects/projectNew.ppm````
 2. ````add-layer layer2````
@@ -410,7 +428,7 @@ that can be used to read in a file and turn it into a string.
 * Jonathan Markowitz (markowitz.jo@northeastern.edu)
 * Yige Sun (sun.yig@northeastern.edu)
 
-### 5 References
+### 6 References
 
 1. [Assignment Page](https://northeastern.instructure.com/courses/133134/assignments/1776187)
 2. [Java Docs](https://docs.oracle.com/en/java/javase/11/docs/api/)
@@ -420,3 +438,11 @@ that can be used to read in a file and turn it into a string.
 6. TurtleGraphics Command Design Pattern from Class Notes
 7. [Thanos Truck Image](https://wompampsupport.azureedge.net/fetchimage?siteId=7575&v=2&jpgQuality=100&width=700&url=https%3A%2F%2Fi.kym-cdn.com%2Fentries%2Ficons%2Ffacebook%2F000%2F027%2F072%2Fthanos_car_2.jpg)
 8. ImageUtil file provided by Professor
+9. [Java Swing Tutorial](https://www.youtube.com/watch?v=Kmgo00avvEw)
+10. [BiFunction in Java](https://www.geeksforgeeks.org/java-bifunction-interface-methods-apply-and-addthen/)
+11. [JList Tutorial](https://www.youtube.com/watch?v=WiX3n2BMGIc)
+12. [JListModel Tutorial](http://www.seasite.niu.edu/cs580java/JList_Basics.htm)
+13. Callback Command Design Pattern from Class Notes
+14. HSLUtil file provided by Professor
+15. [HSL and HSV Color Models](https://en.wikipedia.org/wiki/HSL_and_HSV)
+16. [Putting File Bar in Native Location for Mac](https://stackoverflow.com/questions/8955638/how-do-i-move-my-jmenubar-to-the-screen-menu-bar-on-mac-os-x)
