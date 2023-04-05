@@ -1,6 +1,5 @@
-package gui;
+package gui.controller;
 
-import java.util.List;
 
 /**
  * Represents the features that the GUI will support. Allows the user to interact with the GUI, by

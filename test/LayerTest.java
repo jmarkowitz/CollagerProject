@@ -56,14 +56,14 @@ public class LayerTest {
             new Pixel(255, 255, 255, 255)}};
     LayerInterface layer = new Layer("testLayer", pixelGrid);
     PixelInterface[][] newGrid = layer.getPixelGrid();
-    String result = "";
-    String answer = "";
+    StringBuilder result = new StringBuilder();
+    StringBuilder answer = new StringBuilder();
     for (int i = 0; i < 2; i++) {
       for (int j = 0; j < 3; j++) {
-        result += pixelGrid[i][j].toString(0);
-        answer += newGrid[i][j].toString(0);
+        result.append(pixelGrid[i][j].toString(0));
+        answer.append(newGrid[i][j].toString(0));
       }
     }
-    assertEquals(result, answer);
+    assertEquals(result.toString(), answer.toString());
   }
 }
