@@ -30,7 +30,8 @@ instructs the user to press **File** > **New Project** or **Open Project**.
 When a GUI is started, the user will see three main panels:
 
 1. The Menu Bar: contains all the options for the program. The options are:
-    * File: contains the options to create a new project, open a project, save a project, save an image, and
+    * File: contains the options to create a new project, open a project, save a project, save an
+      image, and
       quit the program.
     * Project: contains the option to add an image to a layer.
 2. The Layer Panel: contains all the layers in the project, and allows the user to add a new layer.
@@ -47,27 +48,27 @@ When a GUI is started, the user will see three main panels:
 ### Example Workflow
 
 * Create a new project/Open a project
-  * File > New Project
-    * Input the width and height of the project
-  * File > Open Project
-    * Select the project file to open (.collage)
+    * File > New Project
+        * Input the width and height of the project
+    * File > Open Project
+        * Select the project file to open (.collage)
 * Add a layer
-  * Input a name for the layer
+    * Input a name for the layer
 * Add an image to the layer
-  * Select the layer
-  * Select Project > Add Image To Selected Layer
-  * choose the image file to add (supports .ppm, .png, jpg/jpeg)
-  * input the x and y coordinates of where to place the top left corner of image
+    * Select the layer
+    * Select Project > Add Image To Selected Layer
+    * choose the image file to add (supports .ppm, .png, jpg/jpeg)
+    * input the x and y coordinates of where to place the top left corner of image
 * Apply a filter
-  * Select the layer
-  * Select the filter
-  * Press the **Apply** button
+    * Select the layer
+    * Select the filter
+    * Press the **Apply** button
 * Save the project
-  * File > Save Project
-    * Select the directory to save the project file
-    * Input the name of the file with the proper extension (.collage)
-  * File > Save Image
-    * Select the directory to save the image file
-    * Input the name of the file with the proper extension (.ppm, .png)
+    * File > Save Project
+        * Select the directory to save the project file
+        * Input the name of the file with the proper extension (.collage)
+    * File > Save Image
+        * Select the directory to save the image file
+        * Input the name of the file with the proper extension (.ppm, .png)
 * Quit the program
-  * File > Quit
+    * File > Quit

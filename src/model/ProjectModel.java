@@ -67,8 +67,10 @@ public interface ProjectModel extends ProjectModelState {
 
   /**
    * Builds the project based on the given project string.
+   *
    * @param projectString the string representation of the project
-   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   * @throws IllegalStateException    if this method is called before a project is created or loaded
+   *                                  in
    * @throws IllegalArgumentException if the project string is invalid
    */
   void buildProject(String projectString) throws IllegalStateException, IllegalArgumentException;

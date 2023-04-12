@@ -46,6 +46,7 @@ public class Main {
         default:
           throw new IllegalArgumentException("Invalid type");
       }
+      break;
     }
 
     if (args.length == 0) {

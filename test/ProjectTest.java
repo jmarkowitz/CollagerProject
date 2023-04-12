@@ -1,24 +1,20 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Scanner;
-
 import controller.CollagerCommand;
 import controller.commands.LoadProject;
+import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import model.Layer;
 import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
 import model.Project;
 import model.ProjectModel;
+import org.junit.Test;
 import view.CommandLineTextView;
 import view.ProjectView;
-
-import org.junit.Test;
 
 /**
  * Test class for testing a {@code Project}'s behaviors and functionality.
@@ -219,15 +215,15 @@ public class ProjectTest {
   public void testForCompressLayers() {
     //The image grid for layer 1
     PixelInterface[][] imageGrid1 = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200)}};
+        new Pixel(60, 60, 60, 60)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200)}};
 
     //The image grid for layer 2
     PixelInterface[][] imageGrid2 = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200)}};
+        new Pixel(60, 60, 60, 60)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200)}};
 
     ProjectModel p1 = new Project();
     //test whether the compressLayers() method can be used when haven't created
@@ -248,9 +244,9 @@ public class ProjectTest {
 
     //The image grid for answer
     PixelInterface[][] resultGrid = {{new Pixel(215, 215, 215, 255),
-            new Pixel(209, 209, 209, 255)},
-            {new Pixel(194, 194, 194, 255),
-                    new Pixel(180, 180, 180, 255)}};
+        new Pixel(209, 209, 209, 255)},
+        {new Pixel(194, 194, 194, 255),
+            new Pixel(180, 180, 180, 255)}};
 
     PixelInterface[][] compressedLayer = p1.compressLayers();
     String result = "";
@@ -264,6 +260,9 @@ public class ProjectTest {
     assertEquals(result, answer);
   }
 
+  /**
+   * The test method for getLayers() method.
+   */
   @Test
   public void testForGetLayers() {
     ProjectModel p1 = new Project();
@@ -277,9 +276,9 @@ public class ProjectTest {
     }
 
     PixelInterface[][] bg = {{new Pixel(255, 255, 255, 50),
-            new Pixel(255, 255, 255, 60)},
-            {new Pixel(255, 255, 255, 100),
-                    new Pixel(255, 255, 255, 200)}};
+        new Pixel(255, 255, 255, 60)},
+        {new Pixel(255, 255, 255, 100),
+            new Pixel(255, 255, 255, 200)}};
 
     p1.newProject(2, 2);
     p1.addLayer("L1");
@@ -287,42 +286,43 @@ public class ProjectTest {
     p1.addLayer("L3");
     Map<String, LayerInterface> layerList = new LinkedHashMap<>();
     layerList.put("L1",
-            new Layer("L1", bg));
+        new Layer("L1", bg));
     layerList.put("L2",
-            new Layer("L2", bg));
+        new Layer("L2", bg));
     layerList.put("L3",
-            new Layer("L3", bg));
-
+        new Layer("L3", bg));
 
     assertEquals(layerList.get(0), p1.getLayers().get(0));
     assertEquals(layerList.get(1), p1.getLayers().get(1));
     assertEquals(layerList.get(2), p1.getLayers().get(2));
   }
 
+  /**
+   * The test for ExportProjecrt() method.
+   */
   @Test
   public void testForExportProject() {
     ProjectModel p1 = new Project();
     p1.newProject(2, 2);
     assertEquals("C1\n" +
-            "2 2\n" +
-            "255\n" +
-            "bg normal\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n", p1.exportProject());
+        "2 2\n" +
+        "255\n" +
+        "bg normal\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n", p1.exportProject());
 
     PixelInterface[][] imageGrid1 = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200)}};
+        new Pixel(60, 60, 60, 60)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200)}};
 
     //The image grid for layer 2
     PixelInterface[][] imageGrid2 = {{new Pixel(50, 50, 50, 50),
-            new Pixel(60, 60, 60, 60)},
-            {new Pixel(100, 100, 100, 100),
-                    new Pixel(200, 200, 200, 200)}};
-
+        new Pixel(60, 60, 60, 60)},
+        {new Pixel(100, 100, 100, 100),
+            new Pixel(200, 200, 200, 200)}};
 
     p1.addLayer("L1");
     p1.addImageToLayer("L1", imageGrid1, 0, 0);
@@ -331,57 +331,60 @@ public class ProjectTest {
     p1.addImageToLayer("L2", imageGrid2, 1, 1);
 
     assertEquals("C1\n" +
-            "2 2\n" +
-            "255\n" +
-            "bg normal\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "L1 normal\n" +
-            "50 50 50 50\n" +
-            "60 60 60 60\n" +
-            "100 100 100 100\n" +
-            "200 200 200 200\n" +
-            "L2 normal\n" +
-            "255 255 255 0\n" +
-            "255 255 255 0\n" +
-            "255 255 255 0\n" +
-            "50 50 50 50\n", p1.exportProject());
+        "2 2\n" +
+        "255\n" +
+        "bg normal\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "L1 normal\n" +
+        "50 50 50 50\n" +
+        "60 60 60 60\n" +
+        "100 100 100 100\n" +
+        "200 200 200 200\n" +
+        "L2 normal\n" +
+        "255 255 255 0\n" +
+        "255 255 255 0\n" +
+        "255 255 255 0\n" +
+        "50 50 50 50\n", p1.exportProject());
   }
 
+  /**
+   * The test for buildProject() method.
+   */
   @Test
   public void testForBuildProject() {
     ProjectModel p1 = new Project();
     p1.buildProject("C1\n" +
-            "2 2\n" +
-            "255\n" +
-            "bg normal\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "255 255 255 255\n" +
-            "L1 normal\n" +
-            "50 50 50 50\n" +
-            "60 60 60 60\n" +
-            "100 100 100 100\n" +
-            "200 200 200 200\n" +
-            "L2 normal\n" +
-            "255 255 255 0\n" +
-            "255 255 255 0\n" +
-            "255 255 255 0\n" +
-            "50 50 50 50\n");
+        "2 2\n" +
+        "255\n" +
+        "bg normal\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "255 255 255 255\n" +
+        "L1 normal\n" +
+        "50 50 50 50\n" +
+        "60 60 60 60\n" +
+        "100 100 100 100\n" +
+        "200 200 200 200\n" +
+        "L2 normal\n" +
+        "255 255 255 0\n" +
+        "255 255 255 0\n" +
+        "255 255 255 0\n" +
+        "50 50 50 50\n");
     Map<String, LayerInterface> layerList = new LinkedHashMap<>();
     PixelInterface[][] bg = {{new Pixel(255, 255, 255, 50),
-            new Pixel(255, 255, 255, 60)},
-            {new Pixel(255, 255, 255, 100),
-                    new Pixel(255, 255, 255, 200)}};
+        new Pixel(255, 255, 255, 60)},
+        {new Pixel(255, 255, 255, 100),
+            new Pixel(255, 255, 255, 200)}};
     layerList.put("bg",
-            new Layer("bg", bg));
+        new Layer("bg", bg));
     layerList.put("L1",
-            new Layer("L1", bg));
+        new Layer("L1", bg));
     layerList.put("L2",
-            new Layer("L2", bg));
+        new Layer("L2", bg));
     assertEquals(layerList.get("bg").getName(), p1.getLayers().get("bg").getName());
     assertEquals(layerList.get("L1").getName(), p1.getLayers().get("L1").getName());
     assertEquals(layerList.get("L2").getName(), p1.getLayers().get("L2").getName());

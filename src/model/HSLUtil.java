@@ -7,7 +7,7 @@ package model;
 public class HSLUtil {
 
   /**
-   * Converts an RGB representation in the range 0-1 into an HSL representation where
+   * Converts an RGB representation in the range 0-1 into an HSL representation where.
    * <ul>
    * <li> 0 &lt;= H &lt; 360</li>
    * <li> 0 &lt;= S &lt;= 1</li>
@@ -26,7 +26,8 @@ public class HSLUtil {
     double delta = componentMax - componentMin;
 
     double lightness = (componentMax + componentMin) / 2;
-    double hue, saturation;
+    double hue;
+    double saturation;
     if (delta == 0) {
       hue = 0;
       saturation = 0;
@@ -56,16 +57,17 @@ public class HSLUtil {
   }
 
   /**
-   * Convers an HSL representation where
+   * Convers an HSL representation where.
    * <ul>
    * <li> 0 &lt;= H &lt; 360</li>
    * <li> 0 &lt;= S &lt;= 1</li>
    * <li> 0 &lt;= L &lt;= 1</li>
    * </ul>
    * into an RGB representation where each component is in the range 0-1
-   * @param hue hue of the HSL representation
+   *
+   * @param hue        hue of the HSL representation
    * @param saturation saturation of the HSL representation
-   * @param lightness lightness of the HSL representation
+   * @param lightness  lightness of the HSL representation
    * @return an array of integers containing the converted RGB values
    */
   public static Integer[] convertHSLToRGB(double hue, double saturation, double lightness) {

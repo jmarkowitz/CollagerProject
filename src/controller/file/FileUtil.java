@@ -1,6 +1,5 @@
 package controller.file;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -29,12 +28,18 @@ public class FileUtil {
     while (sc.hasNextLine()) {
       String s = sc.nextLine();
       if (s.charAt(0) != '#') {
-        builder.append(s + System.lineSeparator());
+        builder.append(s).append(System.lineSeparator());
       }
     }
     return builder.toString();
   }
 
+  /**
+   * Returns the extension of the file.
+   *
+   * @param filepath the path of the file
+   * @return the extension of the file as a String
+   */
   public static String getFileExtension(String filepath) {
     int dotIndex = filepath.lastIndexOf('.');
     if (dotIndex == -1 || dotIndex == filepath.length() - 1) {

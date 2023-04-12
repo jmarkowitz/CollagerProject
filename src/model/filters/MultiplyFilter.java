@@ -1,11 +1,13 @@
 package model.filters;
 
-import static model.Project.MAX_VALUE;
-
 import model.HSLUtil;
 import model.Pixel;
 import model.PixelInterface;
 
+/**
+ * Represents a filter that converts the RGB values to HSL and multiplies the lightness of the
+ * current pixel by the lightness of the background pixel.
+ */
 public class MultiplyFilter extends AbstractFilter {
 
   /**

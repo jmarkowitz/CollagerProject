@@ -8,13 +8,27 @@ import model.Pixel;
 import model.PixelInterface;
 import model.ProjectModelState;
 
-
+/**
+ * Represents a handler for image files. Allows the user to read and write images.
+ */
 public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
 
+  /**
+   * Constructs an ImageHandler object.
+   *
+   * @param modelState the model state for the program
+   */
   public ImageHandler(ProjectModelState modelState) {
     super(modelState);
   }
 
+  /**
+   * This method get all the information in a file.
+   *
+   * @param filepath The filepath of a file.
+   * @return All the information in a file.
+   * @throws IOException if the file is invalid.
+   */
   @Override
   public PixelInterface[][] readFile(String filepath) throws IOException {
     BufferedImage img = ImageIO.read(new File(filepath));
@@ -34,14 +48,32 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
     return pixels.clone();
   }
 
+  /**
+   * This method read the information to a file.
+   *
+   * @param filepath the filepath of a file.
+   * @throws IOException if the file is invalid.
+   */
   @Override
   public void writeFile(String filepath) throws IOException {
     String extension = this.getFileExtension(filepath);
     PixelInterface[][] finalImage = this.modelState.compressLayers();
-    this.writePixelsToImage(finalImage, filepath, extension);
+    switch (extension) {
+      case "png":
+        this.writePixelsToPNG(finalImage, filepath, extension);
+        break;
+      case "jpeg":
+      case "jpg":
+        this.writePixelsToJPEG(finalImage, filepath, extension);
+        break;
+      default:
+        throw new IllegalArgumentException("Invalid file extension");
+    }
+    this.writePixelsToPNG(finalImage, filepath, extension);
   }
 
-  private void writePixelsToImage(PixelInterface[][] compressedImage, String filepath,
+  // Helper method to write pixels to an image
+  private void writePixelsToPNG(PixelInterface[][] compressedImage, String filepath,
       String extension)
       throws IOException {
     BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getHeight(),
@@ -62,4 +94,27 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
       throw new IOException("Unable to write image to file");
     }
   }
+
+  private void writePixelsToJPEG(PixelInterface[][] compressedImage, String filepath,
+      String extension) throws IOException {
+    BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getHeight(),
+        BufferedImage.TYPE_INT_RGB);
+    for (int row = 0; row < this.modelState.getHeight(); row++) {
+      for (int col = 0; col < this.modelState.getWidth(); col++) {
+        PixelInterface curPixel = compressedImage[row][col];
+        PixelInterface adjustedPixel = curPixel.convertToRGB();
+        int rgb = (adjustedPixel.getRed() << 16) | (adjustedPixel.getGreen() << 8)
+            | adjustedPixel.getBlue();
+        image.setRGB(col, row, rgb);
+      }
+    }
+    File output = new File(filepath);
+    try {
+      ImageIO.write(image, extension, output);
+    } catch (IOException e) {
+      throw new IOException("Unable to write image to file");
+    }
+  }
+
+
 }

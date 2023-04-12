@@ -1,14 +1,25 @@
 package controller.file;
 
-import model.ProjectModel;
 import model.ProjectModelState;
 
+/**
+ * The abstract class for all the handler classes.
+ *
+ * @param <F> The given file.
+ */
 public abstract class AbstractFileHandler<F> implements FileHandler<F> {
 
-  private enum FileType {
+  /**
+   * The enum class which limits the file types that the users can choose.
+   */
+  protected enum FileType {
+
     TXT("txt"),
+
     COLLAGE("collage"),
+
     JSON("json"),
+
     JPG("jpg"),
     JPEG("jpeg"),
     PNG("png"),
@@ -27,6 +38,11 @@ public abstract class AbstractFileHandler<F> implements FileHandler<F> {
 
   protected final ProjectModelState modelState;
 
+  /**
+   * The constructor of this class.
+   *
+   * @param modelState The passed-in modelState
+   */
   public AbstractFileHandler(ProjectModelState modelState) {
     this.modelState = modelState;
   }

@@ -1,19 +1,12 @@
 package controller.commands;
 
-import static model.Project.MAX_VALUE;
 
 import controller.CollagerCommand;
 import controller.file.FileHandler;
 import controller.file.FileUtil;
 import controller.file.ImageHandler;
 import controller.file.PPMHandler;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import model.FilterInterface;
-import model.LayerInterface;
-import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 

@@ -1,7 +1,7 @@
 import gui.controller.Features;
 import gui.view.GUIProjectView;
+import java.awt.image.BufferedImage;
 import java.util.List;
-import model.PixelInterface;
 
 /**
  * Mock view class for testing the FeatureController.
@@ -59,7 +59,7 @@ public class GUIProjectViewMock implements GUIProjectView {
    * @param image the 2D array of pixels
    */
   @Override
-  public void renderImage(PixelInterface[][] image) {
+  public void renderImage(BufferedImage image) {
     log.append("renderImage called").append(System.lineSeparator());
 
   }

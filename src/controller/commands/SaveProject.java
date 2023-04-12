@@ -2,16 +2,8 @@ package controller.commands;
 
 import controller.CollagerCommand;
 import controller.file.FileHandler;
-import controller.file.FileUtil;
-import controller.file.ImageHandler;
-import controller.file.PPMHandler;
 import controller.file.TextProjectHandler;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
-import java.util.Scanner;
-import model.LayerInterface;
-import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -42,8 +34,7 @@ public class SaveProject implements CollagerCommand {
    * separated by a new line </li>
    * </ul>
    *
-   * @throws IOException if this method is called before a project has been created or
-   *                               loaded
+   * @throws IOException if this method is called before a project has been created or loaded
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {

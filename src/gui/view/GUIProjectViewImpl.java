@@ -4,9 +4,9 @@ import gui.controller.Features;
 import gui.view.GUIProjectViewImpl.CustomInputDialog.FieldValues;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -27,7 +27,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
-import model.PixelInterface;
 
 /**
  * Represents the view for the GUI. This class allows for the controller to interact with the view,
@@ -36,18 +35,11 @@ import model.PixelInterface;
  */
 public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
-  private final int programWidth;
-  private final int programHeight;
-
-  // menu stuff
-  private final JMenuBar menuBar;
-  private final JMenu fileMenu;
   private final JMenuItem newMenuItem;
   private final JMenuItem openProjectMenuItem;
   private final JMenuItem saveProjectMenuItem;
   private final JMenuItem exportMenuItem;
   private final JMenuItem quitMenuItem;
-  private final JMenu projectMenu;
   private final JMenuItem addImageMenuItem;
 
   private static final int SIDE_BAR_WIDTH = 300;
@@ -58,43 +50,39 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
   // layer stuff
   private final JButton addLayerButton;
-  private final JPanel layerPanel;
-  private final JLabel layerLabel;
-  private final JPanel topLayerPanel;
   private final JList<String> layerList;
   private final DefaultListModel<String> layerListModel;
 
-  // workspace stuff
-  private final JPanel workspacePanel, imagePanel;
-  private JLabel imageLabel;
-  private JScrollPane workspaceScroll;
+  private final JPanel imagePanel;
   private final int imagePanelDefaultWidth;
   private final int imagePanelDefaultHeight;
 
   // tool stuff
   private final JButton applyFilterButton;
-  private final JPanel toolPanel;
-  private final JPanel topToolPanel;
-  private final JLabel toolLabel;
   private final JList<String> filterList;
   private final DefaultListModel<String> filterListModel;
-  private final JScrollPane filterListScrollPane;
 
+  /**
+   * Constructs the entire view frame and initializes all the components.
+   *
+   * @param caption the title of the frame
+   */
   public GUIProjectViewImpl(String caption) {
     super(caption);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-    programWidth = (int) size.getWidth();
-    programHeight = (int) size.getHeight();
+    int programWidth = (int) size.getWidth();
+    int programHeight = (int) size.getHeight();
     this.setSize(programWidth, programHeight);
     this.setVisible(true);
     this.setLayout(new BorderLayout());
 
     // create menu bar
-    menuBar = new JMenuBar();
+    // menu stuff
+    JMenuBar menuBar = new JMenuBar();
 
     // create file menu
-    fileMenu = new JMenu("File");
+    JMenu fileMenu = new JMenu("File");
     newMenuItem = new JMenuItem("New Project");
     openProjectMenuItem = new JMenuItem("Open Project");
     saveProjectMenuItem = new JMenuItem("Save Project");
@@ -104,7 +92,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     this.saveProjectMenuItem.setEnabled(false);
 
     // create Project menu
-    projectMenu = new JMenu("Project");
+    JMenu projectMenu = new JMenu("Project");
     addImageMenuItem = new JMenuItem("Add Image To Selected Layer");
     this.addImageMenuItem.setEnabled(false);
     projectMenu.add(addImageMenuItem);
@@ -135,18 +123,18 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     // --------------------------MAIN LAYER PANEL----------------------------------
 
     // layer panel for displaying all layers and adding new ones
-    layerPanel = new JPanel();
+    JPanel layerPanel = new JPanel();
     layerPanel.setBackground(SIDE_BAR_COLOR);
     layerPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, programHeight));
     this.setMinimumSize(
         new Dimension(programWidth - FRAME_MIN_SIZE, programHeight - FRAME_MIN_SIZE));
 
     // top layer panel for displaying the layer options
-    topLayerPanel = new JPanel();
+    JPanel topLayerPanel = new JPanel();
     topLayerPanel.setBackground(new Color(100, 100, 100));
     topLayerPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, 50));
 
-    layerLabel = new JLabel();
+    JLabel layerLabel = new JLabel();
     layerLabel.setText("Layers");
     layerLabel.setLayout(new BorderLayout());
     layerLabel.setForeground(Color.WHITE);
@@ -180,7 +168,8 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
     // --------------------------MAIN WORKSPACE PANEL----------------------------------
     // workspace panel for displaying the image
-    workspacePanel = new JPanel();
+    // workspace stuff
+    JPanel workspacePanel = new JPanel();
     workspacePanel.setBackground(new Color(30, 30, 30));
     workspacePanel.setPreferredSize(
         new Dimension(programWidth - SIDE_BAR_WIDTH * 2, programHeight));
@@ -197,16 +186,16 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
     // --------------------------MAIN TOOL PANEL----------------------------------
     // tool panel for displaying all tools
-    toolPanel = new JPanel();
+    JPanel toolPanel = new JPanel();
     toolPanel.setBackground(SIDE_BAR_COLOR);
     toolPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, programHeight));
 
     // top tool panel for displaying the tools
-    topToolPanel = new JPanel();
+    JPanel topToolPanel = new JPanel();
     topToolPanel.setBackground(new Color(100, 100, 100));
     topToolPanel.setPreferredSize(new Dimension(SIDE_BAR_WIDTH, 50));
 
-    toolLabel = new JLabel();
+    JLabel toolLabel = new JLabel();
     toolLabel.setText("Filters");
     toolLabel.setLayout(new BorderLayout());
     toolLabel.setForeground(Color.WHITE);
@@ -230,7 +219,7 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     filterList.setBorder(new EmptyBorder(10, 10, 10, 10));
     filterList.setLayout(new BorderLayout());
     filterList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-    filterListScrollPane = new JScrollPane();
+    JScrollPane filterListScrollPane = new JScrollPane();
     filterListScrollPane.setViewportView(filterList);
 
     // add statements
@@ -458,24 +447,13 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
    * @param image the 2D array of pixels
    */
   @Override
-  public void renderImage(PixelInterface[][] image) {
-    int height = image.length;
-    int width = image[0].length;
-    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    for (int row = 0; row < height; row++) {
-      for (int col = 0; col < width; col++) {
-        PixelInterface curPixel = image[row][col];
-        int argb =
-            (curPixel.getAlpha() << 24) | (curPixel.getRed() << 16) | (curPixel.getGreen() << 8)
-                | curPixel.getBlue();
-        bufferedImage.setRGB(col, row, argb);
-      }
-    }
-
+  public void renderImage(BufferedImage image) {
+    int width = image.getWidth();
+    int height = image.getHeight();
     imagePanel.setPreferredSize(new Dimension(Math.min(width, imagePanelDefaultWidth),
         Math.min(height, imagePanelDefaultHeight)));
-    imageLabel = new JLabel(new ImageIcon(bufferedImage));
-    workspaceScroll = new JScrollPane(imageLabel,
+    JLabel imageLabel = new JLabel(new ImageIcon(image));
+    JScrollPane workspaceScroll = new JScrollPane(imageLabel,
         JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
         JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
     imagePanel.removeAll();

@@ -4,6 +4,10 @@ import model.HSLUtil;
 import model.Pixel;
 import model.PixelInterface;
 
+/**
+ * Represents a screen blend filter that will use the lightness value of the composite image's
+ * pixels below and the current layer's pixels and return the resulting pixel.
+ */
 public class ScreenFilter extends AbstractFilter {
 
   /**

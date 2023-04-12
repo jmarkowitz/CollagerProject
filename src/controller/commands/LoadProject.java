@@ -2,12 +2,8 @@ package controller.commands;
 
 import controller.CollagerCommand;
 import controller.file.FileHandler;
-import controller.file.FileUtil;
 import controller.file.TextProjectHandler;
 import java.io.IOException;
-import java.util.Scanner;
-import model.Pixel;
-import model.PixelInterface;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -19,7 +15,7 @@ public class LoadProject implements CollagerCommand {
   private final String filepath;
 
   /**
-   * Constructs a load project command
+   * Constructs a load project command.
    *
    * @param filepath the filepath to load the project from
    */
@@ -31,7 +27,7 @@ public class LoadProject implements CollagerCommand {
    * Method that will execute the load project command.
    *
    * @param model the model that will be used to load the project
-   * @param view the view that will be used to render the message
+   * @param view  the view that will be used to render the message
    * @throws IOException              if there is an issue rendering the message
    * @throws IllegalArgumentException if the file is invalid
    */

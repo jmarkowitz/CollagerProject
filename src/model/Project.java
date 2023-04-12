@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -11,15 +9,15 @@ import model.filters.BlueFilter;
 import model.filters.BrightenIntensityFilter;
 import model.filters.BrightenLumaFilter;
 import model.filters.BrightenValueFilter;
-import model.filters.ScreenFilter;
 import model.filters.DarkenIntensityFilter;
 import model.filters.DarkenLumaFilter;
 import model.filters.DarkenValueFilter;
-import model.filters.MultiplyFilter;
-import model.filters.GreenFilter;
 import model.filters.DifferenceFilter;
+import model.filters.GreenFilter;
+import model.filters.MultiplyFilter;
 import model.filters.NormalFilter;
 import model.filters.RedFilter;
+import model.filters.ScreenFilter;
 
 /**
  * Represents a collager project that can be created and edited. Allows the user to create a new
@@ -28,8 +26,6 @@ import model.filters.RedFilter;
 public class Project implements ProjectModel {
 
   public static final int MAX_VALUE = 255;
-  private final int screenWidth;
-  private final int screenHeight;
   private int height;
   private int width;
   private final Map<String, LayerInterface> layerLinkedMap;
@@ -41,9 +37,6 @@ public class Project implements ProjectModel {
    * Constructs a new project.
    */
   public Project() {
-    Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-    this.screenWidth = (int) size.getWidth();
-    this.screenHeight = (int) size.getHeight();
     this.layerLinkedMap = new LinkedHashMap<>();
     this.allFilters = new HashMap<>();
   }
@@ -201,7 +194,8 @@ public class Project implements ProjectModel {
       for (int col = 0; col < xEnd; col++) {
         PixelInterface bottomPixelGrid = bottomImageGridCopy[row + y][col + x];
         PixelInterface topPixelGrid = topImageGrid[row][col];
-        PixelInterface updatedPixel = topPixelGrid.bgPixelConverter(bottomPixelGrid.getRed(), bottomPixelGrid.getGreen(), bottomPixelGrid.getBlue(), bottomPixelGrid.getAlpha());
+        PixelInterface updatedPixel = topPixelGrid.bgPixelConverter(bottomPixelGrid.getRed(),
+            bottomPixelGrid.getGreen(), bottomPixelGrid.getBlue(), bottomPixelGrid.getAlpha());
         bottomImageGridCopy[row + y][col + x] = updatedPixel;
       }
     }
@@ -218,7 +212,8 @@ public class Project implements ProjectModel {
     for (String name : allLayerNames) {
       LayerInterface curLayer = layerLinkedMap.get(name);
       PixelInterface[][] curLayerGrid = curLayer.getPixelGrid();
-      PixelInterface[][] curLayerFiltered = this.allFilters.get(curLayer.getFilter()).apply(curLayerGrid, bgImage);
+      PixelInterface[][] curLayerFiltered = this.allFilters.get(curLayer.getFilter())
+          .apply(curLayerGrid, bgImage);
       bgImage = this.changePixels(bgImage, curLayerFiltered, 0, 0);
     }
     return bgImage;
@@ -286,8 +281,10 @@ public class Project implements ProjectModel {
 
   /**
    * Returns a string representation of the project.
+   *
    * @return the string representation of the project
-   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   * @throws IllegalStateException if this method is called before a project is created or loaded
+   *                               in
    */
   @Override
   public String exportProject() throws IllegalStateException {
@@ -312,12 +309,15 @@ public class Project implements ProjectModel {
 
   /**
    * Builds the project based on the given project string.
+   *
    * @param projectString the string representation of the project
-   * @throws IllegalStateException if this method is called before a project is created or loaded in
+   * @throws IllegalStateException    if this method is called before a project is created or loaded
+   *                                  in
    * @throws IllegalArgumentException if the project string is invalid
    */
   @Override
-  public void buildProject(String projectString) throws IllegalStateException, IllegalArgumentException {
+  public void buildProject(String projectString)
+      throws IllegalStateException, IllegalArgumentException {
     boolean isBGLayer = true;
     int width;
     int height;
@@ -331,13 +331,13 @@ public class Project implements ProjectModel {
     }
     width = sc.nextInt();
     height = sc.nextInt();
-      this.newProject(height, width);
+    this.newProject(height, width);
     int maxValue = sc.nextInt();
     while (sc.hasNext()) {
       String layerName = sc.next();
-        if (!isBGLayer) {
-          this.addLayer(layerName);
-        }
+      if (!isBGLayer) {
+        this.addLayer(layerName);
+      }
       String filterName = sc.next();
       PixelInterface[][] currentLayer = new PixelInterface[height][width];
       for (int row = 0; row < height; row++) {
@@ -351,12 +351,12 @@ public class Project implements ProjectModel {
               this.scalePixel(alpha, maxValue));
         }
       }
-        if (!isBGLayer) {
-          this.addImageToLayer(layerName, currentLayer, 0, 0);
-        }
-        if (!isBGLayer) {
-          this.setFilter(layerName, filterName);
-        }
+      if (!isBGLayer) {
+        this.addImageToLayer(layerName, currentLayer, 0, 0);
+      }
+      if (!isBGLayer) {
+        this.setFilter(layerName, filterName);
+      }
       isBGLayer = false;
     }
   }

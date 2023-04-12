@@ -32,7 +32,7 @@ public abstract class AbstractFilter implements FilterInterface {
    * Applies the filter to the given layer and returns the layer with the filtered pixels.
    *
    * @param curImage the layer to be filtered
-   * @param bgImage the background image used for certain filters
+   * @param bgImage  the background image used for certain filters
    * @return the filtered layer
    */
   @Override
@@ -58,12 +58,14 @@ public abstract class AbstractFilter implements FilterInterface {
   protected int produceValidValue(int value) {
     if (value > 255) {
       return 255;
-    } else
+    } else {
       return Math.max(value, 0);
+    }
   }
 
   /**
    * Changes the range of the value from 0-255 to 0-1.
+   *
    * @param value the value to be changed
    * @return the value as a double in the range of 0-1
    */
