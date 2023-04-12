@@ -3,6 +3,10 @@ package model.filters;
 import model.Pixel;
 import model.PixelInterface;
 
+/**
+ * Represents a difference filter that takes two pixels RGB components and subtracts them
+ * component-wise. The resulting pixel is the absolute value of the difference.
+ */
 public class DifferenceFilter extends AbstractFilter {
 
 

@@ -6,6 +6,7 @@ import controller.file.ImageHandler;
 import controller.file.PPMHandler;
 import controller.file.TextProjectHandler;
 import gui.view.GUIProjectView;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class FeatureController implements Features {
       try {
         this.model.newProject(height, width);
         this.getFilters();
-        view.renderImage(model.compressLayers());
+        view.renderImage(this.convertToImage(model.compressLayers()));
         view.activateButtons();
         view.refresh();
         this.isProjectActive = true;
@@ -82,7 +83,7 @@ public class FeatureController implements Features {
         }
       }
       this.getFilters();
-      view.renderImage(model.compressLayers());
+      view.renderImage(this.convertToImage(model.compressLayers()));
       view.activateButtons();
       view.refresh();
       this.isProjectActive = true;
@@ -196,7 +197,7 @@ public class FeatureController implements Features {
     }
     try {
       model.addImageToLayer(layerName, image, x, y);
-      view.renderImage(model.compressLayers());
+      view.renderImage(this.convertToImage(model.compressLayers()));
       view.refresh();
     } catch (IllegalArgumentException | IllegalStateException e) {
       view.renderMessage(e.getMessage());
@@ -213,7 +214,7 @@ public class FeatureController implements Features {
   public void setFilter(String layerName, String filterName) {
     try {
       model.setFilter(layerName, filterName);
-      view.renderImage(model.compressLayers());
+      view.renderImage(this.convertToImage(model.compressLayers()));
       view.refresh();
     } catch (IllegalArgumentException | IllegalStateException e) {
       view.renderMessage("Please select a layer to apply a filter to.");
@@ -234,4 +235,21 @@ public class FeatureController implements Features {
       view.renderMessage(e.getMessage());
     }
   }
+
+  private BufferedImage convertToImage(PixelInterface[][] image) {
+    int height = image.length;
+    int width = image[0].length;
+    BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    for (int row = 0; row < height; row++) {
+      for (int col = 0; col < width; col++) {
+        PixelInterface curPixel = image[row][col];
+        int argb =
+            (curPixel.getAlpha() << 24) | (curPixel.getRed() << 16) | (curPixel.getGreen() << 8)
+                | curPixel.getBlue();
+        bufferedImage.setRGB(col, row, argb);
+      }
+    }
+    return bufferedImage;
+  }
+
 }

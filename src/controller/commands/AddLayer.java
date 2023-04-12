@@ -2,7 +2,6 @@ package controller.commands;
 
 import controller.CollagerCommand;
 import java.io.IOException;
-import java.util.Scanner;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -14,7 +13,7 @@ public class AddLayer implements CollagerCommand {
   private final String layerName;
 
   /**
-   * Constructs an add layer command
+   * Constructs an add layer command.
    *
    * @param layerName the name of the layer to add
    */

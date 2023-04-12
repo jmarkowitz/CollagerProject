@@ -2,7 +2,39 @@
 
 ---
 
+## Decoupling the View
+
+In order to pass this project along to anyone else, the only files that would need to be sent are:
+
+**Command Line**
+
+* `ProjectView.java` Interface
+* `CommandLineTextView.java` class (implements `ProjectView`)
+    * These are the only files required as the view is decoupled from the controller for the command
+      line version of the program.
+
+**GUI**
+
+* `GUIProjectView.java` Interface
+* `GUIProjectViewImpl.java` class (implements `GUIProjectView`)
+* `Feature.java` Interface
+    * The `Feature` interface is necessary as there is coupling between the controller and view in
+      order to allow for asynchronous user input. The `Feature` interface is used to allow for the
+      controller to be able to call methods in the view without having to know what the view is.
+
+---
+
 ## Recent Implementations/Changes
+
+* Changed the `renderImage()` method in the `GUIProjectView` interface to take in a `BufferedImage`
+  instead of a `PixelInterface[][]`. This was done to decouple the view from the model and allow for
+  flexibility of our design.
+* Added a private helper method in the `FeatureController` to turn a `PixelInterface[][]` into a
+  `BufferedImage` to be used in the `renderImage()` method.
+
+---
+
+## Previous Implementations/Changes (Before 4/11/2023)
 
 * Added `compressLayers()` method to `ProjectModelState` interface to allow for the user to
   compress all the layers into one image [Click Me!](#141-projectModelState)
@@ -14,14 +46,16 @@
   input/output [Click Me!](#311-filehandler)
 * Changed Filter design to use `BiFunction` instead of `Function` interface to allow for
   background layer to be passed in as well [Click Me!](#131-filterinterface)
-* Added `DifferenceFilter`, `MultiplyFilter`, and `ScreenFilter` to the filter options [Click Me!](#1313-differencefilter)
+* Added `DifferenceFilter`, `MultiplyFilter`, and `ScreenFilter` to the filter
+  options [Click Me!](#1313-differencefilter)
 * Added `HSLUtil` class to handle conversion between RGB and HSL and back (to help with
   `MultiplyFilter` and `ScreenFilter`) [Click Me!](#1316-hslutil)
 * Added `Feature` interface and `FeatureController` class to handle user input for an asynchronous
   controller [Click Me!](#41-features)
 * Added `GUIProjectView` interface and `GUIProjectViewImpl` class to handle user specific inputs and
   visualizations [Click Me!](#43-guiprojectview)
-* Added a USEME.md file to help understand how the GUI should be used and interacted with [Click Me!](/USEME.md)
+* Added a USEME.md file to help understand how the GUI should be used and interacted
+  with [Click Me!](/USEME.md)
 
 ---
 

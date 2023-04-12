@@ -55,7 +55,8 @@ public class CollagerControllerImpl implements CollagerController {
     this.knownCommands.put("load-project", (Scanner s) -> new LoadProject(s.next()));
     this.knownCommands.put("save-project", (Scanner s) -> new SaveProject(s.next()));
     this.knownCommands.put("add-layer", (Scanner s) -> new AddLayer(s.next()));
-    this.knownCommands.put("add-image-to-layer", (Scanner s) -> new AddImage(s.next(), s.next(), s.nextInt(), s.nextInt()));
+    this.knownCommands.put("add-image-to-layer",
+        (Scanner s) -> new AddImage(s.next(), s.next(), s.nextInt(), s.nextInt()));
     this.knownCommands.put("set-filter", (Scanner s) -> new SetFilter(s.next(), s.next()));
     this.knownCommands.put("save-image", (Scanner s) -> new SaveImage(s.next()));
   }

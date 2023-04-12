@@ -21,6 +21,14 @@ public class AddImage implements CollagerCommand {
   private final int x;
   private final int y;
 
+  /**
+   * Constructs an AddImage command.
+   *
+   * @param layerName the name of the layer to add the image to
+   * @param imagePath the path of the image to add
+   * @param x         the x coordinate of the image
+   * @param y         the y coordinate of the image
+   */
   public AddImage(String layerName, String imagePath, int x, int y) {
     this.layerName = layerName;
     this.imagePath = imagePath;

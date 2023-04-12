@@ -2,7 +2,6 @@ package controller.commands;
 
 import controller.CollagerCommand;
 import java.io.IOException;
-import java.util.Scanner;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -15,7 +14,7 @@ public class NewProject implements CollagerCommand {
   private final int width;
 
   /**
-   * Constructs a new project command
+   * Constructs a new project command.
    *
    * @param height the height of the project to be created
    * @param width  the width of the project to be created

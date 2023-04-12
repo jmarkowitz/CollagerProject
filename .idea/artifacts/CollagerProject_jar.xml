@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="CollagerProject:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CollagerProject_jar</output-path>
+    <root id="archive" name="CollagerProject.jar">
+      <element id="module-output" name="CollagerProject" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy/1.11.13/byte-buddy-1.11.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/net/bytebuddy/byte-buddy-agent/1.11.13/byte-buddy-agent-1.11.13.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$MAVEN_REPOSITORY$/org/objenesis/objenesis/3.2/objenesis-3.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

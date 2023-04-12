@@ -1,11 +1,10 @@
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import model.Layer;
 import model.LayerInterface;
 import model.Pixel;
 import model.PixelInterface;
+import org.junit.Test;
 
 /**
  * Test class for testing all functionality specific to a layer.

@@ -2,7 +2,6 @@ package controller.commands;
 
 import controller.CollagerCommand;
 import java.io.IOException;
-import java.util.Scanner;
 import model.ProjectModel;
 import view.ProjectView;
 
@@ -17,7 +16,8 @@ public class SetFilter implements CollagerCommand {
 
   /**
    * Constructs a set filter command.
-   * @param layerName the name of the layer to apply the filter to
+   *
+   * @param layerName  the name of the layer to apply the filter to
    * @param filterName the name of the filter to apply
    */
   public SetFilter(String layerName, String filterName) {
@@ -31,13 +31,13 @@ public class SetFilter implements CollagerCommand {
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {
-      try {
-        model.setFilter(layerName, filterName);
-        view.renderMessage(filterName + " filter was successfully added to " + layerName + " layer"
-            + System.lineSeparator());
-      } catch (IllegalArgumentException | IllegalStateException e) {
-        view.renderMessage(e.getMessage() + System.lineSeparator());
-        throw new IOException();
-      }
+    try {
+      model.setFilter(layerName, filterName);
+      view.renderMessage(filterName + " filter was successfully added to " + layerName + " layer"
+          + System.lineSeparator());
+    } catch (IllegalArgumentException | IllegalStateException e) {
+      view.renderMessage(e.getMessage() + System.lineSeparator());
+      throw new IOException();
     }
   }
+}

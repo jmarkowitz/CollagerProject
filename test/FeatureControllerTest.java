@@ -20,7 +20,7 @@ public class FeatureControllerTest {
   @Test
   public void testValidControllerConstruction() {
     ProjectModel model = new Project();
-    model.newProject(1,1);
+    model.newProject(1, 1);
     GUIProjectView view = new GUIProjectViewMock(new StringBuilder());
     try {
       Features gc = new FeatureController(model, view);
@@ -31,12 +31,12 @@ public class FeatureControllerTest {
 
   /**
    * Test method to ensure IllegalArgumentExceptions are thrown if the controller is given a null
-   * model or view
+   * model or view.
    */
   @Test
   public void testInvalidControllerConstruction() {
     ProjectModel model = new Project();
-    model.newProject(1,1);
+    model.newProject(1, 1);
     GUIProjectView view = new GUIProjectViewMock(new StringBuilder());
     try { // all null params
       new FeatureController(null, null);

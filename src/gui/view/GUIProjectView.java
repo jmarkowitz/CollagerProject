@@ -1,8 +1,8 @@
 package gui.view;
 
 import gui.controller.Features;
+import java.awt.image.BufferedImage;
 import java.util.List;
-import model.PixelInterface;
 
 /**
  * Represents the view for the GUI. This interface allows for the controller to interact with the
@@ -40,7 +40,7 @@ public interface GUIProjectView {
    *
    * @param image the 2D array of pixels
    */
-  void renderImage(PixelInterface[][] image);
+  void renderImage(BufferedImage image);
 
   /**
    * Given the String passed in, it will render a popup window with the message to the user.
