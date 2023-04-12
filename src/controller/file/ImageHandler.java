@@ -52,41 +52,25 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
    * This method read the information to a file.
    *
    * @param filepath the filepath of a file.
-   * @throws IOException if the file is invalid.
+   * @throws IOException              if the file is invalid.
+   * @throws IllegalArgumentException if the file extension is invalid.
    */
   @Override
-  public void writeFile(String filepath) throws IOException {
+  public void writeFile(String filepath) throws IOException, IllegalArgumentException {
     String extension = this.getFileExtension(filepath);
     PixelInterface[][] finalImage = this.modelState.compressLayers();
+    BufferedImage image;
     switch (extension) {
       case "png":
-        this.writePixelsToPNG(finalImage, filepath, extension);
+        image = this.pixelsToImage(finalImage, BufferedImage.TYPE_INT_ARGB);
         break;
       case "jpeg":
       case "jpg":
-        this.writePixelsToJPEG(finalImage, filepath, extension);
+        image = this.pixelsToImage(finalImage, BufferedImage.TYPE_INT_RGB);
         break;
       default:
         throw new IllegalArgumentException("Invalid file extension");
     }
-    this.writePixelsToPNG(finalImage, filepath, extension);
-  }
-
-  // Helper method to write pixels to an image
-  private void writePixelsToPNG(PixelInterface[][] compressedImage, String filepath,
-      String extension)
-      throws IOException {
-    BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getHeight(),
-        BufferedImage.TYPE_INT_ARGB);
-    for (int row = 0; row < this.modelState.getHeight(); row++) {
-      for (int col = 0; col < this.modelState.getWidth(); col++) {
-        PixelInterface curPixel = compressedImage[row][col];
-        int argb =
-            (curPixel.getAlpha() << 24) | (curPixel.getRed() << 16) | (curPixel.getGreen() << 8)
-                | curPixel.getBlue();
-        image.setRGB(col, row, argb);
-      }
-    }
     File output = new File(filepath);
     try {
       ImageIO.write(image, extension, output);
@@ -95,26 +79,30 @@ public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
     }
   }
 
-  private void writePixelsToJPEG(PixelInterface[][] compressedImage, String filepath,
-      String extension) throws IOException {
+  // Helper method to write pixels to an image and will add transparency and changed the buffered
+  // image type depending on what the extension is
+  private BufferedImage pixelsToImage(PixelInterface[][] compressedImage, int type) {
     BufferedImage image = new BufferedImage(this.modelState.getWidth(), this.modelState.getHeight(),
-        BufferedImage.TYPE_INT_RGB);
+        type);
     for (int row = 0; row < this.modelState.getHeight(); row++) {
       for (int col = 0; col < this.modelState.getWidth(); col++) {
         PixelInterface curPixel = compressedImage[row][col];
-        PixelInterface adjustedPixel = curPixel.convertToRGB();
-        int rgb = (adjustedPixel.getRed() << 16) | (adjustedPixel.getGreen() << 8)
-            | adjustedPixel.getBlue();
-        image.setRGB(col, row, rgb);
+        if (type == BufferedImage.TYPE_INT_ARGB) {
+          int pixelBit =
+              (curPixel.getAlpha() << 24)
+                  | (curPixel.getRed() << 16)
+                  | (curPixel.getGreen() << 8)
+                  | curPixel.getBlue();
+          image.setRGB(col, row, pixelBit);
+        } else {
+          curPixel = curPixel.convertToRGB();
+          int pixelBit = (curPixel.getRed() << 16) |
+              (curPixel.getGreen() << 8) |
+              curPixel.getBlue();
+          image.setRGB(col, row, pixelBit);
+        }
       }
     }
-    File output = new File(filepath);
-    try {
-      ImageIO.write(image, extension, output);
-    } catch (IOException e) {
-      throw new IOException("Unable to write image to file");
-    }
+    return image;
   }
-
-
 }
