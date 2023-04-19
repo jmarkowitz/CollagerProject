@@ -12,7 +12,8 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Represents the command that will add an image to a layer.
+ * Represents a command that will utilize the {@code FileInterface} interface implementations to
+ * read in an image file depending on the image's extension.
  */
 public class AddImage implements CollagerCommand {
 
@@ -37,7 +38,8 @@ public class AddImage implements CollagerCommand {
   }
 
   /**
-   * Method that will execute the command.
+   * Method that will execute the add image command to read in the image file and use the model to
+   * add it.
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {

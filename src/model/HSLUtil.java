@@ -1,8 +1,8 @@
 package model;
 
 /**
- * This class contains utility methods to convert an RGB representation to HSL and back and print
- * those results. Feel free to change these methods as required.
+ * This class contains utility methods to convert an RGB representation to HSL and back and return
+ * those results.
  */
 public class HSLUtil {
 

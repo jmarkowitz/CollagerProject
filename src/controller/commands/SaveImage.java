@@ -11,7 +11,9 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Represents a command that will save the current project as a ppm file.
+ * Represents a command that will allow the user to save an image to the type they want to by using
+ * the {@code ImageHandler} and {@code PPMHandler} implementations of the {@code FileHandler}
+ * interface.
  */
 public class SaveImage implements CollagerCommand {
 

@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a brighten intensity filter that can be applied to a layer.
+ * Represents a brighten intensity filter that can be applied to a layer. This filter will brighten
+ * the intensity of the current image's pixels.
  */
 public class BrightenIntensityFilter extends AbstractFilter {
 

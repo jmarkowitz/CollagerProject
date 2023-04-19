@@ -2,67 +2,35 @@
 
 ---
 
-## Decoupling the View
-
-In order to pass this project along to anyone else, the only files that would need to be sent are:
-
-**Command Line**
-
-* `ProjectView.java` Interface
-* `CommandLineTextView.java` class (implements `ProjectView`)
-    * These are the only files required as the view is decoupled from the controller for the command
-      line version of the program.
-
-**GUI**
-
-* `GUIProjectView.java` Interface
-* `GUIProjectViewImpl.java` class (implements `GUIProjectView`)
-* `Feature.java` Interface
-    * The `Feature` interface is necessary as there is coupling between the controller and view in
-      order to allow for asynchronous user input. The `Feature` interface is used to allow for the
-      controller to be able to call methods in the view without having to know what the view is.
-
----
-
-## Recent Implementations/Changes
-
-* Changed the `renderImage()` method in the `GUIProjectView` interface to take in a `BufferedImage`
-  instead of a `PixelInterface[][]`. This was done to decouple the view from the model and allow for
-  flexibility of our design.
-* Added a private helper method in the `FeatureController` to turn a `PixelInterface[][]` into a
-  `BufferedImage` to be used in the `renderImage()` method.
-
----
-
-## Previous Implementations/Changes (Before 4/11/2023)
-
-* Added `compressLayers()` method to `ProjectModelState` interface to allow for the user to
-  compress all the layers into one image [Click Me!](#141-projectModelState)
-* Added `exportProject()` method to `ProjectModelState` interface to allow for the user to
-  export the project as a string [Click Me!](#141-projectmodelstate)
-* Added `buildProject()` method to `ProjectModel` interface to allow for the user to build a
-  project from a string [Click Me!](#142-projectmodel)
-* Added `FileHandler` interface and respective classes to handle file
-  input/output [Click Me!](#311-filehandler)
-* Changed Filter design to use `BiFunction` instead of `Function` interface to allow for
-  background layer to be passed in as well [Click Me!](#131-filterinterface)
-* Added `DifferenceFilter`, `MultiplyFilter`, and `ScreenFilter` to the filter
-  options [Click Me!](#1313-differencefilter)
-* Added `HSLUtil` class to handle conversion between RGB and HSL and back (to help with
-  `MultiplyFilter` and `ScreenFilter`) [Click Me!](#1316-hslutil)
-* Added `Feature` interface and `FeatureController` class to handle user input for an asynchronous
-  controller [Click Me!](#41-features)
-* Added `GUIProjectView` interface and `GUIProjectViewImpl` class to handle user specific inputs and
-  visualizations [Click Me!](#43-guiprojectview)
-* Added a USEME.md file to help understand how the GUI should be used and interacted
-  with [Click Me!](/USEME.md)
-
----
-
 ## Introduction
 
-Welcome! The information below will first describe the design of the program and how everything is
-represented. Then it will go over commands that can be used in the program to start a collage.
+Welcome! This program can be used to make your own collages with images! That includes:
+
+* creating projects
+* adding layers
+* adding images to layers
+* setting a filter to each layer
+* saving/exporting images as .png, .jpeg/.jpg, and .ppm
+* saving the project as a .collage file
+* loading in previous projects and still be able to change all layers
+
+Currently, the user will be able to operate all the information above using the GUI, command line
+version, or a batch command .txt file to run a series of commands in a row. It is important to note
+that while using GUI mode, this program does not support the dragging of the images/layers.
+
+---
+
+## Requirements
+
+To be able to run and use this program you will need:
+
+* Java 11 or higher JRE
+* JUnit4 for running any of the tests
+
+## Using the Collager
+
+To use the project and understand how to use all three modes, refer to the [USEME.md](/USEME.md)
+
 ---
 
 ## Design
@@ -399,70 +367,12 @@ image files or project files.
 
 ---
 
-### 5 Running The Program
-
-#### 5.1 Commands
-
-* ````new-project height width````
-    * This command will create a new project with the height and width provided.
-* ````load-project filepath````
-    * This command will load in a project from the filepath provided.
-* ````save-project filepath````
-    * This command will save the project to the filepath provided.
-* ````add-layer layer-name````
-    * This command will add a layer to the project.
-* ````add-image-to-layer layer-name filepath x y````
-    * This command will add an image to the layer with the name provided.
-* ````set-filter layer-name filter-option````
-    * This command will set a filter to the layer with the name provided.
-    * The filter options are:
-        * ````red-component````
-        * ````green-component````
-        * ````blue-component````
-        * ````brighten-value````
-        * ````darken-value````
-        * ````brighten-intensity````
-        * ````darken-intensity````
-        * ````brighten-luma````
-        * ````darken-luma````
-        * ````differnce````
-        * ````multiply````
-        * ````screen````
-* ````save-image filepath````
-    * This command will save the image to the filepath provided.
-* ````q```` or ````quit````
-    * This command will exit the program and will **NOT** save the project or image.
-
-#### 5.2 Example New Project Workflow
-
-1. ````new-project 100 100````
-2. ````add-layer layer1````
-3. ````add-image-to-layer layer1 images/image1.ppm 0 0````
-4. ````set-filter layer1 brighten-intensity````
-5. ````save-image images/imageNew.ppm````
-6. ````save-project projects/projectNew.ppm````
-7. ````q````
-
-***Note: use the batch_commands.txt for running all commands or follow above.***
-
-#### 5.3 Example Load Project Workflow
-
-1. ````load-project projects/projectNew.ppm````
-2. ````add-layer layer2````
-3. ````add-image-to-layer layer2 images/image2.ppm 0 0````
-4. ````set-filter layer2 brighten-intensity````
-5. ````save-image images/imageNew.ppm````
-6. ````save-project projects/projectNew.ppm````
-7. ````q````
-
-## Enjoy!
-
-### Authors
+## Authors
 
 * Jonathan Markowitz (markowitz.jo@northeastern.edu)
 * Yige Sun (sun.yig@northeastern.edu)
 
-### 6 References
+## References
 
 1. [Assignment Page](https://northeastern.instructure.com/courses/133134/assignments/1776187)
 2. [Java Docs](https://docs.oracle.com/en/java/javase/11/docs/api/)

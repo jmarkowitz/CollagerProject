@@ -11,7 +11,11 @@ import view.ProjectView;
 public interface CollagerCommand {
 
   /**
-   * Method that will execute the command.
+   * Method that will execute the command of any subclasses that implement it.
+   *
+   * @param model the model to be modified
+   * @param view  the view to update
+   * @throws IOException if there is an error executing the command
    */
   void execute(ProjectModel model, ProjectView view) throws IOException;
 

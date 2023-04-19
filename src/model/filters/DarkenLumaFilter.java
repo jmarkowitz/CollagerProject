@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a darken luma filter that can be applied to a layer.
+ * Represents a darken luma filter that can be applied to a layer. This filter will darken the luma
+ * of the current image's pixels.
  */
 public class DarkenLumaFilter extends AbstractFilter {
 

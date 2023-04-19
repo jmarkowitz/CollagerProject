@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a blue filter that can be applied to a layer.
+ * Represents a blue filter that can be applied to a layer. This filter will keep only the blue
+ * channel of the current image's pixels.
  */
 public class BlueFilter extends AbstractFilter {
 

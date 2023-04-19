@@ -3,7 +3,8 @@ package model.filters;
 import model.PixelInterface;
 
 /**
- * Represents a normal filter that can be applied to a layer.
+ * Represents a normal filter that can be applied to a layer. This will bring the current image's
+ * pixels back to normal with no filter applied.
  */
 public class NormalFilter extends AbstractFilter {
 

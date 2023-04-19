@@ -33,8 +33,6 @@ public class SaveProject implements CollagerCommand {
    * <li> all layers' name, their respective filter and the UNMODIFIED RGBA pixels in each layer
    * separated by a new line </li>
    * </ul>
-   *
-   * @throws IOException if this method is called before a project has been created or loaded
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {

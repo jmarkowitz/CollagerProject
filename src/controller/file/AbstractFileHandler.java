@@ -9,6 +9,30 @@ import model.ProjectModelState;
  */
 public abstract class AbstractFileHandler<F> implements FileHandler<F> {
 
+  protected final ProjectModelState modelState;
+
+  /**
+   * The constructor of this class.
+   *
+   * @param modelState The passed-in modelState
+   */
+  public AbstractFileHandler(ProjectModelState modelState) {
+    this.modelState = modelState;
+  }
+
+  protected String getFileExtension(String filepath) {
+    int dotIndex = filepath.lastIndexOf('.');
+    if (dotIndex == -1 || dotIndex == filepath.length() - 1) {
+      return "";
+    } else {
+      return filepath.substring(dotIndex + 1).toLowerCase();
+    }
+  }
+
+  protected int scalePixel(int pixelValue, int maxValue) {
+    return (int) Math.round(pixelValue * (255.0 / maxValue));
+  }
+
   /**
    * The enum class which limits the file types that the users can choose.
    */
@@ -34,30 +58,6 @@ public abstract class AbstractFileHandler<F> implements FileHandler<F> {
     public String getExtension() {
       return this.extension;
     }
-  }
-
-  protected final ProjectModelState modelState;
-
-  /**
-   * The constructor of this class.
-   *
-   * @param modelState The passed-in modelState
-   */
-  public AbstractFileHandler(ProjectModelState modelState) {
-    this.modelState = modelState;
-  }
-
-  protected String getFileExtension(String filepath) {
-    int dotIndex = filepath.lastIndexOf('.');
-    if (dotIndex == -1 || dotIndex == filepath.length() - 1) {
-      return "";
-    } else {
-      return filepath.substring(dotIndex + 1).toLowerCase();
-    }
-  }
-
-  protected int scalePixel(int pixelValue, int maxValue) {
-    return (int) Math.round(pixelValue * (255.0 / maxValue));
   }
 
 }

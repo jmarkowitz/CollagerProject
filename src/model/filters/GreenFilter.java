@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a green filter that can be applied to a layer.
+ * Represents a green filter that can be applied to a layer. This filter will keep only the green
+ * channel of the current image's pixels.
  */
 public class GreenFilter extends AbstractFilter {
 

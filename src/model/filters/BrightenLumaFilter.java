@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a brighten luma filter that can be applied to a layer.
+ * Represents a brighten luma filter that can be applied to a layer. This will brighten the luma of
+ * the current image's pixels.
  */
 public class BrightenLumaFilter extends AbstractFilter {
 

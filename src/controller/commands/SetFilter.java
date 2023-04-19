@@ -27,7 +27,7 @@ public class SetFilter implements CollagerCommand {
 
 
   /**
-   * Method that will execute the command.
+   * Method that will set the given filter on the given layer in the model.
    */
   @Override
   public void execute(ProjectModel model, ProjectView view) throws IOException {

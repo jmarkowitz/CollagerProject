@@ -3,8 +3,8 @@ package model;
 import java.util.function.BiFunction;
 
 /**
- * Represents a filter that can be used on a layer. Allows the user to apply a filter, get the name,
- * and return a valid value.
+ * Represents a filter that can be used on a layer. Allows the user to apply a filter on a 2D array
+ * of pixels and get the filtered image back.
  */
 @FunctionalInterface
 public interface FilterInterface extends

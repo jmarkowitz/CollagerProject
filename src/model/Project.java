@@ -26,10 +26,10 @@ import model.filters.ScreenFilter;
 public class Project implements ProjectModel {
 
   public static final int MAX_VALUE = 255;
-  private int height;
-  private int width;
   private final Map<String, LayerInterface> layerLinkedMap;
   private final Map<String, FilterInterface> allFilters;
+  private int height;
+  private int width;
   private boolean inProgress;
 
 
@@ -179,9 +179,7 @@ public class Project implements ProjectModel {
 
     PixelInterface[][] bottomImageGridCopy = new PixelInterface[this.height][this.width];
     for (int row = 0; row < this.height; row++) {
-      for (int col = 0; col < this.width; col++) {
-        bottomImageGridCopy[row][col] = bottomImageGrid[row][col];
-      }
+      System.arraycopy(bottomImageGrid[row], 0, bottomImageGridCopy[row], 0, this.width);
     }
 
     int imageHeight = topImageGrid.length;

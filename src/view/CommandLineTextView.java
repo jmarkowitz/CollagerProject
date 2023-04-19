@@ -3,7 +3,8 @@ package view;
 import java.io.IOException;
 
 /**
- * Represents a command line text view of a collager project.
+ * Represents a command line text view of a collager project. This view will print out to the type
+ * of view used. The default view is {@code System.out}.
  */
 public class CommandLineTextView implements ProjectView {
 

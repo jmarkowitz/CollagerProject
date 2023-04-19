@@ -9,7 +9,8 @@ import model.PixelInterface;
 import model.ProjectModelState;
 
 /**
- * Represents a handler for image files. Allows the user to read and write images.
+ * Represents a handler for image files. Allows the user to read and write images files such as
+ * .png, .jpeg or .jpg.
  */
 public class ImageHandler extends AbstractFileHandler<PixelInterface[][]> {
 

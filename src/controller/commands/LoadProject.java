@@ -8,7 +8,8 @@ import model.ProjectModel;
 import view.ProjectView;
 
 /**
- * Class that represents the load project command.
+ * Represents a command that allows the user to load in a project using the
+ * {@code TextProjectHandler} implementation of the {@code FileHandler} interface.
  */
 public class LoadProject implements CollagerCommand {
 
@@ -28,8 +29,6 @@ public class LoadProject implements CollagerCommand {
    *
    * @param model the model that will be used to load the project
    * @param view  the view that will be used to render the message
-   * @throws IOException              if there is an issue rendering the message
-   * @throws IllegalArgumentException if the file is invalid
    */
   @Override
   public void execute(ProjectModel model, ProjectView view)

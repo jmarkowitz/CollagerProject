@@ -4,7 +4,8 @@ import model.Pixel;
 import model.PixelInterface;
 
 /**
- * Represents a red filter that can be applied to a layer.
+ * Represents a red filter that can be applied to a layer. This filter will keep only the red
+ * channel of the current image's pixels.
  */
 public class RedFilter extends AbstractFilter {
 

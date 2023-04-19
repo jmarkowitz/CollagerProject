@@ -236,6 +236,7 @@ public class FeatureController implements Features {
     }
   }
 
+  // converts the 2D pixel array to a BufferedImage
   private BufferedImage convertToImage(PixelInterface[][] image) {
     int height = image.length;
     int width = image[0].length;

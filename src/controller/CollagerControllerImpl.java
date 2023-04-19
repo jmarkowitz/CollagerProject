@@ -25,7 +25,6 @@ public class CollagerControllerImpl implements CollagerController {
   private final ProjectModel model;
   private final ProjectView view;
   private final Readable in;
-  private boolean programStarted;
   private final Map<String, Function<Scanner, CollagerCommand>> knownCommands;
 
   /**
@@ -62,7 +61,8 @@ public class CollagerControllerImpl implements CollagerController {
   }
 
   /**
-   * Starts the Image Collage program.
+   * Starts the Image Collage program and will wait for user input. Once input has been received it
+   * will execute the command based on the input.
    *
    * @throws IllegalStateException if the controller cannot successfully read input or output
    */

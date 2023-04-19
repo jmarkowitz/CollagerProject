@@ -35,32 +35,28 @@ import javax.swing.border.EmptyBorder;
  */
 public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
 
+  private static final int SIDE_BAR_WIDTH = 300;
+  private static final int FRAME_MIN_SIZE = 400;
+  private static final Color SIDE_BAR_COLOR = new Color(42, 37, 39);
+  private static final String WORKING_DIRECTORY_PATH = System.getProperty("user.dir");
   private final JMenuItem newMenuItem;
   private final JMenuItem openProjectMenuItem;
   private final JMenuItem saveProjectMenuItem;
   private final JMenuItem exportMenuItem;
   private final JMenuItem quitMenuItem;
   private final JMenuItem addImageMenuItem;
-
-  private static final int SIDE_BAR_WIDTH = 300;
-  private static final int FRAME_MIN_SIZE = 400;
-  private static final Color SIDE_BAR_COLOR = new Color(42, 37, 39);
-  private static final String WORKING_DIRECTORY_PATH = System.getProperty("user.dir");
-  private boolean isProjectActive;
-
   // layer stuff
   private final JButton addLayerButton;
   private final JList<String> layerList;
   private final DefaultListModel<String> layerListModel;
-
   private final JPanel imagePanel;
   private final int imagePanelDefaultWidth;
   private final int imagePanelDefaultHeight;
-
   // tool stuff
   private final JButton applyFilterButton;
   private final JList<String> filterList;
   private final DefaultListModel<String> filterListModel;
+  private boolean isProjectActive;
 
   /**
    * Constructs the entire view frame and initializes all the components.
@@ -229,85 +225,6 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
     toolPanel.add(filterList, BorderLayout.CENTER);
     this.add(toolPanel, BorderLayout.EAST);
     this.renderMessage("To Create/Open a project, select File.");
-  }
-
-  /**
-   * Represents a class that creates a custom input dialog box to solve the issue of handling
-   * multiple input fields.
-   */
-  static class CustomInputDialog {
-
-    private final JPanel panel;
-    private final JLabel label1;
-    private final JLabel label2;
-    private final String title;
-    private final JTextField label1Field;
-    private final JTextField label2Field;
-
-    /**
-     * Constructs a custom input dialog box.
-     *
-     * @param title  the title of the dialog box
-     * @param label1 the first label name
-     * @param label2 the second label name
-     */
-    public CustomInputDialog(String title, String label1, String label2) {
-      panel = new JPanel();
-      label1Field = new JTextField(10);
-      label2Field = new JTextField(10);
-      this.label1 = new JLabel(label1);
-      this.label2 = new JLabel(label2);
-      this.title = title;
-    }
-
-    // gets the values from the input fields
-    private FieldValues getValues() {
-      panel.add(label1);
-      panel.add(label1Field);
-      panel.add(label2);
-      panel.add(label2Field);
-      this.label1Field.requestFocus();
-
-      int result = JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION,
-          JOptionPane.PLAIN_MESSAGE);
-
-      if (result == JOptionPane.OK_OPTION) {
-        int val1 = Integer.parseInt(label1Field.getText());
-        int val2 = Integer.parseInt(label2Field.getText());
-        return new FieldValues(val1, val2);
-      }
-      return null;
-    }
-
-    /**
-     * Represents a class that holds two values from the input fields.
-     */
-    static class FieldValues {
-
-      private final int val1;
-      private final int val2;
-
-      /**
-       * Constructs a FieldValues object.
-       *
-       * @param val1 the first value
-       * @param val2 the second value
-       */
-      public FieldValues(int val1, int val2) {
-        this.val1 = val1;
-        this.val2 = val2;
-      }
-
-      // getter for val1
-      private int getVal1() {
-        return val1;
-      }
-
-      // getter for val2
-      private int getVal2() {
-        return val2;
-      }
-    }
   }
 
   /**
@@ -491,5 +408,84 @@ public class GUIProjectViewImpl extends JFrame implements GUIProjectView {
   public void refresh() {
     this.repaint();
     this.revalidate();
+  }
+
+  /**
+   * Represents a class that creates a custom input dialog box to solve the issue of handling
+   * multiple input fields.
+   */
+  static class CustomInputDialog {
+
+    private final JPanel panel;
+    private final JLabel label1;
+    private final JLabel label2;
+    private final String title;
+    private final JTextField label1Field;
+    private final JTextField label2Field;
+
+    /**
+     * Constructs a custom input dialog box.
+     *
+     * @param title  the title of the dialog box
+     * @param label1 the first label name
+     * @param label2 the second label name
+     */
+    public CustomInputDialog(String title, String label1, String label2) {
+      panel = new JPanel();
+      label1Field = new JTextField(10);
+      label2Field = new JTextField(10);
+      this.label1 = new JLabel(label1);
+      this.label2 = new JLabel(label2);
+      this.title = title;
+    }
+
+    // gets the values from the input fields
+    private FieldValues getValues() {
+      panel.add(label1);
+      panel.add(label1Field);
+      panel.add(label2);
+      panel.add(label2Field);
+      this.label1Field.requestFocus();
+
+      int result = JOptionPane.showConfirmDialog(null, panel, title, JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.PLAIN_MESSAGE);
+
+      if (result == JOptionPane.OK_OPTION) {
+        int val1 = Integer.parseInt(label1Field.getText());
+        int val2 = Integer.parseInt(label2Field.getText());
+        return new FieldValues(val1, val2);
+      }
+      return null;
+    }
+
+    /**
+     * Represents a class that holds two values from the input fields.
+     */
+    static class FieldValues {
+
+      private final int val1;
+      private final int val2;
+
+      /**
+       * Constructs a FieldValues object.
+       *
+       * @param val1 the first value
+       * @param val2 the second value
+       */
+      public FieldValues(int val1, int val2) {
+        this.val1 = val1;
+        this.val2 = val2;
+      }
+
+      // getter for val1
+      private int getVal1() {
+        return val1;
+      }
+
+      // getter for val2
+      private int getVal2() {
+        return val2;
+      }
+    }
   }
 }

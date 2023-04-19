@@ -3,9 +3,9 @@ package controller.file;
 import java.io.IOException;
 
 /**
- * The interface which is used to read and write file.
+ * Represents a way for any subclass to read and write files of type {@code F}.
  *
- * @param <F> The file.
+ * @param <F> The file type.
  */
 public interface FileHandler<F> {
 

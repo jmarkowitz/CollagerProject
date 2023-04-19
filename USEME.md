@@ -12,11 +12,11 @@ The program can be run in three different ways depending on the command line arg
 1. No arguments: The program will run in GUI mode (also what happens when double-click on jar file).
     * `java -jar CollagerProject.jar`
 2. Command Line Text Mode: The program will wait for commands given by the
-   user. [Click here](/README.md#51-commands) to see what commands are available.
+   user.
     * `java -jar CollagerProject.jar -text`
 3. Batch Command Run Mode: The program will run a batch of commands from a text file given the
    filepath as the second command line argument.
-    * `java -jar Program.jar -file path-of-script-file`
+    * `java -jar CollagerProject.jar -file path-of-script-file`
 
 ---
 
@@ -72,3 +72,57 @@ When a GUI is started, the user will see three main panels:
         * Input the name of the file with the proper extension (.ppm, .png)
 * Quit the program
     * File > Quit
+
+### Command Line Use
+
+#### Commands
+
+* ````new-project height width````
+    * This command will create a new project with the height and width provided.
+* ````load-project filepath````
+    * This command will load in a project from the filepath provided.
+* ````save-project filepath````
+    * This command will save the project to the filepath provided.
+* ````add-layer layer-name````
+    * This command will add a layer to the project.
+* ````add-image-to-layer layer-name filepath x y````
+    * This command will add an image to the layer with the name provided.
+* ````set-filter layer-name filter-option````
+    * This command will set a filter to the layer with the name provided.
+    * The filter options are:
+        * ````red-component````
+        * ````green-component````
+        * ````blue-component````
+        * ````brighten-value````
+        * ````darken-value````
+        * ````brighten-intensity````
+        * ````darken-intensity````
+        * ````brighten-luma````
+        * ````darken-luma````
+        * ````differnce````
+        * ````multiply````
+        * ````screen````
+* ````save-image filepath````
+    * This command will save the image to the filepath provided.
+* ````q```` or ````quit````
+    * This command will exit the program and will **NOT** save the project or image.
+
+#### Example New Project Workflow
+
+1. ````new-project 100 100````
+2. ````add-layer layer1````
+3. ````add-image-to-layer layer1 images/image1.ppm 0 0````
+4. ````set-filter layer1 brighten-intensity````
+5. ````save-image images/imageNew.ppm````
+6. ````save-project projects/projectNew.ppm````
+7. ````q````
+
+#### Example Load Project Workflow
+
+1. ````load-project projects/projectNew.ppm````
+2. ````add-layer layer2````
+3. ````add-image-to-layer layer2 images/image2.ppm 0 0````
+4. ````set-filter layer2 brighten-intensity````
+5. ````save-image images/imageNew.ppm````
+6. ````save-project projects/projectNew.ppm````
+7. ````q````

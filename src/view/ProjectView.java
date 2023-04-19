@@ -3,7 +3,8 @@ package view;
 import java.io.IOException;
 
 /**
- * The interface for a client's perspective of the model of a collager project.
+ * The interface for a client's perspective of the model of a collager project. Can be used to see
+ * what the model looks like and how it can change.
  */
 public interface ProjectView {
 
